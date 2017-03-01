@@ -8,13 +8,12 @@ package main
 
 import "fmt"
 import (
-	//"database/sql"
-       //       "fmt"
-	//       "github.com/mattn/go-sqlite3"
-	//       "log"
-	//       "os"
+	_ "database/sql"
+	_ "github.com/mattn/go-sqlite3"	
+	_ "github.com/knq/dburl"
+	_ "github.com/mattes/migrate/migrate"
+	_ "github.com/mattes/migrate/driver/sqlite3"
 	)
-
 
 func main() {
     fmt.Println("Hello, GCC!")

@@ -1,6 +1,8 @@
 # gogccintro
 golang interfaces for the gcc introspector
 
+![Build Status](https://travis-ci.org/h4ck3rm1k3/gogccintro.svg?branch=master)
+
 [godoc.org]: http://godoc.org/github.com/h4ck3rm1k3/gogccintro "godoc.org"
 
 ##Install

@@ -1,3 +1,6 @@
+# gogccintro
+golang interfaces for the gcc introspector
+
 [godoc.org]: http://godoc.org/github.com/h4ck3rm1k3/gogccintro "godoc.org"
 
 ##Install
@@ -16,5 +19,5 @@ James Michael Du Pont [jamesmikedupont@gmail.com]
 
 Copyright (c) 2017, James Michael Du Pont.
 All rights reserved.
-Use of this source code is governed by a BSD-style license that can be
+Use of this source code is governed by a AGPL-style license that can be
 found in the LICENSE file.

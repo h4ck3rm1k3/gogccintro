@@ -8,7 +8,6 @@ import (
 	_ "github.com/mattn/go-sqlite3"	
 	"github.com/knq/dburl"
 	"github.com/mattes/migrate/migrate"
-	//"github.com/knq/xo/examples/booktest/sqlite3/models"
 	_ "github.com/mattes/migrate/driver/sqlite3"
 	)
 

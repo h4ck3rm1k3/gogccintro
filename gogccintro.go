@@ -20,7 +20,13 @@ import (
 	//"github.com/BurntSushi/toml"
 //	"gopkg.in/yaml.v2"
 	"github.com/jinzhu/configor"
+	"github.com/h4ck3rm1k3/gogccintro/filters"
+	//"filter/load_recurse"
 	)
+
+//filters := map[string]int{
+//	"load_recurse": filter.load_recurse,
+//}
 
 var Config = struct {
 	APPName string `default:"go gcc introspector"`
@@ -29,23 +35,11 @@ var Config = struct {
 		Path     string
 	}
 
-	Transform struct {
-		Filter     string
-		StartNode struct {
-			FileID int
-			NodeType string
-			Attrs[] struct {
-				Field string
-				SubField string
-				SubValue string
-			}
-		}
-	}
+	Transform filter.Transform
 	
 	OutputDB struct {
 		Path     string
 	}
-
 }{}
 
 func main() {
@@ -67,7 +61,8 @@ func main() {
 	fmt.Printf("output db %s\n", Config.OutputDB.Path)
 	fmt.Printf("filter %s\n", Config.Transform.Filter)
 
-	fmt.Printf("transform: %#v\n", Config.Transform)
+	
+	filter.DoTransform(Config.Transform)
 	
 	//configBytes, err := yaml.Marshal(&Config)
 	//fmt.Printf("output %#v\nerr:%#v\n", configBytes, err)

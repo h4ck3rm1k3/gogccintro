@@ -31,6 +31,15 @@ var Config = struct {
 
 	Transform struct {
 		Filter     string
+		StartNode struct {
+			FileID int
+			NodeType string
+			Attrs[] struct {
+				Field string
+				SubField string
+				SubValue string
+			}
+		}
 	}
 	
 	OutputDB struct {
@@ -52,11 +61,14 @@ func main() {
 	}
 	
 	fmt.Println("Hello, GCC!")
-	//fmt.Printf("config: %#v\n", Config)
+
 
 	fmt.Printf("input db %s\n", Config.InputDB.Path)
 	fmt.Printf("output db %s\n", Config.OutputDB.Path)
+	fmt.Printf("filter %s\n", Config.Transform.Filter)
 
+	fmt.Printf("transform: %#v\n", Config.Transform)
+	
 	//configBytes, err := yaml.Marshal(&Config)
 	//fmt.Printf("output %#v\nerr:%#v\n", configBytes, err)
 	//ioutil.WriteFile("test.yaml", configBytes, 0644)

@@ -4,4 +4,13 @@ inputdb:
 outputdb:
   path: "/home/mdupont/experiments/gogccintro/models/test.sqlite3"
 transform:
-  filter: ""
+  filter: "load_recurse"
+  startnode:
+    fileid : 1
+    nodetype : "function_decl"	
+    attrs :
+      - 
+        field : 'name'
+        subfield : "strg"
+        subvalue : "key_get_conv"
+    

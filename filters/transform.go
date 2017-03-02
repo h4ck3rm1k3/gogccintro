@@ -2,7 +2,7 @@ package filter
 
 type Transform struct {
   Filter     string
-  StartNode StartNode
+  LoadRecurse StartNode
 }
 
 type ITransform interface{

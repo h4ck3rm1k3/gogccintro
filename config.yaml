@@ -5,7 +5,7 @@ outputdb:
   path: "/home/mdupont/experiments/gogccintro/models/test.sqlite3"
 transform:
   filter: "load_recurse"
-  startnode:
+  loadrecurse:
     fileid : 1
     nodetype : "function_decl"	
     attrs :

@@ -6,11 +6,11 @@ outputdb:
 transform:
   filter: "load_recurse"
   loadrecurse:
-    fileid : 1
+    fileid : 2
     nodetype : "function_decl"	
     attrs :
       - 
-        field : 'name'
+        field : 'refs_name'
         subfield : "attrs_string"
         subvalue : "key_get_conv"
     

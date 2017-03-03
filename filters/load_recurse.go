@@ -72,6 +72,8 @@ func (n *MyEventReceiver) TimingKv(eventName string, nanoseconds int64, kvs map[
 }
 
 type foo struct {
+	NodeType      string        `json:"node_type"`       // node_type
+	NodeID        string        `json:"node_id"`         // node_id
 
 }
 
@@ -104,15 +106,18 @@ func (t2 load_recurse_t) execute(in *sql.DB , out *sql.DB, t Transform) {
 		fmt.Printf("Field: %s\n", x.Field)
 
 		sql := i_sess.
-			Select("*").
+			Select("gcc_tu_parser_node.*").
 			From("gcc_tu_parser_node").
-			Where("gcc_tu_parser_node.node_type=?",t.LoadRecurse.NodeType).
+
 			Join(
 			dbr.I("gcc_tu_parser_node").As("subobject"),
 			dbr.And(
+				dbr.Eq("gcc_tu_parser_node.source_file_id",t.LoadRecurse.FileId),
+				dbr.Eq("subobject.source_file_id",t.LoadRecurse.FileId),
+				dbr.Eq("gcc_tu_parser_node.node_type",t.LoadRecurse.NodeType),				
 				dbr.Eq(
-					x.Field,
-					dbr.I("gcc_tu_parser_node.node_id"),
+					fmt.Sprintf("gcc_tu_parser_node.%s",x.Field),
+					dbr.I("subobject.node_id"),
 				),
 				dbr.Eq(
 					fmt.Sprintf("subobject.%s",x.SubField),

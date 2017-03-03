@@ -10,11 +10,12 @@ package main
 import (
 	"fmt"
 	"os"
+	"log"
 //	"io/ioutil"
 	"flag"
 	_ "database/sql"
 	_ "github.com/mattn/go-sqlite3"	
-	_ "github.com/knq/dburl"
+	"github.com/knq/dburl"
 	_ "github.com/mattes/migrate/migrate"
 	_ "github.com/mattes/migrate/driver/sqlite3"
 	//"github.com/BurntSushi/toml"
@@ -61,8 +62,16 @@ func main() {
 	fmt.Printf("output db %s\n", Config.OutputDB.Path)
 	fmt.Printf("filter %s\n", Config.Transform.Filter)
 
+	indb, err := dburl.Open(Config.InputDB.Path)
+	if err != nil {
+		log.Fatal(err)
+	}
+	outdb, err := dburl.Open(Config.OutputDB.Path)
+	if err != nil {
+		log.Fatal(err)
+	}
 	
-	filter.DoTransform(Config.Transform)
+	filter.DoTransform(indb, outdb, Config.Transform)
 	
 	//configBytes, err := yaml.Marshal(&Config)
 	//fmt.Printf("output %#v\nerr:%#v\n", configBytes, err)

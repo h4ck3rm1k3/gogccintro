@@ -1,8 +1,8 @@
 appname : "test"
 inputdb:
-  path: "/home/mdupont/experiments/introspector/introspector/db.sqlite3"
+  path: "sqlite:/home/mdupont/experiments/introspector/introspector/db.sqlite3"
 outputdb:
-  path: "/home/mdupont/experiments/gogccintro/models/test.sqlite3"
+  path: "sqlite:/home/mdupont/experiments/gogccintro/models/test.sqlite3"
 transform:
   filter: "load_recurse"
   loadrecurse:
@@ -11,6 +11,6 @@ transform:
     attrs :
       - 
         field : 'name'
-        subfield : "strg"
+        subfield : "attrs_string"
         subvalue : "key_get_conv"
     

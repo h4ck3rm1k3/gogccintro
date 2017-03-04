@@ -2,6 +2,7 @@ package filter
 // load recurse command
 import (
 	"fmt"
+	"strconv"
 	"encoding/json"
 	"bytes"
 	//"log"
@@ -110,6 +111,28 @@ func (t * Traversal) recurse_field(fieldname string, id sql.NullInt64, fromid in
 	}
 }
 
+func (t * Traversal) recurse_str_field(fieldname string, id string, fromid int , from_type string){
+	if id != "" {
+		i, err := strconv.Atoi(id)			
+		if err != nil {
+			fmt.Printf("\t%v %sERR\n",id, err)
+		}else {
+			var v uint64 = uint64(i)
+			if t.tree.SetBitFirst(v){
+				t.wg.Add(1) // add this to the waitgroup
+				go func() {
+					defer t.wg.Done() // 
+					t.recurse_node_id(int(v),fieldname, fromid, from_type)
+				}()
+			} else {
+				
+			}
+		} 
+	}else {
+		//fmt.Printf("null %s\n", fieldname)
+	}
+}
+
 func (t * Traversal) recurse(id int,fieldname string, fromid int){
 	
 	fmt.Printf("recurse start %d %s %d\n", id, fieldname, fromid)
@@ -148,6 +171,9 @@ func (t * Traversal) recurse_node(n * models.GccTuParserNode,fieldname string, f
 	t.recurse_field("RefsBody", n.RefsBody, id, n.NodeType)
 	t.recurse_field("RefsBpos", n.RefsBpos, id, n.NodeType)
 	t.recurse_field("RefsChan", n.RefsChan, id, n.NodeType)
+
+	t.recurse_str_field("AttrsType", n.AttrsType, id, n.NodeType)
+	
 	// if the type is field_decl
 	if n.NodeType == "field_decl" {
 		t.recurse_field("RefsChain", n.RefsChain, id, n.NodeType)

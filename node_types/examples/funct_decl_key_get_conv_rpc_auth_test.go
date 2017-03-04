@@ -1,6 +1,7 @@
 package node_types_examples
 import (
 	"testing"
+	"strconv"
 	"reflect"
 	"fmt"
 	"encoding/json"
@@ -17,8 +18,11 @@ func TestLoad(*testing.T){
 		"AttrsNote",
 		"AttrsTypeSize",
 		"AttrsAddr",
+	}
+	str_ref_fields := []string{
 		"AttrsType",
 	}
+
 	ref_fields := []string{
 		"RefsArgs",
 		//"RefsScpe",
@@ -106,9 +110,30 @@ func TestLoad(*testing.T){
 				} else{
 					fmt.Printf("\treflect %d %s %v NULL\n", k,fn,rid)
 				}
+			}			
+		}
+		
+		for k,fn := range str_ref_fields {
+			objValue := reflect.ValueOf(v).Elem()
+			field := objValue.FieldByName(fn)
+			rid := field.String()
+			if rid == "" {
+
+			} else {
+			
+				i, err := strconv.Atoi(rid)			
+				if err != nil {
+					fmt.Printf("\treflect2 %d %s %v %sERR\n", k,fn,rid, err)
+				} else {
+					o:=treemap.Nodes[i]
+					if o != nil {
+						s2:=treemap.FindName(o)
+						fmt.Printf("\treflect2 %d %s %v %d %v %s\n", k,fn,rid,o.NodeID, o.NodeType, s2)
+					} else{
+					fmt.Printf("\treflect2 %d %s %v NULL\n", k,fn,rid)
+					}
+				}
 			}
-		
-		
 		}	
 	}
 }

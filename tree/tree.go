@@ -18,7 +18,15 @@ func (t * TreeMap) FindName(n * models.GccTuParserNode) string{
 	} else if n.RefsName.Valid {
 		return t.FindName(t.Nodes[int(n.RefsName.Int64)])
 	} else {
-		return "TODO1"
+		return t.FindConstInt(n) // just return  the int value
+	}
+}
+
+func (t * TreeMap) FindConstInt(n * models.GccTuParserNode) string{
+	if n.NodeType == "integer_cst" {
+		return n.AttrsTypeSize // misnamed
+	} else {
+		return "TODO2"
 	}
 }
 

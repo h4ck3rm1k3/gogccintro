@@ -60,7 +60,7 @@ type GccTuParserNode struct {
 	SourceFileID  int `json:"source_file_id"`  // source_file_id
 	NodeType      string        `json:"node_type"`       // node_type
 	NodeID        int        `json:"node_id"`         // node_id
-
+	
 	// xo fields
 	_exists, _deleted bool
 }

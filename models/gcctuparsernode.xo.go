@@ -6,6 +6,7 @@ package models
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 )
 
 // GccTuParserNode represents a row from 'gcc_tu_parser_node'.
@@ -56,9 +57,9 @@ type GccTuParserNode struct {
 	RefsDecl      sql.NullInt64 `json:"refs_decl"`       // refs_decl
 	RefsLabl      sql.NullInt64 `json:"refs_labl"`       // refs_labl
 	AttrsType     string        `json:"attrs_type"`      // attrs_type
-	SourceFileID  sql.NullInt64 `json:"source_file_id"`  // source_file_id
+	SourceFileID  int `json:"source_file_id"`  // source_file_id
 	NodeType      string        `json:"node_type"`       // node_type
-	NodeID        string        `json:"node_id"`         // node_id
+	NodeID        int        `json:"node_id"`         // node_id
 
 	// xo fields
 	_exists, _deleted bool
@@ -178,7 +179,7 @@ func (gtpn *GccTuParserNode) Delete(db XODB) error {
 //
 // Generated from foreign key 'gcc_tu_parser_node_source_file_id_fkey'.
 func (gtpn *GccTuParserNode) GccTuParserSourcefile(db XODB) (*GccTuParserSourcefile, error) {
-	return GccTuParserSourcefileByID(db, int(gtpn.SourceFileID.Int64))
+	return GccTuParserSourcefileByID(db, gtpn.SourceFileID)
 }
 
 // GccTuParserNodeByID retrieves a row from 'gcc_tu_parser_node' as a GccTuParserNode.
@@ -193,13 +194,27 @@ func GccTuParserNodeByID(db XODB, id int) (*GccTuParserNode, error) {
 		`FROM gcc_tu_parser_node ` +
 		`WHERE id = ?`
 
+	//const sqlstr2 = `SELECT id , refs_argt FROM gcc_tu_parser_node WHERE id = ?`
+
 	// run query
 	XOLog(sqlstr, id)
 	gtpn := GccTuParserNode{
 		_exists: true,
 	}
 
-	err = db.QueryRow(sqlstr, id).Scan(&gtpn.ID, &gtpn.RefsArgt, &gtpn.RefsPrms, &gtpn.AttrsString, &gtpn.RefsDomn, &gtpn.RefsRetn, &gtpn.RefsBpos, &gtpn.RefsMax, &gtpn.RefsCsts, &gtpn.RefsValu, &gtpn.RefsMin, &gtpn.RefsName, &gtpn.RefsSize, &gtpn.RefsType, &gtpn.RefsUnql, &gtpn.RefsVal, &gtpn.RefsArgs, &gtpn.RefsElts, &gtpn.RefsRefd, &gtpn.RefsLow, &gtpn.RefsBody, &gtpn.RefsPurp, &gtpn.RefsChan, &gtpn.RefsCnst, &gtpn.AttrsTypeName, &gtpn.RefsFn, &gtpn.RefsChain, &gtpn.RefsPtd, &gtpn.RefsMngl, &gtpn.RefsCond, &gtpn.RefsVars, &gtpn.RefsOp0, &gtpn.RefsOp1, &gtpn.RefsOp2, &gtpn.RefsE, &gtpn.AttrsNote, &gtpn.RefsIdx, &gtpn.RefsScpe, &gtpn.RefsFlds, &gtpn.AttrsTypeSize, &gtpn.RefsInit, &gtpn.RefsExpr, &gtpn.AttrsAddr, &gtpn.RefsDecl, &gtpn.RefsLabl, &gtpn.AttrsType, &gtpn.SourceFileID, &gtpn.NodeType, &gtpn.NodeID)
+	fmt.Printf("check %s %s\n",sqlstr, id)
+
+	foo := db.QueryRow(sqlstr, id)
+	
+	fmt.Printf("after query gtpn:%s\n",foo)
+	
+	//err = foo.Scan(&gtpn.ID)
+	err = foo.Scan(&gtpn.ID,
+		&gtpn.RefsArgt,
+		&gtpn.RefsPrms, &gtpn.AttrsString, &gtpn.RefsDomn, &gtpn.RefsRetn, &gtpn.RefsBpos, &gtpn.RefsMax, &gtpn.RefsCsts, &gtpn.RefsValu, &gtpn.RefsMin, &gtpn.RefsName, &gtpn.RefsSize, &gtpn.RefsType, &gtpn.RefsUnql, &gtpn.RefsVal, &gtpn.RefsArgs, &gtpn.RefsElts, &gtpn.RefsRefd, &gtpn.RefsLow, &gtpn.RefsBody, &gtpn.RefsPurp, &gtpn.RefsChan, &gtpn.RefsCnst, &gtpn.AttrsTypeName, &gtpn.RefsFn, &gtpn.RefsChain, &gtpn.RefsPtd, &gtpn.RefsMngl, &gtpn.RefsCond, &gtpn.RefsVars, &gtpn.RefsOp0, &gtpn.RefsOp1, &gtpn.RefsOp2, &gtpn.RefsE, &gtpn.AttrsNote, &gtpn.RefsIdx, &gtpn.RefsScpe, &gtpn.RefsFlds, &gtpn.AttrsTypeSize, &gtpn.RefsInit, &gtpn.RefsExpr, &gtpn.AttrsAddr, &gtpn.RefsDecl, &gtpn.RefsLabl, &gtpn.AttrsType, &gtpn.SourceFileID, &gtpn.NodeType, &gtpn.NodeID,
+	)
+	
+	fmt.Printf("after err:%s gtpn:%s\n",err, gtpn)
 	if err != nil {
 		return nil, err
 	}
@@ -210,7 +225,7 @@ func GccTuParserNodeByID(db XODB, id int) (*GccTuParserNode, error) {
 // GccTuParserNodesBySourceFileID retrieves a row from 'gcc_tu_parser_node' as a GccTuParserNode.
 //
 // Generated from index 'gcc_tu_parser_node_source_file_id_78e6a0aa'.
-func GccTuParserNodesBySourceFileID(db XODB, sourceFileID sql.NullInt64) ([]*GccTuParserNode, error) {
+func GccTuParserNodesBySourceFileID(db XODB, sourceFileID int) ([]*GccTuParserNode, error) {
 	var err error
 
 	// sql query
@@ -249,7 +264,7 @@ func GccTuParserNodesBySourceFileID(db XODB, sourceFileID sql.NullInt64) ([]*Gcc
 // GccTuParserNodeBySourceFileIDNodeID retrieves a row from 'gcc_tu_parser_node' as a GccTuParserNode.
 //
 // Generated from index 'gcc_tu_parser_node_source_file_id_node_id_bc8c0130_uniq'.
-func GccTuParserNodeBySourceFileIDNodeID(db XODB, sourceFileID sql.NullInt64, nodeID string) (*GccTuParserNode, error) {
+func GccTuParserNodeBySourceFileIDNodeID(db XODB, sourceFileID int, nodeID string) (*GccTuParserNode, error) {
 	var err error
 
 	// sql query

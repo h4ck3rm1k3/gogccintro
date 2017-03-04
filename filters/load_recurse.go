@@ -3,8 +3,9 @@ package filter
 import (
 	"fmt"
 	"encoding/json"
+	"bytes"
 	//"log"
-	//"os"
+	"os"
 	"database/sql"
 	"github.com/h4ck3rm1k3/gogccintro/models"
 	"github.com/h4ck3rm1k3/gogccintro/tree"
@@ -76,119 +77,123 @@ func (n *MyEventReceiver) TimingKv(eventName string, nanoseconds int64, kvs map[
 	// fmt.Printf("timing kvs: %s\n",kvs)
 }
 
-type foo struct {
-	NodeType      string        `json:"node_type"`       // node_type
-	NodeID        string        `json:"node_id"`         // node_id
-
-}
 
 type Traversal struct {
 	in * sql.DB
 	out * sql.DB
+	outf * os.File
 	transform * Transform
 	tree * tree.TreeMap
 	wg * sync.WaitGroup
 }
 
-func (t * Traversal) recurse_field(fieldname string, id sql.NullInt64){
+func (t * Traversal) recurse_field(fieldname string, id sql.NullInt64, fromid int ){
 	if id.Valid {
 		var v uint64 = uint64(id.Int64)
 		if t.tree.SetBitFirst(v){
 			//fmt.Printf("waitgroup before %v\n", t.wg)
-			fmt.Printf("going to recurse %d\n", v)
+			//fmt.Printf("going to recurse %d\n", v)
 			t.wg.Add(1) // add this to the waitgroup
 			//fmt.Printf("waitgroup %v\n", t.wg)
 			go func() {
-				fmt.Printf("in recurse %d\n", v)
+				//fmt.Printf("in recurse %d\n", v)
 				//fmt.Printf("waitgroup %v\n", t.wg)
 				defer t.wg.Done() // 
-				t.recurse(int(v))
-				fmt.Printf("after recurse %d\n", v)
+				t.recurse_node_id(int(v),fieldname, fromid)
+				//fmt.Printf("after recurse %d\n", v)
 			}()
 		} else {
-			fmt.Printf("missed %d\n", v)
+			//fmt.Printf("missed %d\n", v)
 		}
 	} else {
 		//fmt.Printf("null %s\n", fieldname)
 	}
 }
 
-func (t * Traversal) recurse(id int){
-	fmt.Printf("recurse id %d\n", id)
-	
+func (t * Traversal) recurse(id int,fieldname string, fromid int){
 	
 	//fmt.Printf("in t %d", t)
 	var err error
 	n, err := models.GccTuParserNodeByID(t.in, id);
-
 	if (err != nil){
 	 	fmt.Printf("failed %s", err)
 	 	return
 	}
-	
-	//fmt.Printf("ok %s %s", n, err)
-	b, err := json.Marshal(n)
-	fmt.Printf("json %s %s\n", b, err)
-
-	if (err != nil){
-		fmt.Printf("failed %s", err)
-		return
-	}
-
-	t.recurse_field("RefsArgs", n.RefsArgs)
-	t.recurse_field("RefsArgt", n.RefsArgt)
-	t.recurse_field("RefsBody", n.RefsBody)
-	t.recurse_field("RefsBpos", n.RefsBpos)
-	t.recurse_field("RefsChan", n.RefsChan)
-	t.recurse_field("RefsCnst", n.RefsCnst)
-	t.recurse_field("RefsCond", n.RefsCond)
-	t.recurse_field("RefsCsts", n.RefsCsts)
-	t.recurse_field("RefsDecl", n.RefsDecl)
-	t.recurse_field("RefsDomn", n.RefsDomn)
-	t.recurse_field("RefsE", n.RefsE)
-	t.recurse_field("RefsElts", n.RefsElts)
-	t.recurse_field("RefsExpr", n.RefsExpr)
-	t.recurse_field("RefsFlds", n.RefsFlds)
-	t.recurse_field("RefsFn", n.RefsFn)
-	t.recurse_field("RefsIdx", n.RefsIdx)
-	t.recurse_field("RefsInit", n.RefsInit)
-	t.recurse_field("RefsLabl", n.RefsLabl)
-	t.recurse_field("RefsLow", n.RefsLow)
-	t.recurse_field("RefsMax", n.RefsMax)
-	t.recurse_field("RefsMin", n.RefsMin)
-	t.recurse_field("RefsMngl", n.RefsMngl)
-	t.recurse_field("RefsName", n.RefsName)
-	t.recurse_field("RefsOp0", n.RefsOp0)
-	t.recurse_field("RefsOp1", n.RefsOp1)
-	t.recurse_field("RefsOp2", n.RefsOp2)
-	t.recurse_field("RefsPrms", n.RefsPrms)
-	t.recurse_field("RefsPtd", n.RefsPtd)
-	t.recurse_field("RefsPurp", n.RefsPurp)
-	t.recurse_field("RefsRefd", n.RefsRefd)
-	t.recurse_field("RefsRetn", n.RefsRetn)
-	t.recurse_field("RefsScpe", n.RefsScpe)
-	t.recurse_field("RefsSize", n.RefsSize)
-	t.recurse_field("RefsType", n.RefsType)
-	t.recurse_field("RefsUnql", n.RefsUnql)
-	t.recurse_field("RefsVal", n.RefsVal)
-	t.recurse_field("RefsValu", n.RefsValu)
-	t.recurse_field("RefsVars", n.RefsVars)
-	
-	fmt.Printf("recurse done %d\n", id)	
+	t.recurse_node(n,fieldname, fromid)
 }
 
-func (t2 load_recurse_t) execute(in *sql.DB , out *sql.DB, t * Transform) {
+func (t * Traversal) recurse_node_id(id int,fieldname string, fromid int){
+	
+	//fmt.Printf("in t %d", t)
+	var err error
+	n, err := models.GccTuParserNodeBySourceFileIDNodeID(t.in, t.transform.LoadRecurse.FileId, id)
+	if (err != nil){
+	 	fmt.Printf("failed %s", err)
+	 	return
+	}
+	t.recurse_node(n,fieldname, fromid)
+}
+
+func (t * Traversal) recurse_node(n * models.GccTuParserNode,fieldname string, fromid int){
+
+	id := n.NodeID
+
+	// save the nodes
+	t.tree.Nodes[id]=n
+	
+	fmt.Printf("recurse id %d type %s from %s and %d\n", id, n.NodeType, fieldname, fromid)
+
+	t.recurse_field("RefsArgs", n.RefsArgs, id)
+	t.recurse_field("RefsArgt", n.RefsArgt, id)
+	t.recurse_field("RefsBody", n.RefsBody, id)
+	t.recurse_field("RefsBpos", n.RefsBpos, id)
+	t.recurse_field("RefsChan", n.RefsChan, id)
+	t.recurse_field("RefsCnst", n.RefsCnst, id)
+	t.recurse_field("RefsCond", n.RefsCond, id)
+	t.recurse_field("RefsCsts", n.RefsCsts, id)
+	t.recurse_field("RefsDecl", n.RefsDecl, id)
+	t.recurse_field("RefsDomn", n.RefsDomn, id)
+	t.recurse_field("RefsE", n.RefsE, id)
+	t.recurse_field("RefsElts", n.RefsElts, id)
+	t.recurse_field("RefsExpr", n.RefsExpr, id)
+	t.recurse_field("RefsFlds", n.RefsFlds, id)
+	t.recurse_field("RefsFn", n.RefsFn, id)
+	t.recurse_field("RefsIdx", n.RefsIdx, id)
+	t.recurse_field("RefsInit", n.RefsInit, id)
+	t.recurse_field("RefsLabl", n.RefsLabl, id)
+	t.recurse_field("RefsLow", n.RefsLow, id)
+	t.recurse_field("RefsMax", n.RefsMax, id)
+	t.recurse_field("RefsMin", n.RefsMin, id)
+	t.recurse_field("RefsMngl", n.RefsMngl, id)
+	t.recurse_field("RefsName", n.RefsName, id)
+	t.recurse_field("RefsOp0", n.RefsOp0, id)
+	t.recurse_field("RefsOp1", n.RefsOp1, id)
+	t.recurse_field("RefsOp2", n.RefsOp2, id)
+	t.recurse_field("RefsPrms", n.RefsPrms, id)
+	t.recurse_field("RefsPtd", n.RefsPtd, id)
+	t.recurse_field("RefsPurp", n.RefsPurp, id)
+	t.recurse_field("RefsRefd", n.RefsRefd, id)
+	t.recurse_field("RefsRetn", n.RefsRetn, id)
+	//t.recurse_field("RefsScpe", n.RefsScpe, id)
+	t.recurse_field("RefsSize", n.RefsSize, id)
+	t.recurse_field("RefsType", n.RefsType, id)
+	t.recurse_field("RefsUnql", n.RefsUnql, id)
+	t.recurse_field("RefsVal", n.RefsVal, id)
+	t.recurse_field("RefsValu", n.RefsValu, id)
+	t.recurse_field("RefsVars", n.RefsVars, id)
+	
+	//fmt.Printf("recurse done %d\n", id)
+
+}
+
+func (t2 load_recurse_t) execute(in *sql.DB , out *sql.DB, outf * os.File, t * Transform) {
 	runtime.GOMAXPROCS(1000)
-	//do_load_recurse(t)
+
 	//fmt.Printf("load recurse test\n")
 	// inside this function we select the 
 	fmt.Printf("load_recurse: %#v\n", t.LoadRecurse)
-	fmt.Printf("fileid: %d\n", )
 
 
-	//log.SetOutput(os.Stderr)
-	//logger := log.New(os.Stderr, "logger: ", log.Lshortfile)
-	
 	f,err := models.GccTuParserSourcefileByID(in,t.LoadRecurse.FileId)
 	fmt.Printf("file: %s\n", f)
 	if err != nil {
@@ -211,6 +216,7 @@ func (t2 load_recurse_t) execute(in *sql.DB , out *sql.DB, t * Transform) {
 	fmt.Printf("max id: %d\n", max_id)
 	treemap := tree.NewTreeMap(max_id)
 	fmt.Printf("treemap: %v\n", treemap)
+	//treemap.Nodes[0]=nil
 	fmt.Printf("node_type: %s\n", t.LoadRecurse.NodeType)
 
 	for i,x := range t.LoadRecurse.Attrs {
@@ -254,7 +260,7 @@ func (t2 load_recurse_t) execute(in *sql.DB , out *sql.DB, t * Transform) {
 		sql.LoadValue(&row)
 		fmt.Printf("node_id: %d\n", row)
 		var wg sync.WaitGroup
-		t := Traversal{
+		t2 := Traversal{
 			in:in,
 			out:out,
 			transform:t,
@@ -263,15 +269,29 @@ func (t2 load_recurse_t) execute(in *sql.DB , out *sql.DB, t * Transform) {
 		}
 
 		start := time.Now()
-		t.recurse(row);
+		t2.recurse(row,"start",0);
 		duration := time.Now().Sub(start)
 		fmt.Printf("duration: %s\n", duration)
 		//
 		fmt.Println("Waiting To Finish")
-		t.wg.Wait()
+		t2.wg.Wait()
 		duration = time.Now().Sub(start)
 		fmt.Printf("duration2: %s\n", duration)
+		fmt.Printf("results: %v\n", t2.tree.Nodes)
+
+		// write to  test file
+		var buffer bytes.Buffer
+
+		body, _ := json.Marshal(treemap.Nodes)
+		buffer.Write(body)
+		buffer.WriteString("\n")
+		
+		//fmt.Println(buffer.String())
+		outf.WriteString(buffer.String())
+		// now lets do a type analysis of this
+		
 	}
+	
 }
 
 // func do_load_recurse(t Transform) {

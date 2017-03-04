@@ -264,7 +264,7 @@ func GccTuParserNodesBySourceFileID(db XODB, sourceFileID int) ([]*GccTuParserNo
 // GccTuParserNodeBySourceFileIDNodeID retrieves a row from 'gcc_tu_parser_node' as a GccTuParserNode.
 //
 // Generated from index 'gcc_tu_parser_node_source_file_id_node_id_bc8c0130_uniq'.
-func GccTuParserNodeBySourceFileIDNodeID(db XODB, sourceFileID int, nodeID string) (*GccTuParserNode, error) {
+func GccTuParserNodeBySourceFileIDNodeID(db XODB, sourceFileID int, nodeID int) (*GccTuParserNode, error) {
 	var err error
 
 	// sql query

@@ -3,6 +3,8 @@ inputdb:
   path: "sqlite:/home/mdupont/experiments/introspector/introspector/db.sqlite3"
 outputdb:
   path: "sqlite:/home/mdupont/experiments/gogccintro/models/test.sqlite3"
+outputtest:
+  path: "/home/mdupont/experiments/gogccintro/node_types/examples/funct_decl_key_get_conv_rpc_auth.json"
 transform:
   filter: "load_recurse"
   loadrecurse:
@@ -13,4 +15,3 @@ transform:
         field : 'refs_name'
         subfield : "attrs_string"
         subvalue : "key_get_conv"
-    

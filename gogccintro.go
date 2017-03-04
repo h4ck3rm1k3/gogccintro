@@ -41,6 +41,11 @@ var Config = struct {
 	OutputDB struct {
 		Path     string
 	}
+
+	// where to write the test file
+	OutputTest struct {
+		Path     string
+	}
 }{}
 
 func main() {
@@ -70,9 +75,16 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	
-	filter.DoTransform(indb, outdb, &Config.Transform)
-	
+
+	outf, err := os.Create(Config.OutputTest.Path)
+	defer outf.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	filter.DoTransform(indb, outdb, outf, &Config.Transform)
+
+
 	//configBytes, err := yaml.Marshal(&Config)
 	//fmt.Printf("output %#v\nerr:%#v\n", configBytes, err)
 	//ioutil.WriteFile("test.yaml", configBytes, 0644)

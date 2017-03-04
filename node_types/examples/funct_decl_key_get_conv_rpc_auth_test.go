@@ -12,8 +12,15 @@ import (
 )
 
 func TestLoad(*testing.T){
-
-	fields := []string{
+	str_fields := []string{
+		"AttrsString",
+		"AttrsTypeName",
+		"AttrsNote",
+		"AttrsTypeSize",
+		"AttrsAddr",
+		"AttrsType",
+	}
+	ref_fields := []string{
 		"RefsArgs",
 		"RefsScpe",
 		"RefsArgt",
@@ -72,17 +79,31 @@ func TestLoad(*testing.T){
 	}
 	fmt.Printf("map %v\n", treemap.Nodes)
 	for _,v := range treemap.Nodes {
-		fmt.Printf("node id %d\n", v.NodeID)
-		fmt.Printf("node type %s\n", v.NodeType)
+		fmt.Printf("node id %d %s\n", v.NodeID,v.NodeType)
 		//fmt.Printf("map %s %v\n", k, v)
 
-		for k,fn := range fields {
+		for k,fn := range str_fields {
+			objValue := reflect.ValueOf(v).Elem()
+			field := objValue.FieldByName(fn).String()
+			if field != "" {
+				fmt.Printf("\tField %d %s : %v\n", k,fn,field)
+			}
+
+		}	
+
+		for k,fn := range ref_fields {
 			objValue := reflect.ValueOf(v).Elem()
 			field := objValue.FieldByName(fn)
 			valid := field.FieldByName("Valid").Bool()
 			rid := field.FieldByName("Int64").Int()			
 			if valid {
-				fmt.Printf("reflect %d %s %v\n", k,fn,rid)
+
+				o:=treemap.Nodes[int(rid)]
+				if o != nil {
+					fmt.Printf("\treflect %d %s %v %d %v\n", k,fn,rid,o.NodeID, o.NodeType)
+				} else{
+					fmt.Printf("\treflect %d %s %v NULL\n", k,fn,rid)
+				}
 			}
 		
 		

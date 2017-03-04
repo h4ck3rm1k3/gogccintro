@@ -12,6 +12,16 @@ type TreeMap struct {
 	Mutex sync.RWMutex
 }
 
+func (t * TreeMap) FindName(n * models.GccTuParserNode) string{
+	if n.NodeType == "identifier_node" {
+		return n.AttrsString
+	} else if n.RefsName.Valid {
+		return t.FindName(t.Nodes[int(n.RefsName.Int64)])
+	} else {
+		return "TODO1"
+	}
+}
+
 func NewTreeMap(size int) *TreeMap {
 	return &TreeMap{
 		Mutex: sync.RWMutex{},

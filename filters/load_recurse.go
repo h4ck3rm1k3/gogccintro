@@ -87,7 +87,7 @@ type Traversal struct {
 	wg * sync.WaitGroup
 }
 
-func (t * Traversal) recurse_field(fieldname string, id sql.NullInt64, fromid int ){
+func (t * Traversal) recurse_field(fieldname string, id sql.NullInt64, fromid int , from_type string){
 	if id.Valid {
 		var v uint64 = uint64(id.Int64)
 		if t.tree.SetBitFirst(v){
@@ -99,7 +99,7 @@ func (t * Traversal) recurse_field(fieldname string, id sql.NullInt64, fromid in
 				//fmt.Printf("in recurse %d\n", v)
 				//fmt.Printf("waitgroup %v\n", t.wg)
 				defer t.wg.Done() // 
-				t.recurse_node_id(int(v),fieldname, fromid)
+				t.recurse_node_id(int(v),fieldname, fromid, from_type)
 				//fmt.Printf("after recurse %d\n", v)
 			}()
 		} else {
@@ -112,77 +112,81 @@ func (t * Traversal) recurse_field(fieldname string, id sql.NullInt64, fromid in
 
 func (t * Traversal) recurse(id int,fieldname string, fromid int){
 	
-	//fmt.Printf("in t %d", t)
+	fmt.Printf("recurse start %d %s %d\n", id, fieldname, fromid)
 	var err error
 	n, err := models.GccTuParserNodeByID(t.in, id);
 	if (err != nil){
 	 	fmt.Printf("failed %s", err)
 	 	return
 	}
-	t.recurse_node(n,fieldname, fromid)
+	t.recurse_node(n,fieldname, fromid, "entry")
 }
 
-func (t * Traversal) recurse_node_id(id int,fieldname string, fromid int){
+func (t * Traversal) recurse_node_id(id int,fieldname string, fromid int, fromtype string){
 	
-	//fmt.Printf("in t %d", t)
+	fmt.Printf("recurse field_node_id %d %s %d %s\n", id, fieldname, fromid, fromtype)
 	var err error
 	n, err := models.GccTuParserNodeBySourceFileIDNodeID(t.in, t.transform.LoadRecurse.FileId, id)
 	if (err != nil){
 	 	fmt.Printf("failed %s", err)
 	 	return
 	}
-	t.recurse_node(n,fieldname, fromid)
+	t.recurse_node(n,fieldname, fromid, fromtype)
 }
 
-func (t * Traversal) recurse_node(n * models.GccTuParserNode,fieldname string, fromid int){
+func (t * Traversal) recurse_node(n * models.GccTuParserNode,fieldname string, fromid int, from_type string){
 
 	id := n.NodeID
 
 	// save the nodes
 	t.tree.Nodes[id]=n
 	
-	fmt.Printf("recurse id %d type %s from %s and %d\n", id, n.NodeType, fieldname, fromid)
+	fmt.Printf("recurse nodeid:%d type:%s from (%s,%d,%s)\n", id, n.NodeType, fieldname, fromid, from_type)
 
-	t.recurse_field("RefsArgs", n.RefsArgs, id)
-	t.recurse_field("RefsArgt", n.RefsArgt, id)
-	t.recurse_field("RefsBody", n.RefsBody, id)
-	t.recurse_field("RefsBpos", n.RefsBpos, id)
-	t.recurse_field("RefsChan", n.RefsChan, id)
-	t.recurse_field("RefsCnst", n.RefsCnst, id)
-	t.recurse_field("RefsCond", n.RefsCond, id)
-	t.recurse_field("RefsCsts", n.RefsCsts, id)
-	t.recurse_field("RefsDecl", n.RefsDecl, id)
-	t.recurse_field("RefsDomn", n.RefsDomn, id)
-	t.recurse_field("RefsE", n.RefsE, id)
-	t.recurse_field("RefsElts", n.RefsElts, id)
-	t.recurse_field("RefsExpr", n.RefsExpr, id)
-	t.recurse_field("RefsFlds", n.RefsFlds, id)
-	t.recurse_field("RefsFn", n.RefsFn, id)
-	t.recurse_field("RefsIdx", n.RefsIdx, id)
-	t.recurse_field("RefsInit", n.RefsInit, id)
-	t.recurse_field("RefsLabl", n.RefsLabl, id)
-	t.recurse_field("RefsLow", n.RefsLow, id)
-	t.recurse_field("RefsMax", n.RefsMax, id)
-	t.recurse_field("RefsMin", n.RefsMin, id)
-	t.recurse_field("RefsMngl", n.RefsMngl, id)
-	t.recurse_field("RefsName", n.RefsName, id)
-	t.recurse_field("RefsOp0", n.RefsOp0, id)
-	t.recurse_field("RefsOp1", n.RefsOp1, id)
-	t.recurse_field("RefsOp2", n.RefsOp2, id)
-	t.recurse_field("RefsPrms", n.RefsPrms, id)
-	t.recurse_field("RefsPtd", n.RefsPtd, id)
-	t.recurse_field("RefsPurp", n.RefsPurp, id)
-	t.recurse_field("RefsRefd", n.RefsRefd, id)
-	t.recurse_field("RefsRetn", n.RefsRetn, id)
-	//t.recurse_field("RefsScpe", n.RefsScpe, id)
-	t.recurse_field("RefsSize", n.RefsSize, id)
-	t.recurse_field("RefsType", n.RefsType, id)
-	t.recurse_field("RefsUnql", n.RefsUnql, id)
-	t.recurse_field("RefsVal", n.RefsVal, id)
-	t.recurse_field("RefsValu", n.RefsValu, id)
-	t.recurse_field("RefsVars", n.RefsVars, id)
+	t.recurse_field("RefsArgs", n.RefsArgs, id, n.NodeType)
+	t.recurse_field("RefsArgt", n.RefsArgt, id, n.NodeType)
+	t.recurse_field("RefsBody", n.RefsBody, id, n.NodeType)
+	t.recurse_field("RefsBpos", n.RefsBpos, id, n.NodeType)
+	t.recurse_field("RefsChan", n.RefsChan, id, n.NodeType)
+	// if the type is field_decl
+	if n.NodeType == "field_decl" {
+		t.recurse_field("RefsChain", n.RefsChain, id, n.NodeType)
+	}
+	t.recurse_field("RefsCnst", n.RefsCnst, id, n.NodeType)
+	t.recurse_field("RefsCond", n.RefsCond, id, n.NodeType)
+	t.recurse_field("RefsCsts", n.RefsCsts, id, n.NodeType)
+	t.recurse_field("RefsDecl", n.RefsDecl, id, n.NodeType)
+	t.recurse_field("RefsDomn", n.RefsDomn, id, n.NodeType)
+	t.recurse_field("RefsE", n.RefsE, id, n.NodeType)
+	t.recurse_field("RefsElts", n.RefsElts, id, n.NodeType)
+	t.recurse_field("RefsExpr", n.RefsExpr, id, n.NodeType)
+	t.recurse_field("RefsFlds", n.RefsFlds, id, n.NodeType)
+	t.recurse_field("RefsFn", n.RefsFn, id, n.NodeType)
+	t.recurse_field("RefsIdx", n.RefsIdx, id, n.NodeType)
+	t.recurse_field("RefsInit", n.RefsInit, id, n.NodeType)
+	t.recurse_field("RefsLabl", n.RefsLabl, id, n.NodeType)
+	t.recurse_field("RefsLow", n.RefsLow, id, n.NodeType)
+	t.recurse_field("RefsMax", n.RefsMax, id, n.NodeType)
+	t.recurse_field("RefsMin", n.RefsMin, id, n.NodeType)
+	t.recurse_field("RefsMngl", n.RefsMngl, id, n.NodeType)
+	t.recurse_field("RefsName", n.RefsName, id, n.NodeType)
+	t.recurse_field("RefsOp0", n.RefsOp0, id, n.NodeType)
+	t.recurse_field("RefsOp1", n.RefsOp1, id, n.NodeType)
+	t.recurse_field("RefsOp2", n.RefsOp2, id, n.NodeType)
+	t.recurse_field("RefsPrms", n.RefsPrms, id, n.NodeType)
+	t.recurse_field("RefsPtd", n.RefsPtd, id, n.NodeType)
+	t.recurse_field("RefsPurp", n.RefsPurp, id, n.NodeType)
+	t.recurse_field("RefsRefd", n.RefsRefd, id, n.NodeType)
+	t.recurse_field("RefsRetn", n.RefsRetn, id, n.NodeType)
+	//t.recurse_field("RefsScpe", n.RefsScpe, id, n.NodeType)
+	t.recurse_field("RefsSize", n.RefsSize, id, n.NodeType)
+	t.recurse_field("RefsType", n.RefsType, id, n.NodeType)
+	t.recurse_field("RefsUnql", n.RefsUnql, id, n.NodeType)
+	t.recurse_field("RefsVal", n.RefsVal, id, n.NodeType)
+	t.recurse_field("RefsValu", n.RefsValu, id, n.NodeType)
+	t.recurse_field("RefsVars", n.RefsVars, id, n.NodeType)
 	
-	//fmt.Printf("recurse done %d\n", id)
+	//fmt.Printf("recurse done %d\n", id, n.NodeType)
 
 }
 
@@ -294,10 +298,4 @@ func (t2 load_recurse_t) execute(in *sql.DB , out *sql.DB, outf * os.File, t * T
 	
 }
 
-// func do_load_recurse(t Transform) {
-// 	//load_config()
-// 	//execute_filter()
-// 	//report_results()
-// 	fmt.Printf("load recurse %#v\n", t)
-// }
 

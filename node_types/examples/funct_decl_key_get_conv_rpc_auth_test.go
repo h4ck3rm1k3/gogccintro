@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"encoding/json"
 	"github.com/h4ck3rm1k3/gogccintro/tree"
-	_ "github.com/h4ck3rm1k3/gogccintro/models"
+	//"github.com/h4ck3rm1k3/gogccintro/models"
 	"io/ioutil"
 	//"os"
 )
@@ -22,11 +22,12 @@ func TestLoad(*testing.T){
 	}
 	ref_fields := []string{
 		"RefsArgs",
-		"RefsScpe",
+		//"RefsScpe",
 		"RefsArgt",
 		"RefsBody",
 		"RefsBpos",
 		"RefsChan",
+		"RefsChain",
 		"RefsCnst",
 		"RefsCond",
 		"RefsCsts",
@@ -77,9 +78,10 @@ func TestLoad(*testing.T){
 		fmt.Printf("err %v\n", err)
 		panic(err)
 	}
-	fmt.Printf("map %v\n", treemap.Nodes)
+	//fmt.Printf("map %v\n", treemap.Nodes)
 	for _,v := range treemap.Nodes {
-		fmt.Printf("node id %d %s\n", v.NodeID,v.NodeType)
+		s:=treemap.FindName(v)
+		fmt.Printf("node id %d %s name:%s\n", v.NodeID,v.NodeType,s)
 		//fmt.Printf("map %s %v\n", k, v)
 
 		for k,fn := range str_fields {
@@ -100,7 +102,8 @@ func TestLoad(*testing.T){
 
 				o:=treemap.Nodes[int(rid)]
 				if o != nil {
-					fmt.Printf("\treflect %d %s %v %d %v\n", k,fn,rid,o.NodeID, o.NodeType)
+					s2:=treemap.FindName(o)
+					fmt.Printf("\treflect %d %s %v %d %v %s\n", k,fn,rid,o.NodeID, o.NodeType, s2)
 				} else{
 					fmt.Printf("\treflect %d %s %v NULL\n", k,fn,rid)
 				}

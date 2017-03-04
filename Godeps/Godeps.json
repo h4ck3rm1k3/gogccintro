@@ -2,7 +2,29 @@
 	"ImportPath": "github.com/h4ck3rm1k3/gogccintro",
 	"GoVersion": "go1.7",
 	"GodepVersion": "v79",
+	"Packages": [
+		"./..."
+	],
 	"Deps": [
+		{
+			"ImportPath": "github.com/BurntSushi/toml",
+			"Comment": "v0.2.0-21-g9906417",
+			"Rev": "99064174e013895bbd9b025c31100bd1d9b590ca"
+		},
+		{
+			"ImportPath": "github.com/gocraft/dbr",
+			"Comment": "v2.1-4-g10fa49b",
+			"Rev": "10fa49bf1ee63a0f822283ef9805d818f9e84742"
+		},
+		{
+			"ImportPath": "github.com/gocraft/dbr/dialect",
+			"Comment": "v2.1-4-g10fa49b",
+			"Rev": "10fa49bf1ee63a0f822283ef9805d818f9e84742"
+		},
+		{
+			"ImportPath": "github.com/jinzhu/configor",
+			"Rev": "b7df2005e02e9226447139012db968eda90a4b91"
+		},
 		{
 			"ImportPath": "github.com/knq/dburl",
 			"Rev": "bf1ba90c1f629acb763bec410de872095b71c0cc"
@@ -43,8 +65,16 @@
 			"Rev": "d82897d60e9700f52d3633fd0d41eb1f9b6f8a64"
 		},
 		{
+			"ImportPath": "github.com/polaris1119/bitmap",
+			"Rev": "5731fcb409d1c5efd320f4f16f59004a61c6e654"
+		},
+		{
 			"ImportPath": "golang.org/x/net/context",
 			"Rev": "906cda9512f77671ab44f8c8563b13a8e707b230"
+		},
+		{
+			"ImportPath": "gopkg.in/yaml.v1",
+			"Rev": "9f9df34309c04878acc86042b16630b0f696e1de"
 		}
 	]
 }

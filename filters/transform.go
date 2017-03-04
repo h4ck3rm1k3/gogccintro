@@ -10,10 +10,10 @@ type Transform struct {
 }
 
 type ITransform interface{
-  execute(in *sql.DB , out *sql.DB, t Transform)
+  execute(in *sql.DB , out *sql.DB, t * Transform)
 }
 
-func DoTransform(in *sql.DB , out *sql.DB, t Transform) {
+func DoTransform(in *sql.DB , out *sql.DB, t * Transform) {
 	ld := load_recurse_t{}
 	
 	funcs := map[string] ITransform {

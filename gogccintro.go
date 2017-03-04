@@ -71,7 +71,7 @@ func main() {
 		log.Fatal(err)
 	}
 	
-	filter.DoTransform(indb, outdb, Config.Transform)
+	filter.DoTransform(indb, outdb, &Config.Transform)
 	
 	//configBytes, err := yaml.Marshal(&Config)
 	//fmt.Printf("output %#v\nerr:%#v\n", configBytes, err)

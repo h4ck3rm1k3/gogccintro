@@ -7,8 +7,12 @@ import (
 	//"os"
 	"database/sql"
 	"github.com/h4ck3rm1k3/gogccintro/models"
+	"github.com/h4ck3rm1k3/gogccintro/tree"
 	"github.com/gocraft/dbr"
 	"github.com/gocraft/dbr/dialect"
+	"time"
+	"runtime"
+	"sync"
 )
 
 type StartNode struct {
@@ -32,44 +36,44 @@ type MyEventReceiver struct{}
 
 // Event receives a simple notification when various events occur
 func (n *MyEventReceiver) Event(eventName string) {
-	fmt.Printf("Event: %s\n",eventName)
+	// fmt.Printf("Event: %s\n",eventName)
 }
 
 // EventKv receives a notification when various events occur along with
 // optional key/value data
 func (n *MyEventReceiver) EventKv(eventName string, kvs map[string]string) {
-	fmt.Printf("EventKV: %s\n",eventName)
-	fmt.Printf("KV: %s\n",kvs)
+	// fmt.Printf("EventKV: %s\n",eventName)
+	// fmt.Printf("KV: %s\n",kvs)
 }
 
 // EventErr receives a notification of an error if one occurs
 func (n *MyEventReceiver) EventErr(eventName string, err error) error {
-	fmt.Printf("errevnt: %s\n",eventName)
-	fmt.Printf("errde: %s\n",err)
+	// fmt.Printf("errevnt: %s\n",eventName)
+	// fmt.Printf("errde: %s\n",err)
 
 	return err }
 
 // EventErrKv receives a notification of an error if one occurs along with
 // optional key/value data
 func (n *MyEventReceiver) EventErrKv(eventName string, err error, kvs map[string]string) error {
-	fmt.Printf("errevt: %s\n",eventName)
-	fmt.Printf("errde2: %s\n",err)
-	fmt.Printf("errkv: %s\n",kvs)
+	// fmt.Printf("errevt: %s\n",eventName)
+	// fmt.Printf("errde2: %s\n",err)
+	// fmt.Printf("errkv: %s\n",kvs)
 	
 	return err
 }
 
 // Timing receives the time an event took to happen
 func (n *MyEventReceiver) Timing(eventName string, nanoseconds int64) {
-	fmt.Printf("timing: %s\n",eventName)
-	fmt.Printf("secs: %s\n",nanoseconds)
+	// fmt.Printf("timing: %s\n",eventName)
+	// fmt.Printf("secs: %s\n",nanoseconds)
 }
 
 // TimingKv receives the time an event took to happen along with optional key/value data
 func (n *MyEventReceiver) TimingKv(eventName string, nanoseconds int64, kvs map[string]string) {
-	fmt.Printf("timing: %s\n",eventName)
-	fmt.Printf("secs: %s\n",nanoseconds)
-	fmt.Printf("timing kvs: %s\n",kvs)
+	// fmt.Printf("timing: %s\n",eventName)
+	// fmt.Printf("secs: %s\n",nanoseconds)
+	// fmt.Printf("timing kvs: %s\n",kvs)
 }
 
 type foo struct {
@@ -80,15 +84,40 @@ type foo struct {
 
 type Traversal struct {
 	in * sql.DB
+	out * sql.DB
+	transform * Transform
+	tree * tree.TreeMap
+	wg * sync.WaitGroup
 }
 
-func (t Traversal) recurse_field(fieldname string, id sql.NullInt64){
+func (t * Traversal) recurse_field(fieldname string, id sql.NullInt64){
+	if id.Valid {
+		var v uint64 = uint64(id.Int64)
+		if t.tree.SetBitFirst(v){
+			//fmt.Printf("waitgroup before %v\n", t.wg)
+			fmt.Printf("going to recurse %d\n", v)
+			t.wg.Add(1) // add this to the waitgroup
+			//fmt.Printf("waitgroup %v\n", t.wg)
+			go func() {
+				fmt.Printf("in recurse %d\n", v)
+				//fmt.Printf("waitgroup %v\n", t.wg)
+				defer t.wg.Done() // 
+				t.recurse(int(v))
+				fmt.Printf("after recurse %d\n", v)
+			}()
+		} else {
+			fmt.Printf("missed %d\n", v)
+		}
+	} else {
+		//fmt.Printf("null %s\n", fieldname)
+	}
+}
+
+func (t * Traversal) recurse(id int){
+	fmt.Printf("recurse id %d\n", id)
 	
-}
-func (t Traversal) recurse(id int){
-
-	fmt.Printf("lookup id %d", id)
-	fmt.Printf("in t %d", t)
+	
+	//fmt.Printf("in t %d", t)
 	var err error
 	n, err := models.GccTuParserNodeByID(t.in, id);
 
@@ -145,10 +174,11 @@ func (t Traversal) recurse(id int){
 	t.recurse_field("RefsValu", n.RefsValu)
 	t.recurse_field("RefsVars", n.RefsVars)
 	
-	
+	fmt.Printf("recurse done %d\n", id)	
 }
 
-func (t2 load_recurse_t) execute(in *sql.DB , out *sql.DB, t Transform) {
+func (t2 load_recurse_t) execute(in *sql.DB , out *sql.DB, t * Transform) {
+	runtime.GOMAXPROCS(1000)
 	//do_load_recurse(t)
 	//fmt.Printf("load recurse test\n")
 	// inside this function we select the 
@@ -169,7 +199,18 @@ func (t2 load_recurse_t) execute(in *sql.DB , out *sql.DB, t Transform) {
 
 	i_con := dbr.Connection{DB: in, EventReceiver: myReceiver, Dialect: dialect.SQLite3}
 	i_sess := i_con.NewSession(nil)
+
+	max_id := 0
 	
+	// get the max id from the file for a bitmap
+	i_sess.Select("max(gcc_tu_parser_node.node_id)").
+		From("gcc_tu_parser_node").
+		Where(
+		dbr.Eq("gcc_tu_parser_node.source_file_id",t.LoadRecurse.FileId),
+	).LoadValue(&max_id)
+	fmt.Printf("max id: %d\n", max_id)
+	treemap := tree.NewTreeMap(max_id)
+	fmt.Printf("treemap: %v\n", treemap)
 	fmt.Printf("node_type: %s\n", t.LoadRecurse.NodeType)
 
 	for i,x := range t.LoadRecurse.Attrs {
@@ -212,12 +253,24 @@ func (t2 load_recurse_t) execute(in *sql.DB , out *sql.DB, t Transform) {
 		row = 0 
 		sql.LoadValue(&row)
 		fmt.Printf("node_id: %d\n", row)
-
+		var wg sync.WaitGroup
 		t := Traversal{
 			in:in,
+			out:out,
+			transform:t,
+			tree:treemap,
+			wg: &wg,
 		}
+
+		start := time.Now()
 		t.recurse(row);
+		duration := time.Now().Sub(start)
+		fmt.Printf("duration: %s\n", duration)
 		//
+		fmt.Println("Waiting To Finish")
+		t.wg.Wait()
+		duration = time.Now().Sub(start)
+		fmt.Printf("duration2: %s\n", duration)
 	}
 }
 

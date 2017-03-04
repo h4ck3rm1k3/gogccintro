@@ -6,7 +6,7 @@ package models
 import (
 	"database/sql"
 	"errors"
-	"fmt"
+	_ "fmt"
 )
 
 // GccTuParserNode represents a row from 'gcc_tu_parser_node'.
@@ -202,11 +202,11 @@ func GccTuParserNodeByID(db XODB, id int) (*GccTuParserNode, error) {
 		_exists: true,
 	}
 
-	fmt.Printf("check %s %s\n",sqlstr, id)
+	//fmt.Printf("check %s %s\n",sqlstr, id)
 
 	foo := db.QueryRow(sqlstr, id)
 	
-	fmt.Printf("after query gtpn:%s\n",foo)
+//	fmt.Printf("after query gtpn:%s\n",foo)
 	
 	//err = foo.Scan(&gtpn.ID)
 	err = foo.Scan(&gtpn.ID,
@@ -214,7 +214,7 @@ func GccTuParserNodeByID(db XODB, id int) (*GccTuParserNode, error) {
 		&gtpn.RefsPrms, &gtpn.AttrsString, &gtpn.RefsDomn, &gtpn.RefsRetn, &gtpn.RefsBpos, &gtpn.RefsMax, &gtpn.RefsCsts, &gtpn.RefsValu, &gtpn.RefsMin, &gtpn.RefsName, &gtpn.RefsSize, &gtpn.RefsType, &gtpn.RefsUnql, &gtpn.RefsVal, &gtpn.RefsArgs, &gtpn.RefsElts, &gtpn.RefsRefd, &gtpn.RefsLow, &gtpn.RefsBody, &gtpn.RefsPurp, &gtpn.RefsChan, &gtpn.RefsCnst, &gtpn.AttrsTypeName, &gtpn.RefsFn, &gtpn.RefsChain, &gtpn.RefsPtd, &gtpn.RefsMngl, &gtpn.RefsCond, &gtpn.RefsVars, &gtpn.RefsOp0, &gtpn.RefsOp1, &gtpn.RefsOp2, &gtpn.RefsE, &gtpn.AttrsNote, &gtpn.RefsIdx, &gtpn.RefsScpe, &gtpn.RefsFlds, &gtpn.AttrsTypeSize, &gtpn.RefsInit, &gtpn.RefsExpr, &gtpn.AttrsAddr, &gtpn.RefsDecl, &gtpn.RefsLabl, &gtpn.AttrsType, &gtpn.SourceFileID, &gtpn.NodeType, &gtpn.NodeID,
 	)
 	
-	fmt.Printf("after err:%s gtpn:%s\n",err, gtpn)
+	//fmt.Printf("after err:%s gtpn:%s\n",err, gtpn)
 	if err != nil {
 		return nil, err
 	}

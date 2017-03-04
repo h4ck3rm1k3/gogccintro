@@ -2,7 +2,6 @@ package node_types_examples
 import (
 	"testing"
 	"reflect"
-	//"gopkg.in/oleiade/reflections.v1"
 	"fmt"
 	"encoding/json"
 	"github.com/h4ck3rm1k3/gogccintro/tree"

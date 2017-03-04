@@ -14,27 +14,27 @@ import (
 type AReceiver struct {
 }
 
-func (r AReceiver) StartGraph(){}
-func (r AReceiver)	StartNode(v * models.GccTuParserNode){
+func (r* AReceiver) StartGraph(){}
+func (r* AReceiver)	StartNode(v * models.GccTuParserNode){
 	fmt.Printf("node id %d %s\n", v.NodeID,v.NodeType)
 }
 
-func (r AReceiver)	ReferenceNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){
+func (r *AReceiver)	ReferenceNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){
 	fmt.Printf("\tField %d/%s -> %s -> %d/%s\n", n.NodeID, n.NodeType, name, o.NodeID, o.NodeType)
 }
 
-func (r AReceiver)	ReferenceAttribute(n * models.GccTuParserNode, name string, value string){
+func (r *AReceiver)	ReferenceAttribute(n * models.GccTuParserNode, name string, value string){
 	fmt.Printf("\tField %d %s -> %s : %v\n", n.NodeID, n.NodeType,name,value)
 }
 
-func (r AReceiver)	EndNode(n * models.GccTuParserNode){}
-func (r AReceiver)	EndGraph(){}
+func (r *AReceiver)	EndNode(n * models.GccTuParserNode){}
+func (r* AReceiver)	EndGraph(){}
 
 func TestLoad3(*testing.T){
 
 	const filename = "funct_decl_key_get_conv_rpc_auth.json"
 	treemap := tree.NewTreeMapFromFile(filename)
-	r := AReceiver{}
+	r := &AReceiver{}
 	treemap.ResolveReferences(r)
 
 }

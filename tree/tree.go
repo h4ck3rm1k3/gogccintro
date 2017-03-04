@@ -64,7 +64,9 @@ type Receiver interface {
 }
 
 func (this * TreeMap) ResolveReferences(r Receiver ){
+	//fmt.Printf("start resolve %v\n", r)
 	r.StartGraph()
+	//fmt.Printf("start resolve %v\n", r)
 	for _,v := range this.Nodes {
 		r.StartNode(v)
 		objValue := reflect.ValueOf(v).Elem()		

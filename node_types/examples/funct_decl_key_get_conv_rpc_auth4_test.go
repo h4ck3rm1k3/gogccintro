@@ -81,7 +81,14 @@ type NodeInstanceGeneric interface {
 }
 
 type NodeTypeGeneric interface {
-	StartNode(v * models.GccTuParserNode)(NodeInstanceGeneric);
+	StartNode(v * models.GccTuParserNode)(NodeInstanceGeneric)
+
+	// incoming
+	ReferenceNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode)
+
+	// outgoing
+	ReferencedNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode)
+		
 }
 
 type TReceiver struct {
@@ -114,22 +121,22 @@ func (r* TReceiver) StartGraph(){
 	}	
 }
 
+type NamedObjectInterface interface {}
+type NodeInstanceIdentifierNode struct {
+	String string
+	NodeID int
+	Named  NamedObjectInterface // what object is named?
+}
+
+///////////////////////////////
+
 type NodeTypeArrayType struct {}
 type NodeTypeFieldDecl struct {}
 type NodeTypeFunctionDecl struct {}
 type NodeTypeFunctionType struct {}
-
 type NodeTypeIdentifierNode struct {
-	//String string
 	names map[string] *NodeInstanceIdentifierNode// instances
-
 }
-
-type NodeInstanceIdentifierNode struct {
-	String string
-	NodeID int
-}
-
 type NodeTypeIntegerCst struct {}
 type NodeTypeIntegerType struct {}
 type NodeTypePointerType struct {}
@@ -138,6 +145,39 @@ type NodeTypeTreeList struct {}
 type NodeTypeTypeDecl struct {}
 type NodeTypeUnionType struct {}
 type NodeTypeVoidType struct {}
+
+///////////////////////////////////
+
+
+func (t* NodeTypeArrayType) ReferenceNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypeFieldDecl) ReferenceNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypeFunctionDecl) ReferenceNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypeFunctionType) ReferenceNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypeIdentifierNode) ReferenceNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypeIntegerCst) ReferenceNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypeIntegerType) ReferenceNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypePointerType) ReferenceNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypeRecordType) ReferenceNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypeTreeList) ReferenceNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypeTypeDecl) ReferenceNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypeUnionType) ReferenceNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypeVoidType) ReferenceNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+
+func (t* NodeTypeArrayType) ReferencedNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypeFieldDecl) ReferencedNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypeFunctionDecl) ReferencedNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypeFunctionType) ReferencedNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypeIdentifierNode) ReferencedNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypeIntegerCst) ReferencedNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypeIntegerType) ReferencedNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypePointerType) ReferencedNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypeRecordType) ReferencedNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypeTreeList) ReferencedNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypeTypeDecl) ReferencedNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypeUnionType) ReferencedNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+func (t* NodeTypeVoidType) ReferencedNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+
+
 
 func (t* NodeTypeArrayType) StartNode(v * models.GccTuParserNode)(NodeInstanceGeneric){
 	return nil
@@ -208,6 +248,10 @@ func (r* TReceiver) StartNode(v * models.GccTuParserNode){
 
 func (r *TReceiver)	ReferenceNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){
 	fmt.Printf("\tField %d/%s -> %s -> %d/%s\n", n.NodeID, n.NodeType, name, o.NodeID, o.NodeType)
+
+	// look up the o.NodeType and
+	r.node_types[n.NodeType].ReferenceNode(n,name,o)
+	r.node_types[o.NodeType].ReferencedNode(n,name,o)
 }
 
 func (r *TReceiver)	ReferenceAttribute(n * models.GccTuParserNode, name string, value string){
@@ -218,6 +262,12 @@ func (r *TReceiver)	EndNode(n * models.GccTuParserNode){}
 func (r* TReceiver)	EndGraph(){
 
 	fmt.Printf("End%v\n", r )
+	fmt.Printf("End%v\n", r.node_types )
+	for i,x := range r.node_types {
+		fmt.Printf("End: %v -> %v\n", i, x )
+	}
+
+	
 }
 
 func TestLoadType(*testing.T){

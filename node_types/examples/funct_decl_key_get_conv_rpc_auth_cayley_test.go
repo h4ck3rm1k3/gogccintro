@@ -18,7 +18,7 @@ type AReceiverCayley struct {
 	store * cayley.Handle
 }
 
-func (r * AReceiverCayley) StartGraph(){
+func (r * AReceiverCayley) StartGraph(tree *tree.TreeMap){
 	//fmt.Printf("start graph %v\n", r)
 	store, err := cayley.NewMemoryGraph()
 	r.store =store

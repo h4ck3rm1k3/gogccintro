@@ -1,19 +1,37 @@
 package node_types
 
+import (
+	//"reflect"
+	//"fmt"
+	//"github.com/h4ck3rm1k3/gogccintro/models"
+	//"github.com/h4ck3rm1k3/gogccintro/tree"
+)
+
+type NodeInterface interface {}
+	
+type NodeBase struct {
+	NodeID int
+	FileID int
+	NodeType string
+}
+
 type TypeInterface interface {}
 
 type NodeTypeArrayType struct {
+	Base NodeBase
 	RefsSize NodeTypeIntegerCst
 	RefsDomn TypeInterface
 	RefsElts TypeInterface
 }
 
 type NodeTypeFieldDecl struct {
-	RefsBpos NodeTypeIntegerCst
+	Base NodeBase
+	RefsBpos int
+	//NodeTypeIntegerCst
 }
 
 type NodeTypeFunctionDecl struct {
-
+	Base NodeBase
 	// the type of the function decl is always a function type
 	RefsType * NodeTypeFunctionType
 
@@ -26,25 +44,48 @@ type NodeTypeList struct {
 }
 
 type NodeTypeFunctionType struct {
+	Base NodeBase
 	RefsPrms NodeTypeList
 	RefsRetn TypeInterface
 	RefsSize NodeTypeIntegerCst
 }
 
+type NamedObjectInterface interface {}
+
 type NodeTypeIdentifierNode struct {
-	Names string
+	Base NodeBase
+	Name string
+	Named  []NamedObjectInterface // what objects have this name?, can be multiple because names can be local
 }
 
+// func CreateNodeTypeIdentifierNode(NodeID int,Name string) *NodeTypeIdentifierNode{
+// 	return &NodeTypeIdentifierNode{
+// 		Name : Name,
+// 		Base : NodeBase{
+// 			NodeID:NodeID,
+// 		},
+// 	}
+// }
+
+	// local 
+	//     field_decl
+	
+	// not local
+	//     union_type, integer_type, type_decl, function_decl
+
 type MinMaxMixin struct {
+
 	RefsMax NodeTypeIntegerCst
 	RefsMin NodeTypeIntegerCst
 }
 
 type TypeMixin struct {
+
 	RefsUnql TypeInterface 
 }
 
 type NameInterface interface {
+
 	// can be an identifier node or type decl
 }
 
@@ -53,26 +94,34 @@ type NamedMixin struct {
 }
 
 type NodeTypeIntegerCst struct {
+	Base NodeBase
 	AttrsType NodeTypeIntegerType
+
 }
-type NodeTypeIntegerType struct {}
+type NodeTypeIntegerType struct {
+	Base NodeBase
+}
 
 type NodeTypePointerType struct {
+	Base NodeBase
 	// what is pointed to
 	RefsPtd TypeInterface 
 }
 
 type NodeTypeRecordType struct {
+	Base NodeBase
 	RefsFlds NodeTypeFieldDecl
 	RefsSize NodeTypeIntegerCst
 }
 
-// type NodeTypeTreeList struct {}
+type NodeTypeTreeList struct {}
+type NodeTypeVoidType struct {}
 type NodeTypeTypeDecl struct {
-	
+	Base NodeBase
 }
 
 type NodeTypeUnionType struct {
+	Base NodeBase
 	RefsSize NodeTypeIntegerCst
 	RefsUnql * NodeTypeUnionType
 	RefsFlds NodeTypeFieldDecl
@@ -95,3 +144,19 @@ var NodeTypeNames=[]string {
 	"function_type",
 }
 
+var NodeTypeMap =
+	map[string]string {
+	"integer_type":"NodeTypeIntegerType",
+	"type_decl":"NodeTypeTypeDecl",
+	"array_type":"NodeTypeArrayType",
+	"identifier_node":"NodeTypeIdentifierNode",
+	"pointer_type":"NodeTypePointerType",
+	"integer_cst":"NodeTypeIntegerCst",
+	"union_type":"NodeTypeUnionType",
+	"record_type":"NodeTypeRecordType",
+	"field_decl":"NodeTypeFieldDecl",
+	"tree_list":"NodeTypeTreeList",
+	"function_decl":"NodeTypeFunctionDecl",
+	"void_type":"NodeTypeVoidType",
+	"function_type":"NodeTypeFunctionType",
+}

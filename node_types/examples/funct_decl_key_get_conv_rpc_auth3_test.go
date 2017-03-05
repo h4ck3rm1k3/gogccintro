@@ -15,7 +15,7 @@ type AReceiver struct {
 
 }
 
-func (r* AReceiver) StartGraph(){}
+func (r* AReceiver) StartGraph(tree *tree.TreeMap){}
 func (r* AReceiver)	StartNode(v * models.GccTuParserNode){
 	fmt.Printf("node id %d %s\n", v.NodeID,v.NodeType)
 }

@@ -55,7 +55,7 @@ func (this* TreeMap) SetBitFirst( pos uint64 ) bool {
 }
 
 type Receiver interface {
-	StartGraph()
+	StartGraph(tree *TreeMap)
 	StartNode(n * models.GccTuParserNode)
 	ReferenceNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode)
 	ReferenceAttribute(n * models.GccTuParserNode, name string, value string)
@@ -66,7 +66,7 @@ type Receiver interface {
 
 func (this * TreeMap) ResolveReferences(r Receiver ){
 	//fmt.Printf("start resolve %v\n", r)
-	r.StartGraph()
+	r.StartGraph(this)
 	//fmt.Printf("start resolve %v\n", r)
 	for _,v := range this.Nodes {
 		r.StartNode(v)

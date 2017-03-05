@@ -146,9 +146,8 @@ func (t* NodeType) EndGraph(){
 			c := fmt.Sprintf("NodeType%s",CamelCase(j))
 			fmt.Printf("\t%s %s\n", i, c)
 		}
-
 	}
-
+	
 	fmt.Printf("IN\n")
 	for i,x := range t.FieldsIncoming {
 
@@ -173,12 +172,13 @@ type TReceiver struct {
 	node_types map[string] NodeTypeGeneric
 	node_types_generic map[string] NodeTypeGeneric
 	ids   map[int] NodeInstanceGeneric// instances
+	NodeFactory node_types.NodeFactory
 }
 
-
-func (r* TReceiver) StartGraph(){
+func (r* TReceiver) StartGraph(tree * tree.TreeMap){
 	r.node_types_generic = make(map[string] NodeTypeGeneric)
 	r.ids = make(map[int] NodeInstanceGeneric)
+	r.NodeFactory.StartGraph(tree)
 	// implementation types
 	r.node_types =
 		map[string] NodeTypeGeneric {
@@ -186,7 +186,7 @@ func (r* TReceiver) StartGraph(){
 		// "type_decl":&NodeTypeTypeDecl{},
 		// "array_type":&NodeTypeArrayType{},
 		"identifier_node":&NodeTypeIdentifierNode{
-			Names: make(map[string] *NodeInstanceIdentifierNode),// instances
+			Names: make(map[string] *node_types.NodeTypeIdentifierNode),// instances
 		},
 		// "pointer_type":&NodeTypePointerType{},
 		// "integer_cst":&NodeTypeIntegerCst{},
@@ -217,20 +217,6 @@ func (r* TReceiver) StartGraph(){
 	}
 }
 
-
-type NamedObjectInterface interface {}
-type NodeInstanceIdentifierNode struct {
-	String string
-	NodeID int
-	Named  []NamedObjectInterface // what objects have this name?, can be multiple because names can be local
-
-	
-	// local 
-	//     field_decl
-	
-	// not local
-	//     union_type, integer_type, type_decl, function_decl
-}
 func (t * NodeTypeIdentifierNode) ReferenceNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
 func (t * NodeTypeIdentifierNode) ReferencedNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
 	
@@ -238,7 +224,7 @@ func (t * NodeTypeIdentifierNode) ReferencedNode(n * models.GccTuParserNode, nam
 ///////////////////////////////
 
 type NodeTypeIdentifierNode struct {
-	Names map[string] *NodeInstanceIdentifierNode// instances
+	Names map[string] *node_types.NodeTypeIdentifierNode// instances
 }
 
 // type NodeTypeVoidType struct {}
@@ -248,15 +234,15 @@ type NodeTypeIdentifierNode struct {
 func (t* NodeTypeIdentifierNode) EndGraph(){}
 
 func (t* NodeTypeIdentifierNode) StartNode(v * models.GccTuParserNode)(NodeInstanceGeneric){
-	o:=NodeInstanceIdentifierNode{
-		String :v.AttrsString,
-		NodeID: v.NodeID,
-	}
-	t.Names[v.AttrsString]=&o
+	o:=node_types.CreateNodeTypeIdentifierNode(v)
+	t.Names[v.AttrsString]=o
 	return &o
 }
 
 func (r* TReceiver) StartNode(v * models.GccTuParserNode){
+
+	//r.NodeFactory.StartNode(v)
+	
 	//fmt.Printf("node id %d %s\n", v.NodeID,v.NodeType)
 	if o, ok := r.node_types_generic[v.NodeType]; ok {
 		//fmt.Printf("node type %s %s\n",v.NodeType, val)
@@ -302,7 +288,7 @@ func (r *TReceiver)	ReferenceAttribute(n * models.GccTuParserNode, name string, 
 
 func (r *TReceiver)	EndNode(n * models.GccTuParserNode){}
 func (r* TReceiver)	EndGraph(){
-	//fmt.Printf("End%v\n", r )
+	fmt.Printf("Prototypes %v\n", node_types.NodePrototypes )
 	//fmt.Printf("End%v\n", r.node_types )
     //for i,x := range r.node_types {		fmt.Printf("End: %v -> %v\n", i, x )	}
 	for i,x := range r.node_types_generic {
@@ -315,6 +301,10 @@ func TestLoadType(*testing.T){
 	//fmt.Printf("test load")
 	const filename = "funct_decl_key_get_conv_rpc_auth.json"
 	treemap := tree.NewTreeMapFromFile(filename)
-	r := &TReceiver{}
+	r := &TReceiver{
+		NodeFactory:node_types.NodeFactory{
+			Tree: treemap,
+		},
+	}
 	treemap.ResolveReferences(r)
 }

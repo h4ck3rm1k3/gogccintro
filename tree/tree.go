@@ -63,6 +63,7 @@ type Receiver interface {
 	EndGraph()
 }
 
+
 func (this * TreeMap) ResolveReferences(r Receiver ){
 	//fmt.Printf("start resolve %v\n", r)
 	r.StartGraph()

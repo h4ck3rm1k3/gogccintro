@@ -12,6 +12,7 @@ import (
 )
 
 type AReceiver struct {
+
 }
 
 func (r* AReceiver) StartGraph(){}

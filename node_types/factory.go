@@ -112,7 +112,8 @@ func (t * NodeFactory)StartNode(v * models.GccTuParserNode)(NodeInterface) {
 	//objValue := reflect.ValueOf(v).Elem()
 
 	if o, ok := NodePrototypes[v.NodeType]; ok {
-		return o.Create(v)
+		o2:= o.Create(v)
+		MapType(v,o2)
 	// 	//fmt.Printf("\tNew Object for type: %s\n",v.NodeType)
 	// 	fmt.Printf("\tObject type: %v\n",o)
 	// 	n1:=o(v)

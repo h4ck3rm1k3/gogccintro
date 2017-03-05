@@ -9,7 +9,7 @@ import (
 )
 
 type NodeTypeGeneric interface {
-	//CreateNode(v * models.GccTuParserNode) NodeInterface
+	Create(v * models.GccTuParserNode) NodeInterface
 }
 
 //func CreateNodeTypeIntegerType(v * models.GccTuParserNode) *NodeTypeIntegerType {
@@ -33,19 +33,19 @@ type NodeTypeFunctionTypeFactory struct {}
 // define prototypes for each node type
 var NodePrototypes =
 	map[string] NodeTypeGeneric {
-	"identifier_node":NodeTypeIdentifierNodeFactory{},
-	"pointer_type":NodeTypePointerTypeFactory{},
-	"function_decl":NodeTypeFunctionDeclFactory{},
-	"void_type":NodeTypeVoidTypeFactory{},
-	"function_type":NodeTypeFunctionTypeFactory{},
-	"integer_type":NodeTypeIntegerTypeFactory{},
-	"type_decl":NodeTypeTypeDeclFactory{},
-	"array_type":NodeTypeArrayTypeFactory{},
-	"integer_cst":NodeTypeIntegerCstFactory{},
-	"union_type":NodeTypeUnionTypeFactory{},
-	"record_type":NodeTypeRecordTypeFactory{},
-	"field_decl":NodeTypeFieldDeclFactory{},
-	"tree_list":NodeTypeTreeListFactory{},
+	"identifier_node": &NodeTypeIdentifierNodeFactory{},
+	"pointer_type": &NodeTypePointerTypeFactory{},
+	"function_decl": &NodeTypeFunctionDeclFactory{},
+	"void_type": &NodeTypeVoidTypeFactory{},
+	"function_type": &NodeTypeFunctionTypeFactory{},
+	"integer_type": &NodeTypeIntegerTypeFactory{},
+	"type_decl": &NodeTypeTypeDeclFactory{},
+	"array_type": &NodeTypeArrayTypeFactory{},
+	"integer_cst": &NodeTypeIntegerCstFactory{},
+	"union_type": &NodeTypeUnionTypeFactory{},
+	"record_type": &NodeTypeRecordTypeFactory{},
+	"field_decl": &NodeTypeFieldDeclFactory{},
+	"tree_list": &NodeTypeTreeListFactory{},
 	
 }
 
@@ -81,21 +81,27 @@ type NodeFactory struct {
 }
 
 func GenerateCode(){
+
+	fmt.Printf("var NodePrototypes =map[string] NodeTypeGeneric {\n")
+	for n,x := range NodeTypeMap {
+		fmt.Printf("\"%s\": & %sFactory{},\n", n,x)
+	}
+	fmt.Printf("}\n")
+	
 	for _,x := range NodeTypeMap {
-		//fmt.Printf("\"%s\":%sFactory{},\n", n,x)
-		//fmt.Printf("type %sFactory struct {}\n", x)
+		fmt.Printf("type %sFactory struct {}\n", x)
 		fmt.Printf("func Create%s(v * models.GccTuParserNode) *%s { return &%s{}}\n",x,x,x)
 		fmt.Printf("func (t * %sFactory)Create(v * models.GccTuParserNode) NodeInterface { return Create%s(v)}\n",x,x)
 			
 		//"integer_type":NodeTypeIntegerTypeFactory{},
 	}
-
 }
+
 func (t * NodeFactory)StartGraph(tree * tree.TreeMap) {
 	
 }
 	
-func (t * NodeFactory)StartNode(v * models.GccTuParserNode) {
+func (t * NodeFactory)StartNode(v * models.GccTuParserNode)(NodeInterface) {
 
 	fmt.Printf("-------------------------------\n")
 	//x := CreateNodeTypeIntegerType
@@ -105,11 +111,12 @@ func (t * NodeFactory)StartNode(v * models.GccTuParserNode) {
 	
 	//objValue := reflect.ValueOf(v).Elem()
 
-	// if o, ok := NodePrototypes[v.NodeType]; ok {
+	if o, ok := NodePrototypes[v.NodeType]; ok {
+		return o.Create(v)
 	// 	//fmt.Printf("\tNew Object for type: %s\n",v.NodeType)
 	// 	fmt.Printf("\tObject type: %v\n",o)
 	// 	n1:=o(v)
 	// 	fmt.Printf("\tNew: %v\n",n1)
-	// }
-	
+	 }
+	return nil
 }

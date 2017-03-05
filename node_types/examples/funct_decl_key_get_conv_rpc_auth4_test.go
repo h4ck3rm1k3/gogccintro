@@ -6,6 +6,7 @@ import (
 	"fmt"
 	//	"encoding/json"
 	"github.com/h4ck3rm1k3/gogccintro/tree"
+	"github.com/h4ck3rm1k3/gogccintro/node_types"
 	"github.com/h4ck3rm1k3/gogccintro/models"
 	//"io/ioutil"
 	//"os"
@@ -137,17 +138,24 @@ func (t* NodeType) StartNode(v * models.GccTuParserNode)(NodeInstanceGeneric){
 }
 
 func (t* NodeType) EndGraph(){
+
+	fmt.Printf("REFS\n")
 	for i,x := range t.FieldsOutgoing {
 		//fmt.Printf("%s->%s->%s\n", t.Name, i,x)
 		for j,_ := range x.RangeTypes {
-			fmt.Printf("\tREF %s->%s->%s\n", t.Name, i, j)
+			c := fmt.Sprintf("NodeType%s",CamelCase(j))
+			fmt.Printf("\t%s %s\n", i, c)
 		}
 
 	}
+
+	fmt.Printf("IN\n")
 	for i,x := range t.FieldsIncoming {
+
 		//fmt.Printf("%s<-%s<-%s\n", t.Name, i,x)
 		for j,_ := range x.DomainTypes {
-			fmt.Printf("\tIN %s<-%s<-%s\n", t.Name, i, j)
+			c := fmt.Sprintf("NodeType%s",CamelCase(j))
+			fmt.Printf("\t%s %s\n", i, c)
 		}
 	}
 }
@@ -167,21 +175,6 @@ type TReceiver struct {
 	ids   map[int] NodeInstanceGeneric// instances
 }
 
-var node_types=[]string {
-	"integer_type",
-	"type_decl",
-	"array_type",
-	"identifier_node",
-	"pointer_type",
-	"integer_cst",
-	"union_type",
-	"record_type",
-	"field_decl",
-	"tree_list",
-	"function_decl",
-	"void_type",
-	"function_type",
-}
 
 func (r* TReceiver) StartGraph(){
 	r.node_types_generic = make(map[string] NodeTypeGeneric)
@@ -205,7 +198,7 @@ func (r* TReceiver) StartGraph(){
 		// "void_type":&NodeTypeVoidType{},
 		// "function_type":&NodeTypeFunctionType{},
 	}
-	for _,x := range node_types {
+	for _,x := range node_types.NodeTypeNames {
 		//x=r.node_types
 		if o, ok := r.node_types[x]; ok {
 			o2:=&NodeType{
@@ -223,6 +216,7 @@ func (r* TReceiver) StartGraph(){
 		}
 	}
 }
+
 
 type NamedObjectInterface interface {}
 type NodeInstanceIdentifierNode struct {
@@ -243,20 +237,10 @@ func (t * NodeTypeIdentifierNode) ReferencedNode(n * models.GccTuParserNode, nam
 
 ///////////////////////////////
 
-// type NodeTypeArrayType struct {}
-// type NodeTypeFieldDecl struct {}
-// type NodeTypeFunctionDecl struct {}
-// type NodeTypeFunctionType struct {}
 type NodeTypeIdentifierNode struct {
 	Names map[string] *NodeInstanceIdentifierNode// instances
 }
-// type NodeTypeIntegerCst struct {}
-// type NodeTypeIntegerType struct {}
-// type NodeTypePointerType struct {}
-// type NodeTypeRecordType struct {}
-// type NodeTypeTreeList struct {}
-// type NodeTypeTypeDecl struct {}
-// type NodeTypeUnionType struct {}
+
 // type NodeTypeVoidType struct {}
 
 ///////////////////////////////////

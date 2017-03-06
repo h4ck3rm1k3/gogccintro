@@ -7,60 +7,129 @@ import (
 	//"github.com/h4ck3rm1k3/gogccintro/tree"
 )
 
-func MapOne(v interface{}){
-	ve := reflect.ValueOf(v).Elem()
+func Indent(indent int) (string) {
+	b := make([]rune, indent)
+	for i := 0; i < indent; i++ {
+		b[i]='\t'
+	}
+	return string(b)
+}
+
+type FieldMap struct {
+	
+}
+
+type StructMap struct {
+	Name string
+	Names map[string] reflect.StructField
+}
+
+func (t*StructMap) Add(name string, f reflect.StructField){
+	t.Names[name]=f
+}
+
+func CreateStructMap(name string) (*StructMap){
+	return &StructMap{
+		Name: name,
+		Names: make(map[string] reflect.StructField),
+	}
+}
+
+func (t*StructMap) Report(indent int){
+	indents := Indent(indent)
+	fmt.Printf("%s report %s\n", indents, t.Name)
+	for name,field := range t.Names {
+		fmt.Printf("%s F %s : %s\n", indents, name, field)
+	}
+}
+
+func (t*StructMap) map_details(indent int, name string, v interface{}){
+	ve := reflect.ValueOf(v)
+	vt2 := reflect.TypeOf(v)
+	if vt2 != nil {
+		vt2k := vt2.Kind()
+		switch vt2k {
+		case reflect.Struct:
+			break
+		case reflect.Ptr:
+			ve = ve.Elem()
+			break
+		default:
+			fmt.Printf("kind %s\n",vt2k)		
+		}
+	} else {
+		//fmt.Printf("null v %s", v)
+		return
+	}
+
 	vt := ve.Type()
+	
 	for i := 0; i < vt.NumField(); i++ {
 		sf := vt.Field(i)
+		//sfi := sf.Interface()
 		f := ve.FieldByIndex([]int{i})
-
-		fmt.Printf(
+		sfi := f.Interface()
+		
 			//"v=%s\n\tve:%s\n\t"
 			//"vt:%s\n"
-			"FIELD\ti:%d\n\tsf:%s\n\tf:%n\n\tName:%s\n\tType:%s\n\tPath%s\n",
-			//v,
-			//ve,
-			//vt,
-			i,
-			sf,
-			f,
-			sf.Name,
-			sf.Type,
-			sf.PkgPath,
-		)
+		// fmt.Printf("%s FIELD i:%d\n",indents,i)
+		// fmt.Printf("%s \tsf:%s\n",indents,sf)
+		// fmt.Printf("%s \tsfi:%s\n",indents,sfi)
+		// fmt.Printf("%s \tf:%s\n",indents,f)
+		// fmt.Printf("%s \tName:%s\n",indents,sf.Name)
+		t.Add(sf.Name,sf)
+		// fmt.Printf("%s \tType:%s\n",indents,sf.Type)
+		// fmt.Printf("%s \tTypeKind:%s\n",indents,sf.Type.Kind())
+
 		//fmt.Printf("typ:%s\n",reflect.TypeOf(sf.Type).String)
 		switch sf.Type.Kind() {
 		case reflect.Int:
-			fmt.Printf("someint1\n")
+			//fmt.Printf("%ssomeint1\n")
 			break
 		case reflect.String:
-			fmt.Printf("a string\n")
+			//fmt.Printf("a string\n")
 			break
 			
 		case reflect.Struct:
-			fmt.Printf("some struct\n")
+			//fmt.Printf("some struct\n")
+			MapOne(indent +1,sf.Name, sfi)
 			break
 		case reflect.Bool:
-			fmt.Printf("some bool\n")
+			//fmt.Printf("some bool\n")
 			break
 		case reflect.Array:
-			fmt.Printf("some array\n")
+			//fmt.Printf("some array\n")
 			break
 		case reflect.Slice:
-			fmt.Printf("some slice\n")
+			//fmt.Printf("some slice\n")
 			break
 		case reflect.Interface:
-			fmt.Printf("some interface\n")
+			//fmt.Printf("some interface\n")
+			MapOne(indent +1,sf.Name,sfi)
+			break
+		case reflect.Ptr:
+			//fmt.Printf("some interface\n")
+			//MapOne(indent +1,sf.Name,sfi)
 			break
 		default:
 			fmt.Printf("some other thing %s\n" , sf.Type.Kind())
 		}
-		fmt.Printf("-----------------\n")
+		//fmt.Printf("-----------------\n")
 	}
+}
+	
+func MapOne(indent int, name string, v interface{}){
 
+	//indents := Indent(indent)
+
+	sm := CreateStructMap(name)
+	sm.map_details(indent, name, v)
+
+	sm.Report(indent)
 
 }
+
 func MapType(v * models.GccTuParserNode, out NodeInterface){
-	MapOne(v)
-	MapOne(out)
+	//MapOne(v)
+	MapOne(1,v.NodeType,out)
 }

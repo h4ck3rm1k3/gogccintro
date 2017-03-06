@@ -6,16 +6,39 @@ import (
 	//"github.com/h4ck3rm1k3/gogccintro/models"
 	//"github.com/h4ck3rm1k3/gogccintro/tree"
 )
-
+type NamedObjectInterface interface {}
 type NodeInterface interface {}
-	
+type NameInterface interface {
+	// can be an identifier node or type decl
+}
+
+type MinMaxMixin struct {
+
+	RefsMax NodeTypeIntegerCst
+	RefsMin NodeTypeIntegerCst
+}
+
+type TypeMixin struct {
+
+	RefsUnql TypeInterface 
+}
+
+
+type NamedMixin struct {
+	RefsName NameInterface
+}
+
 type NodeBase struct {
 	NodeID int
 	FileID int
 	NodeType string
 }
 
-type TypeInterface interface {}
+type TypeInterface struct {
+
+	// interface for types
+	RefsSize NodeTypeIntegerCst // all have a size
+}
 
 type NodeTypeArrayType struct {
 	Base NodeBase
@@ -26,17 +49,16 @@ type NodeTypeArrayType struct {
 
 type NodeTypeFieldDecl struct {
 	Base NodeBase
-	RefsBpos int
-	//NodeTypeIntegerCst
+	RefsBpos NodeTypeIntegerCst
 }
 
 type NodeTypeFunctionDecl struct {
 	Base NodeBase
 	// the type of the function decl is always a function type
-	RefsType * NodeTypeFunctionType
+	RefsType NodeTypeFunctionType
 
 	// the identifier name of the function
-	RefsName * NodeTypeIdentifierNode
+	RefsName NodeTypeIdentifierNode
 }
 
 type NodeTypeList struct {
@@ -50,12 +72,12 @@ type NodeTypeFunctionType struct {
 	RefsSize NodeTypeIntegerCst
 }
 
-type NamedObjectInterface interface {}
+
 
 type NodeTypeIdentifierNode struct {
 	Base NodeBase
 	Name string
-	Named  []NamedObjectInterface // what objects have this name?, can be multiple because names can be local
+	Named  NamedObjectInterface // what objects have this name?, can be multiple because names can be local
 }
 
 // func CreateNodeTypeIdentifierNode(NodeID int,Name string) *NodeTypeIdentifierNode{
@@ -73,29 +95,10 @@ type NodeTypeIdentifierNode struct {
 	// not local
 	//     union_type, integer_type, type_decl, function_decl
 
-type MinMaxMixin struct {
-
-	RefsMax NodeTypeIntegerCst
-	RefsMin NodeTypeIntegerCst
-}
-
-type TypeMixin struct {
-
-	RefsUnql TypeInterface 
-}
-
-type NameInterface interface {
-
-	// can be an identifier node or type decl
-}
-
-type NamedMixin struct {
-	RefsName NameInterface
-}
 
 type NodeTypeIntegerCst struct {
 	Base NodeBase
-	AttrsType NodeTypeIntegerType
+	AttrsType * NodeTypeIntegerType
 
 }
 type NodeTypeIntegerType struct {
@@ -114,8 +117,14 @@ type NodeTypeRecordType struct {
 	RefsSize NodeTypeIntegerCst
 }
 
-type NodeTypeTreeList struct {}
-type NodeTypeVoidType struct {}
+type NodeTypeTreeList struct {
+	Base NodeBase
+}
+
+type NodeTypeVoidType struct {
+	Base NodeBase
+}
+
 type NodeTypeTypeDecl struct {
 	Base NodeBase
 }

@@ -6,6 +6,38 @@ import (
 	//"github.com/h4ck3rm1k3/gogccintro/models"
 	//"github.com/h4ck3rm1k3/gogccintro/tree"
 )
+
+
+
+/*
+a name scope
+*/
+type NameScope struct {
+	Names map[string] * NodeTypeIdentifierNode
+}
+
+type IntegerConstants struct {
+	Ints map[string] * NodeTypeIntegerCst
+}
+
+type TypeCollection struct {
+	Names map[string] * TypeInterface  // name lookup
+	Ids   map[int] * TypeInterface  // id lookup
+}
+
+/*
+collection of
+ * integer constants
+ * identifiers (except for field decls and other local its)
+ * types ( how do we index them?)
+*/
+
+type GlobalScope struct {
+	Names NameScope
+	Integers IntegerConstants
+	Types TypeCollection
+}
+
 type NamedObjectInterface interface {}
 type NodeInterface interface {}
 type NameInterface interface {
@@ -13,43 +45,54 @@ type NameInterface interface {
 }
 
 type MinMaxMixin struct {
-
-	RefsMax NodeTypeIntegerCst
-	RefsMin NodeTypeIntegerCst
+	RefsMax *NodeTypeIntegerCst
+	RefsMin *NodeTypeIntegerCst
 }
 
 type TypeMixin struct {
-
 	RefsUnql TypeInterface 
 }
-
 
 type NamedMixin struct {
 	RefsName NameInterface
 }
 
-type NodeBase struct {
-	NodeID int
-	FileID int
+type NodeType struct {
 	NodeType string
 }
 
-type TypeInterface struct {
+type TUFile struct {
+	FileID int
+}
 
+type NodeBase struct {
+	NodeID int
+	File * TUFile 
+	NodeType * NodeType 
+}
+
+type NodeTypeIdentifierNode struct {
+	Base NodeBase
+	Name string
+	Named  NamedObjectInterface // what objects have this name?, can be multiple because names can be local
+	Scope  NameScope
+}
+
+type TypeInterface struct {
 	// interface for types
-	RefsSize NodeTypeIntegerCst // all have a size
+	RefsSize * NodeTypeIntegerCst // all have a size
 }
 
 type NodeTypeArrayType struct {
 	Base NodeBase
-	RefsSize NodeTypeIntegerCst
+	RefsSize * NodeTypeIntegerCst
 	RefsDomn TypeInterface
 	RefsElts TypeInterface
 }
 
 type NodeTypeFieldDecl struct {
 	Base NodeBase
-	RefsBpos NodeTypeIntegerCst
+	RefsBpos * NodeTypeIntegerCst
 }
 
 type NodeTypeFunctionDecl struct {
@@ -77,15 +120,7 @@ type NodeTypeFunctionType struct {
 	Base NodeBase
 	RefsPrms NodeTypeParamList
 	RefsRetn TypeInterface
-	RefsSize NodeTypeIntegerCst
-}
-
-
-
-type NodeTypeIdentifierNode struct {
-	Base NodeBase
-	Name string
-	Named  NamedObjectInterface // what objects have this name?, can be multiple because names can be local
+	RefsSize * NodeTypeIntegerCst
 }
 
 // func CreateNodeTypeIdentifierNode(NodeID int,Name string) *NodeTypeIdentifierNode{
@@ -96,19 +131,16 @@ type NodeTypeIdentifierNode struct {
 // 		},
 // 	}
 // }
-
-	// local 
-	//     field_decl
-	
-	// not local
-	//     union_type, integer_type, type_decl, function_decl
-
+// local 
+//     field_decl
+// not local
+//     union_type, integer_type, type_decl, function_decl
 
 type NodeTypeIntegerCst struct {
 	Base NodeBase
 	AttrsType * NodeTypeIntegerType
-
 }
+
 type NodeTypeIntegerType struct {
 	Base NodeBase
 }
@@ -127,7 +159,6 @@ type NodeTypeRecordType struct {
 
 type NodeTypeTreeList struct {
 	Base NodeBase
-	
 }
 
 type NodeTypeVoidType struct {

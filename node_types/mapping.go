@@ -20,20 +20,26 @@ type FieldMap struct {
 }
 
 type StructMap struct {
+	Parent * TypesMap
 	Name string
 	Names map[string] reflect.StructField
 }
+
+type TypesMap struct {
+	Types map[string] *StructMap
+}
+
+func CreateTypesMap() (*TypesMap){
+	return &TypesMap{
+		Types: make(map[string] *StructMap),
+	}
+}
+
 
 func (t*StructMap) Add(name string, f reflect.StructField){
 	t.Names[name]=f
 }
 
-func CreateStructMap(name string) (*StructMap){
-	return &StructMap{
-		Name: name,
-		Names: make(map[string] reflect.StructField),
-	}
-}
 
 func (t*StructMap) Report(indent int){
 	indents := Indent(indent)
@@ -92,7 +98,7 @@ func (t*StructMap) map_details(indent int, name string, v interface{}){
 			
 		case reflect.Struct:
 			//fmt.Printf("some struct\n")
-			MapOne(indent +1,sf.Name, sfi)
+			t.Parent.MapOne(indent +1,sf.Name, sfi)
 			break
 		case reflect.Bool:
 			//fmt.Printf("some bool\n")
@@ -105,7 +111,7 @@ func (t*StructMap) map_details(indent int, name string, v interface{}){
 			break
 		case reflect.Interface:
 			//fmt.Printf("some interface\n")
-			MapOne(indent +1,sf.Name,sfi)
+			t.Parent.MapOne(indent +1,sf.Name,sfi)
 			break
 		case reflect.Ptr:
 			//fmt.Printf("some interface\n")
@@ -117,19 +123,25 @@ func (t*StructMap) map_details(indent int, name string, v interface{}){
 		//fmt.Printf("-----------------\n")
 	}
 }
-	
-func MapOne(indent int, name string, v interface{}){
 
+func (t*TypesMap)CreateStructMap(name string) (*StructMap){
+	return &StructMap{
+		Parent: t,
+		Name: name,
+		Names: make(map[string] reflect.StructField),
+	}
+}
+
+func (t*TypesMap)MapOne(indent int, name string, v interface{}){
 	//indents := Indent(indent)
-
-	sm := CreateStructMap(name)
+	sm := t.CreateStructMap(name)
 	sm.map_details(indent, name, v)
 
 	sm.Report(indent)
 
 }
 
-func MapType(v * models.GccTuParserNode, out NodeInterface){
+func (t*TypesMap)MapType(v * models.GccTuParserNode, out NodeInterface){
 	//MapOne(v)
-	MapOne(1,v.NodeType,out)
+	t.MapOne(1,v.NodeType,out)
 }

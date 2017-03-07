@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/h4ck3rm1k3/gogccintro/models"
 	"github.com/h4ck3rm1k3/gogccintro/tree"
+
 )
 
 type NodeTypeGeneric interface {
@@ -78,6 +79,7 @@ func (t * NodeTypeIntegerCstFactory)Create(v * models.GccTuParserNode) NodeInter
 
 type NodeFactory struct {
 	Tree * tree.TreeMap
+	Types * TypesMap
 }
 
 func GenerateCode(){
@@ -98,7 +100,7 @@ func GenerateCode(){
 }
 
 func (t * NodeFactory)StartGraph(tree * tree.TreeMap) {
-	
+	t.Types = CreateTypesMap()
 }
 	
 func (t * NodeFactory)StartNode(v * models.GccTuParserNode)(NodeInterface) {
@@ -113,7 +115,7 @@ func (t * NodeFactory)StartNode(v * models.GccTuParserNode)(NodeInterface) {
 
 	if o, ok := NodePrototypes[v.NodeType]; ok {
 		o2:= o.Create(v)
-		MapType(v,o2)
+		t.Types.MapType(v,o2)
 	// 	//fmt.Printf("\tNew Object for type: %s\n",v.NodeType)
 	// 	fmt.Printf("\tObject type: %v\n",o)
 	// 	n1:=o(v)

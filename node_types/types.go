@@ -61,13 +61,21 @@ type NodeTypeFunctionDecl struct {
 	RefsName NodeTypeIdentifierNode
 }
 
-type NodeTypeList struct {
+// just recuse into the type given
+type Recurse struct {
+	Base NodeBase
+}
+
+type NodeTypeParamList struct {
 	// list of node types
+	Base NodeBase
+	RefsChain Recurse
+	RefsValu TypeInterface
 }
 
 type NodeTypeFunctionType struct {
 	Base NodeBase
-	RefsPrms NodeTypeList
+	RefsPrms NodeTypeParamList
 	RefsRetn TypeInterface
 	RefsSize NodeTypeIntegerCst
 }
@@ -119,6 +127,7 @@ type NodeTypeRecordType struct {
 
 type NodeTypeTreeList struct {
 	Base NodeBase
+	
 }
 
 type NodeTypeVoidType struct {

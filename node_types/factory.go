@@ -102,10 +102,14 @@ func GenerateCode(){
 func (t * NodeFactory)StartGraph(tree * tree.TreeMap) {
 	t.Types = CreateTypesMap()
 }
-	
+
+func (t * NodeFactory)EndGraph() {
+	t.Types.Report()
+}
+
 func (t * NodeFactory)StartNode(v * models.GccTuParserNode)(NodeInterface) {
 
-	fmt.Printf("-------------------------------\n")
+	//fmt.Printf("-------------------------------\n")
 	//x := CreateNodeTypeIntegerType
 	//	fmt.Printf("%v\n",x)
 //	c := x(v)

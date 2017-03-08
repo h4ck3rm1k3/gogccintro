@@ -17,7 +17,9 @@ type card_receiver struct {
 	NodeFactory node_types.NodeFactory
 }
 func (r* card_receiver) EndNode(v * models.GccTuParserNode){}
-func (r* card_receiver) EndGraph(){}
+func (r* card_receiver) EndGraph(){
+	r.NodeFactory.EndGraph()
+}
 func (r* card_receiver) StartGraph(tree * tree.TreeMap){
 	r.ids = make(map[int] NodeInstanceGeneric)
 	r.NodeFactory.StartGraph(tree)

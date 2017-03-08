@@ -42,7 +42,13 @@ type NamedObjectInterface interface {}
 type NodeInterface interface {}
 type NameInterface interface {
 	// can be an identifier node or type decl
+	String() string // all have a size
 }
+type TypeInterface interface {
+	// interface for types
+	RefsSize() * NodeTypeIntegerCst // all have a size
+}
+
 
 type MinMaxMixin struct {
 	RefsMax *NodeTypeIntegerCst
@@ -78,10 +84,6 @@ type NodeTypeIdentifierNode struct {
 	Scope  NameScope
 }
 
-type TypeInterface struct {
-	// interface for types
-	RefsSize * NodeTypeIntegerCst // all have a size
-}
 
 type NodeTypeArrayType struct {
 	Base NodeBase
@@ -98,10 +100,10 @@ type NodeTypeFieldDecl struct {
 type NodeTypeFunctionDecl struct {
 	Base NodeBase
 	// the type of the function decl is always a function type
-	RefsType NodeTypeFunctionType
+	RefsType * NodeTypeFunctionType `node: "contained,single"`
 
 	// the identifier name of the function
-	RefsName NodeTypeIdentifierNode
+	RefsName NodeTypeIdentifierNode `node: "contained,single"`
 }
 
 // just recuse into the type given
@@ -118,9 +120,9 @@ type NodeTypeParamList struct {
 
 type NodeTypeFunctionType struct {
 	Base NodeBase
-	RefsPrms NodeTypeParamList
-	RefsRetn TypeInterface
-	RefsSize * NodeTypeIntegerCst
+	RefsPrms * NodeTypeParamList `node: "contained,recurse"`
+	RefsRetn TypeInterface `node: "reference"`
+	RefsSize * NodeTypeIntegerCst `node: "reference"`
 }
 
 // func CreateNodeTypeIdentifierNode(NodeID int,Name string) *NodeTypeIdentifierNode{
@@ -148,13 +150,13 @@ type NodeTypeIntegerType struct {
 type NodeTypePointerType struct {
 	Base NodeBase
 	// what is pointed to
-	RefsPtd TypeInterface 
+	RefsPtd TypeInterface `node: "reference"`
 }
 
 type NodeTypeRecordType struct {
 	Base NodeBase
-	RefsFlds NodeTypeFieldDecl
-	RefsSize NodeTypeIntegerCst
+	RefsFlds * NodeTypeFieldDecl `node: "contained,recurse"`
+	RefsSize * NodeTypeIntegerCst 
 }
 
 type NodeTypeTreeList struct {
@@ -171,10 +173,10 @@ type NodeTypeTypeDecl struct {
 
 type NodeTypeUnionType struct {
 	Base NodeBase
-	RefsSize NodeTypeIntegerCst
-	RefsUnql * NodeTypeUnionType
-	RefsFlds NodeTypeFieldDecl
-	RefsName NameInterface
+	RefsSize * NodeTypeIntegerCst `node: "reference"`
+	RefsUnql * NodeTypeUnionType `node: "reference,backwards"`
+	RefsFlds * NodeTypeFieldDecl `node: "contained,recurse"`
+	RefsName NameInterface `node: "name"`
 }
 
 var NodeTypeNames=[]string {

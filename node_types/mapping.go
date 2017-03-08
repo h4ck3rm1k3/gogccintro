@@ -19,6 +19,9 @@ func Indent(indent int) (string) {
 type FieldMap struct {
 	Field reflect.StructField
 	TypeName string
+	Role string
+	Name string
+	Path string
 }
 	
 type StructMap struct {
@@ -37,14 +40,22 @@ func CreateTypesMap() (*TypesMap){
 	}
 }
 
-func (s*StructMap) Add(name string, f reflect.StructField, typename string){
-	s.Names[name]=&FieldMap{
-		TypeName:typename,
-		Field:f,
+func (s*StructMap) Add(name string, f reflect.StructField, typename string, role string, name2 string, path string){
+	if _, ok := s.Names[name]; ok {
+		//fmt.Printf("duplicate %s : %s\n", name,s.Names[name])
+	} else{
+		//fmt.Printf("adding %s : %s\n", name,name2)
+		s.Names[name]=&FieldMap{
+			TypeName:typename,
+			Field:f,
+			Role: role,
+			Name: name2,
+			Path: path,
+		}
 	}
 }
 
-func (s*StructMap) map_details(indent int, name string, v interface{}){
+func (s*StructMap) map_details(indent int, role string, name string, v interface{}){
 	//indents := Indent(indent)
 	ve := reflect.ValueOf(v)
 	vt2 := reflect.TypeOf(v)
@@ -87,7 +98,7 @@ func (s*StructMap) map_details(indent int, name string, v interface{}){
 			//fmt.Printf("%s \tsfi:%s/%s\n",indents,sfi,extract_name(sfi))
 			//fmt.Printf("%s \tf:%s/%s\n",indents,f,extract_name(f))
 			//fmt.Printf("%s \tName:%s\n",indents,sf.Name)
-			s.Add(sf.Name,sf,extract_name(sfi))
+			s.Add(sf.Name,sf,extract_name(sfi), name, role, "root")
 			// fmt.Printf("%s \tType:%s\n",indents,sf.Type)
 			// fmt.Printf("%s \tTypeKind:%s\n",indents,sf.Type.Kind())
 			//fmt.Printf("typ:%s\n",reflect.TypeOf(sf.Type).String)
@@ -156,46 +167,69 @@ func extract_name(v interface{}) (string) {
 
 }
 
-func (t*TypesMap)MapOne(indent int, role string, v interface{}){
+func (t*TypesMap)MapOne(indent int, role string, v interface{}) (*StructMap){
 
 	// extract the name of the interface
 	name := extract_name(v)
 	
-	if _, ok := t.Types[name]; ok {
+	if sm, ok := t.Types[name]; ok {
 		//fmt.Printf("Name exists already: %s",name)
+		return sm
 	}else{
 		sm := t.CreateStructMap(name)
-		sm.map_details(indent, name, v)
+		sm.map_details(indent, role, name, v)
 		//sm.Report(indent)
 		t.Types[name]=sm
+		return sm
+	}
+}
+
+func (t*TypesMap) unify(from * StructMap, to * StructMap) {
+	fmt.Printf("Mapping from %s to %s\n", from.Name, to.Name)
+	for name,fromField := range from.Names {
+		if s2, ok := to.Names[name]; ok {
+			fmt.Printf("%s.%s=%s.%s\n",
+				s2.Path,name,
+				fromField.Path,name, )
+		}else{
+			//fmt.Printf("%s.%s<=?\n", fromField.Path,name)
+		}
 	}
 }
 
 func (t*TypesMap)MapType(v * models.GccTuParserNode, out NodeInterface){
 	//MapOne(v)
-	t.MapOne(1,fmt.Sprintf("new %s",v.NodeType),out)
-	t.MapOne(1,v.NodeType,v)
+	to := t.MapOne(1,fmt.Sprintf("new %s",v.NodeType),out)
+	from := t.MapOne(1,v.NodeType,v)
+
+	from.flatten("\t","from",from)
+	to.flatten("\t","to",to)
+	
+	t.unify(from,to)
 }
 
 func (t*TypesMap)Report(){
-	fmt.Printf("TypeMaps Report\n")
-	for name,field := range t.Types {
-		fmt.Printf("report on Name:%s\n",name)
-		//fmt.Printf("Field:%s",field)
-		field.Report(1)
-	}
+	
+	// fmt.Printf("TypeMaps Report\n")
+	// for _,field := range t.Types {
+	// 	//fmt.Printf("report on Name:%s\n",name)
+	// 	//fmt.Printf("Field:%s",field)
+	// 	field.Report(1)
+	// }
 }
 
-func (s*StructMap) flatten(indents string){
+func (s*StructMap) flatten(indents string, path string, top*StructMap){
 	for name,field := range s.Names {
 		if ok,_ := regexp.MatchString("^\\*",field.TypeName); ok {
-			fmt.Printf("%s PTR %s: %s\n", indents, name, field.TypeName)
+			//fmt.Printf("%s %s PTR %s: %s %s %s\n", indents, path, name, field.TypeName, field.Role, field.Name)
+			top.Add(name,field.Field,field.TypeName, field.Role, field.Name, path)
 		}else {
-			fmt.Printf("%s F %s: %s\n", indents, name, field.TypeName)
-
+			//fmt.Printf("%s %s F %s: %s %s %s\n", indents, path, name, field.TypeName, field.Role, field.Name)
+			top.Add(name,field.Field,field.TypeName, field.Role, field.Name, path)
+			
 			if field.TypeName != "sql.NullInt64" {
 				if s2, ok := s.Parent.Types[field.TypeName]; ok {
-					s2.flatten(indents)
+					s2.flatten(indents, fmt.Sprintf("%s.%s",path, name), top)
 				}
 			}
 		}
@@ -204,8 +238,13 @@ func (s*StructMap) flatten(indents string){
 
 func (s*StructMap) Report(indent int){
 	indents := Indent(indent)
-	fmt.Printf("%s report %s\n", indents, s.Name)
-	s.flatten(indents)
+	//fmt.Printf("%s report %s\n", indents, s.Name)
+	s.flatten(indents,"root",s)
+
+	// for name,field := range s.Names {
+	// 	fmt.Printf("%s F %s: TYPE:%s ROLE:%s NAME:%s PATH:%s\n", indents, name, field.TypeName, field.Role, field.Name, field.Path)
+	// }
+	
 	// for name,field := range s.Names {
 	// 	fmt.Printf("%s F %s: %s\n", indents, name, field.TypeName)
 	// 	if s2, ok := s.Parent.Types[field.TypeName]; ok {

@@ -68,12 +68,12 @@ type NodeType struct {
 }
 
 type TUFile struct {
-	FileID int
+	SourceFileID int
 }
 
 type NodeBase struct {
 	NodeID int
-	File * TUFile 
+	File TUFile 
 	NodeType * NodeType 
 }
 
@@ -103,7 +103,7 @@ type NodeTypeFunctionDecl struct {
 	RefsType * NodeTypeFunctionType `node: "contained,single"`
 
 	// the identifier name of the function
-	RefsName NodeTypeIdentifierNode `node: "contained,single"`
+	RefsName * NodeTypeIdentifierNode `node: "contained,single"`
 }
 
 // just recuse into the type given

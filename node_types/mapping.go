@@ -32,14 +32,66 @@ type StructMap struct {
 
 type TypesMap struct {
 	Types map[string] *StructMap
+	Unique map[string] bool
 }
 
 func CreateTypesMap() (*TypesMap){
 	return &TypesMap{
 		Types: make(map[string] *StructMap),
+		Unique : make(map[string] bool),
 	}
 }
 
+func(s*StructMap) ShortName() string{
+	re := regexp.MustCompile("^\\*?[_A-Za-z]+\\.")
+	val := re.ReplaceAllString(s.Name,"")
+	return val
+}
+
+func(s*FieldMap) ShortName() string{
+	re := regexp.MustCompile("^\\*?[_A-Za-z]+\\.")
+	val := re.ReplaceAllString(s.Name,"")
+	return val
+}
+
+func(s*FieldMap) TopPath() string{
+	// re := regexp.MustCompile("^([_A-Za-z]+)\\.([_A-Za-z]+)\\.")
+	// val := re.ReplaceAllString(s.Path,"$1.$2")
+	re := regexp.MustCompile("^[_A-Za-z]+\\.([_A-Za-z]+)")
+	val := re.FindStringSubmatch(s.Path)
+	for _, v := range val { 
+		//fmt.Printf("CHECK %s\n",v)
+		return v
+	}
+	//fmt.Printf("SKIP %s\n",s.Path)
+	return s.Path
+}
+
+func(s*FieldMap) ShortTypeName() string{
+	return s.TypeName
+}
+
+func(s*FieldMap) ShortPath() string{
+	return s.Path
+}
+
+func(s*FieldMap) PathLength() int{
+	var c int
+	c = 0
+	for _, char := range s.Path { 
+		if char == '.' {
+			c++
+		}
+	}
+	return c
+}
+
+func(s*StructMap) LocalName() string{
+	re := regexp.MustCompile("^(\\*)node_types\\.")
+	val := re.ReplaceAllString(s.Name,"$1")
+	return val
+}
+	
 func (s*StructMap) Add(name string, f reflect.StructField, typename string, role string, name2 string, path string){
 	if _, ok := s.Names[name]; ok {
 		//fmt.Printf("duplicate %s : %s\n", name,s.Names[name])
@@ -98,7 +150,7 @@ func (s*StructMap) map_details(indent int, role string, name string, v interface
 			//fmt.Printf("%s \tsfi:%s/%s\n",indents,sfi,extract_name(sfi))
 			//fmt.Printf("%s \tf:%s/%s\n",indents,f,extract_name(f))
 			//fmt.Printf("%s \tName:%s\n",indents,sf.Name)
-			s.Add(sf.Name,sf,extract_name(sfi), name, role, "root")
+			s.Add(sf.Name,sf,extract_name(sfi), name, role, "to")
 			// fmt.Printf("%s \tType:%s\n",indents,sf.Type)
 			// fmt.Printf("%s \tTypeKind:%s\n",indents,sf.Type.Kind())
 			//fmt.Printf("typ:%s\n",reflect.TypeOf(sf.Type).String)
@@ -185,16 +237,80 @@ func (t*TypesMap)MapOne(indent int, role string, v interface{}) (*StructMap){
 }
 
 func (t*TypesMap) unify(from * StructMap, to * StructMap) {
-	fmt.Printf("Mapping from %s to %s\n", from.Name, to.Name)
-	for name,fromField := range from.Names {
-		if s2, ok := to.Names[name]; ok {
-			fmt.Printf("%s.%s=%s.%s\n",
-				s2.Path,name,
-				fromField.Path,name, )
+
+	unique := make(map[string] bool)
+	
+	fmt.Printf("func (to %s) Mapping%s(from %s){\n", to.LocalName(),from.ShortName(), from.Name)
+	for name,_ := range from.Names {
+		if toField, ok := to.Names[name]; ok {
+
+			var new string
+			
+			if toField.PathLength() > 0 {
+				new = fmt.Sprintf("%s.Mapping%s(from)\n",
+					toField.TopPath(),
+					from.ShortName(),
+				)
+			} else {
+				new = fmt.Sprintf("Mapping%s(%s.%s,from.%s)\n",
+					name,
+					toField.TopPath(), //to.. .
+					name, // Refs ...
+
+					//"from.",
+					//fromField.Path,
+					name,
+				)
+
+			}
+			
+			if _, ok := unique[new]; ok {
+				
+			} else {
+				fmt.Printf("\t%s", new)
+				unique[new]=true
+				}
 		}else{
 			//fmt.Printf("%s.%s<=?\n", fromField.Path,name)
 		}
 	}
+	
+	// end of func
+	fmt.Printf("}\n")
+}
+
+func (t*TypesMap)GenerateFields(from * StructMap, to * StructMap){
+
+	for name,fromField := range from.Names {
+		if toField, ok := to.Names[name]; ok {
+
+			var new string
+			
+			if toField.PathLength() > 0 {
+			} else {
+				//fmt.Printf("Mapping%s(from %s){\n", to.LocalName(),from.ShortName(), from.Name)
+				
+				new = fmt.Sprintf("func Mapping%s(to NodeInterface, from %s) { to.Load(from) }\n",
+					//toField.TypeName,
+					name,
+					fromField.TypeName,
+					//name,
+
+				)
+
+			}
+			
+			if _, ok := t.Unique[new]; ok {
+				
+			} else {
+				fmt.Printf("%s", new)
+				t.Unique[new]=true
+				}
+		}else{
+			//fmt.Printf("%s.%s<=?\n", fromField.Path,name)
+		}
+	}
+
 }
 
 func (t*TypesMap)MapType(v * models.GccTuParserNode, out NodeInterface){
@@ -204,8 +320,10 @@ func (t*TypesMap)MapType(v * models.GccTuParserNode, out NodeInterface){
 
 	from.flatten("\t","from",from)
 	to.flatten("\t","to",to)
-	
+
+	t.GenerateFields(from,to)
 	t.unify(from,to)
+
 }
 
 func (t*TypesMap)Report(){
@@ -239,7 +357,7 @@ func (s*StructMap) flatten(indents string, path string, top*StructMap){
 func (s*StructMap) Report(indent int){
 	indents := Indent(indent)
 	//fmt.Printf("%s report %s\n", indents, s.Name)
-	s.flatten(indents,"root",s)
+	s.flatten(indents,"to",s)
 
 	// for name,field := range s.Names {
 	// 	fmt.Printf("%s F %s: TYPE:%s ROLE:%s NAME:%s PATH:%s\n", indents, name, field.TypeName, field.Role, field.Name, field.Path)

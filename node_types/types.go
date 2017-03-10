@@ -3,6 +3,7 @@ package node_types
 import (
 	//"reflect"
 	//"fmt"
+	"database/sql"
 	//"github.com/h4ck3rm1k3/gogccintro/models"
 	//"github.com/h4ck3rm1k3/gogccintro/tree"
 )
@@ -39,16 +40,23 @@ type GlobalScope struct {
 }
 
 type NamedObjectInterface interface {}
-type NodeInterface interface {}
+type NodeInterface interface {
+	Load(v sql.NullInt64)
+}
+
 type NameInterface interface {
 	// can be an identifier node or type decl
 	String() string // all have a size
+	Load(v sql.NullInt64)
 }
 type TypeInterface interface {
 	// interface for types
 	RefsSize() * NodeTypeIntegerCst // all have a size
+	Load(v sql.NullInt64)
 }
-
+func NodeIdFromString(in string) (sql.NullInt64) {
+	return sql.NullInt64{Valid:false}
+}
 
 type MinMaxMixin struct {
 	RefsMax *NodeTypeIntegerCst
@@ -142,6 +150,7 @@ type NodeTypeIntegerCst struct {
 	Base NodeBase
 	AttrsType * NodeTypeIntegerType
 }
+
 
 type NodeTypeIntegerType struct {
 	Base NodeBase

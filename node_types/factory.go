@@ -80,6 +80,7 @@ func (t * NodeTypeIntegerCstFactory)Create(v * models.GccTuParserNode) NodeInter
 type NodeFactory struct {
 	Tree * tree.TreeMap
 	Types * TypesMap
+	TypeNames map[string] bool
 }
 
 func GenerateCode(){
@@ -101,6 +102,7 @@ func GenerateCode(){
 
 func (t * NodeFactory)StartGraph(tree * tree.TreeMap) {
 	t.Types = CreateTypesMap()
+	t.TypeNames= make(map[string] bool)
 }
 
 func (t * NodeFactory)EndGraph() {
@@ -117,13 +119,17 @@ func (t * NodeFactory)StartNode(v * models.GccTuParserNode)(NodeInterface) {
 	
 	//objValue := reflect.ValueOf(v).Elem()
 
-	if o, ok := NodePrototypes[v.NodeType]; ok {
-		o2:= o.Create(v)
-		t.Types.MapType(v,o2)
-	// 	//fmt.Printf("\tNew Object for type: %s\n",v.NodeType)
-	// 	fmt.Printf("\tObject type: %v\n",o)
-	// 	n1:=o(v)
-	// 	fmt.Printf("\tNew: %v\n",n1)
-	 }
+	if _, ok := t.TypeNames[v.NodeType]; ok {
+	}else {
+		t.TypeNames[v.NodeType]=true
+		if o, ok := NodePrototypes[v.NodeType]; ok {
+			o2:= o.Create(v)
+			t.Types.MapType(v,o2)
+			// 	//fmt.Printf("\tNew Object for type: %s\n",v.NodeType)
+			// 	fmt.Printf("\tObject type: %v\n",o)
+			// 	n1:=o(v)
+			// 	fmt.Printf("\tNew: %v\n",n1)
+		}
+	}
 	return nil
 }

@@ -67,8 +67,19 @@ func(s*FieldMap) TopPath() string{
 	return s.Path
 }
 
+func(s*FieldMap) TopPathField() string{
+	re := regexp.MustCompile("^[_A-Za-z]+\\.([_A-Za-z]+)")
+	groups := re.FindStringSubmatch(s.Path)
+	v := groups[1]
+	return v
+
+}
+
 func(s*FieldMap) ShortTypeName() string{
-	return s.TypeName
+	re := regexp.MustCompile("([_A-Za-z]+).([_A-Za-z]+)")
+	groups := re.FindStringSubmatch(s.TypeName)
+	v := groups[2]
+	return v
 }
 
 func(s*FieldMap) ShortPath() string{
@@ -237,15 +248,11 @@ func (t*TypesMap)MapOne(indent int, role string, v interface{}) (*StructMap){
 }
 
 func (t*TypesMap) unify(from * StructMap, to * StructMap) {
-
-	unique := make(map[string] bool)
-	
+	unique := make(map[string] bool)	
 	fmt.Printf("func (to %s) Mapping%s(from %s){\n", to.LocalName(),from.ShortName(), from.Name)
 	for name,_ := range from.Names {
 		if toField, ok := to.Names[name]; ok {
-
-			var new string
-			
+			var new string		
 			if toField.PathLength() > 0 {
 				new = fmt.Sprintf("%s.Mapping%s(from)\n",
 					toField.TopPath(),
@@ -256,27 +263,78 @@ func (t*TypesMap) unify(from * StructMap, to * StructMap) {
 					name,
 					toField.TopPath(), //to.. .
 					name, // Refs ...
-
-					//"from.",
-					//fromField.Path,
 					name,
 				)
-
 			}
-			
-			if _, ok := unique[new]; ok {
-				
+			if _, ok := unique[new]; ok {	
 			} else {
 				fmt.Printf("\t%s", new)
+				unique[new]=true
+				}
+		} else {
+			//fmt.Printf("%s.%s<=?\n", fromField.Path,name)
+		}
+	}	
+	// end of func
+	fmt.Printf("}\n")
+}
+
+func (t*TypesMap) GenerateConstructor(from * StructMap, to * StructMap) {
+	unique := make(map[string] bool)
+	fmt.Printf("func (t * TUFile) Create%s(from %s ) %s {\n\treturn &%s{",
+		to.ShortName(), // create%2
+		from.Name, // from 
+		to.LocalName(), // return ttype
+		to.ShortName(), // create type
+	)
+	
+	for name,_ := range from.Names {
+		if toField, ok := to.Names[name]; ok {
+			var new string
+			// subobject
+			if toField.PathLength() > 0 {
+
+				new = fmt.Sprintf("%s : t.Create%s(from),\n",
+					toField.TopPathField(),
+					toField.TopPathField(),
+					//from.ShortName(),
+				)
+			} else {
+				//                1field : 2FieldCreate(from.3Field)
+				//				fmt.Printf("DEBUG:%v\n",toField)
+				//fmt.Printf("DEBUG:%s\n",toField.ShortTypeName())
+				new = fmt.Sprintf("%s: t.CreateRef%s(from.%s),\n",
+					name,
+					toField.ShortTypeName(), //to.. .
+					name, // Refs ...
+				)
+			}
+			if _, ok := unique[new]; ok {	
+			} else {
+				fmt.Printf("\t\t%s", new)
 				unique[new]=true
 				}
 		}else{
 			//fmt.Printf("%s.%s<=?\n", fromField.Path,name)
 		}
-	}
-	
+	}	
 	// end of func
-	fmt.Printf("}\n")
+	fmt.Printf("\t}\n}\n")
+}
+
+func (t*TypesMap) GenerateRefConstructor(from * StructMap, to * StructMap) {
+	//unique := make(map[string] bool)
+	fmt.Printf("%sMap map [int64] * %s\n",to.ShortName(),to.ShortName())
+	fmt.Printf("%sMap : make(map[int64] *%s),\n",to.ShortName(),to.ShortName())
+	//fmt.Printf("func (t * TUFile) Lookup%s(id int64 ) (*%s,bool) {\n\treturn t.%sMap[id]\n}\n",to.ShortName(),to.ShortName(),to.ShortName())
+		
+	fmt.Printf("func (t * TUFile) CreateRef%s(id sql.NullInt64 ) %s {\n",
+		to.ShortName(), // create%2
+//		from.Name, // from 
+		to.LocalName(), // return type
+	)
+
+	fmt.Printf("\tif id.Valid {\n\t\tif node,ok := t.%sMap[id.Int64]; ok {\n\t\t\treturn node\n\t\t} else {\n\t\t\treturn Create%s(t.LookupGccNode(id.Int64))\n\t\t}\t\n\t}\n\treturn nil\n}\n\n",to.ShortName(),to.ShortName())
 }
 
 func (t*TypesMap)GenerateFields(from * StructMap, to * StructMap){
@@ -321,9 +379,11 @@ func (t*TypesMap)MapType(v * models.GccTuParserNode, out NodeInterface){
 	from.flatten("\t","from",from)
 	to.flatten("\t","to",to)
 
-	t.GenerateFields(from,to)
-	t.unify(from,to)
-
+	//t.GenerateFields(from,to)
+	//t.unify(from,to)
+	//t.GenerateConstructor(from, to)
+	t.GenerateRefConstructor(from, to)
+	
 }
 
 func (t*TypesMap)Report(){

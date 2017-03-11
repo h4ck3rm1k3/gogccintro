@@ -39,10 +39,11 @@ type GlobalScope struct {
 	Types TypeCollection
 }
 
-type NamedObjectInterface interface {}
 type NodeInterface interface {
 	Load(v sql.NullInt64)
 }
+
+type NamedObjectInterface interface {}
 
 type NameInterface interface {
 	// can be an identifier node or type decl
@@ -75,14 +76,15 @@ type NodeType struct {
 	NodeType string
 }
 
-type TUFile struct {
-	SourceFileID int
-}
+/*
+node interface is the base interface into all objects looked up by nodeid
+*/
 
 type NodeBase struct {
 	NodeID int
-	File TUFile 
-	NodeType * NodeType 
+	File * TUFile 
+	//NodeType * NodeType
+	NodeType NodeTypeGeneric
 }
 
 type NodeTypeIdentifierNode struct {
@@ -132,19 +134,6 @@ type NodeTypeFunctionType struct {
 	RefsRetn TypeInterface `node: "reference"`
 	RefsSize * NodeTypeIntegerCst `node: "reference"`
 }
-
-// func CreateNodeTypeIdentifierNode(NodeID int,Name string) *NodeTypeIdentifierNode{
-// 	return &NodeTypeIdentifierNode{
-// 		Name : Name,
-// 		Base : NodeBase{
-// 			NodeID:NodeID,
-// 		},
-// 	}
-// }
-// local 
-//     field_decl
-// not local
-//     union_type, integer_type, type_decl, function_decl
 
 type NodeTypeIntegerCst struct {
 	Base NodeBase

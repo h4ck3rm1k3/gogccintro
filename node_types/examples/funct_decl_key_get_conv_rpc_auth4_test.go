@@ -234,9 +234,9 @@ type NodeTypeIdentifierNode struct {
 func (t* NodeTypeIdentifierNode) EndGraph(){}
 
 func (t* NodeTypeIdentifierNode) StartNode(v * models.GccTuParserNode)(NodeInstanceGeneric){
-	o:=node_types.CreateNodeTypeIdentifierNode(v)
-	t.Names[v.AttrsString]=o
-	return &o
+	//o:=node_types.CreateNodeTypeIdentifierNode(v)
+	//t.Names[v.AttrsString]=o
+	return nil
 }
 
 func (r* TReceiver) StartNode(v * models.GccTuParserNode){

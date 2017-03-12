@@ -8,8 +8,6 @@ import (
 	//"github.com/h4ck3rm1k3/gogccintro/tree"
 )
 
-
-
 /*
 a name scope
 */
@@ -55,6 +53,7 @@ type TypeInterface interface {
 	GetRefsSize() * NodeTypeIntegerCst // all have a size
 	Load(v sql.NullInt64)
 }
+
 func NodeIdFromString(in string) (sql.NullInt64) {
 	return sql.NullInt64{Valid:false}
 }
@@ -85,16 +84,16 @@ type NodeBase struct {
 	NodeID int
 	File * TUFile 
 	NodeTypeName NodeType
-
 }
 
 type NodeTypeIdentifierNode struct {
 	Base NodeBase
-	Name string
-	Named  NamedObjectInterface // what objects have this name?, can be multiple because names can be local
-	Scope  NameScope
-}
+	StringVal string
 
+	// referen
+	//Named  NamedObjectInterface // what objects have this name?, can be multiple because names can be local
+	///Scope  NameScope
+}
 
 type NodeTypeArrayType struct {
 	Base NodeBase
@@ -112,7 +111,6 @@ type NodeTypeFunctionDecl struct {
 	Base NodeBase
 	// the type of the function decl is always a function type
 	RefsType * NodeTypeFunctionType `node: "contained,single"`
-
 	// the identifier name of the function
 	RefsName * NodeTypeIdentifierNode `node: "contained,single"`
 }
@@ -159,6 +157,7 @@ type NodeTypeRecordType struct {
 
 type NodeTypeTreeList struct {
 	Base NodeBase
+	RefsChan * NodeTypeTreeList // next in list
 }
 
 type NodeTypeVoidType struct {

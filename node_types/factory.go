@@ -18,7 +18,7 @@ import (
 )
 
 type NodeTypeGeneric interface {
-	Create(v * models.GccTuParserNode) NodeInterface
+	//Create(v * models.GccTuParserNode) NodeInterface
 }
 
 type NodeTypeTypeDeclFactory struct {}
@@ -51,37 +51,40 @@ var NodePrototypes =
 	"union_type": &NodeTypeUnionTypeFactory{},
 	"record_type": &NodeTypeRecordTypeFactory{},
 	"field_decl": &NodeTypeFieldDeclFactory{},
-	"tree_list": &NodeTypeTreeListFactory{},
-	
+	"tree_list": &NodeTypeTreeListFactory{},	
 }
 
-func (t * NodeTypeArrayTypeFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeArrayType(v)}
-func (t * NodeTypeFieldDeclFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeFieldDecl(v)}
-func (t * NodeTypeFunctionDeclFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeFunctionDecl(v)}
-func (t * NodeTypeFunctionTypeFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeFunctionType(v)}
-func (t * NodeTypeIdentifierNodeFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeIdentifierNode(v)}
-func (t * NodeTypeIntegerCstFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeIntegerCst(v)}
-func (t * NodeTypeIntegerTypeFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeIntegerType(v)}
-func (t * NodeTypePointerTypeFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypePointerType(v)}
-func (t * NodeTypeRecordTypeFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeRecordType(v)}
-func (t * NodeTypeTreeListFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeTreeList(v)}
-func (t * NodeTypeTypeDeclFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeTypeDecl(v)}
-func (t * NodeTypeUnionTypeFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeUnionType(v)}
-func (t * NodeTypeVoidTypeFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeVoidType(v)}
+// generic create functions that do not have to be changed
+// func (t * NodeTypeArrayTypeFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeArrayType(v)}
+// func (t * NodeTypeFieldDeclFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeFieldDecl(v)}
+// func (t * NodeTypeFunctionDeclFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeFunctionDecl(v)}
+// func (t * NodeTypeFunctionTypeFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeFunctionType(v)}
+// func (t * NodeTypeIdentifierNodeFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeIdentifierNode(v)}
+// func (t * NodeTypeIntegerCstFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeIntegerCst(v)}
+// func (t * NodeTypeIntegerTypeFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeIntegerType(v)}
+// func (t * NodeTypePointerTypeFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypePointerType(v)}
+// func (t * NodeTypeRecordTypeFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeRecordType(v)}
+// func (t * NodeTypeTreeListFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeTreeList(v)}
+// func (t * NodeTypeTypeDeclFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeTypeDecl(v)}
+// func (t * NodeTypeUnionTypeFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeUnionType(v)}
+// func (t * NodeTypeVoidTypeFactory)Create(v * models.GccTuParserNode) NodeInterface { return CreateNodeTypeVoidType(v)}
 
-func CreateNodeTypeArrayType(v * models.GccTuParserNode) *NodeTypeArrayType { return &NodeTypeArrayType{}}
-func CreateNodeTypeFieldDecl(v * models.GccTuParserNode) *NodeTypeFieldDecl { return &NodeTypeFieldDecl{}}
-func CreateNodeTypeFunctionDecl(v * models.GccTuParserNode) *NodeTypeFunctionDecl { return &NodeTypeFunctionDecl{}}
-func CreateNodeTypeFunctionType(v * models.GccTuParserNode) *NodeTypeFunctionType { return &NodeTypeFunctionType{}}
-func CreateNodeTypeIdentifierNode(v * models.GccTuParserNode) *NodeTypeIdentifierNode { return &NodeTypeIdentifierNode{}}
-func CreateNodeTypeIntegerCst(v * models.GccTuParserNode) *NodeTypeIntegerCst { return &NodeTypeIntegerCst{}}
-func CreateNodeTypeIntegerType(v * models.GccTuParserNode) *NodeTypeIntegerType { return &NodeTypeIntegerType{}}
-func CreateNodeTypePointerType(v * models.GccTuParserNode) *NodeTypePointerType { return &NodeTypePointerType{}}
-func CreateNodeTypeRecordType(v * models.GccTuParserNode) *NodeTypeRecordType { return &NodeTypeRecordType{}}
-func CreateNodeTypeTreeList(v * models.GccTuParserNode) *NodeTypeTreeList { return &NodeTypeTreeList{}}
-func CreateNodeTypeTypeDecl(v * models.GccTuParserNode) *NodeTypeTypeDecl { return &NodeTypeTypeDecl{}}
-func CreateNodeTypeUnionType(v * models.GccTuParserNode) *NodeTypeUnionType { return &NodeTypeUnionType{}}
-func CreateNodeTypeVoidType(v * models.GccTuParserNode) *NodeTypeVoidType { return &NodeTypeVoidType{}}
+// specific create functions that should 
+// func CreateNodeTypeArrayType(v * models.GccTuParserNode) *NodeTypeArrayType { return &NodeTypeArrayType{}}
+// func CreateNodeTypeFieldDecl(v * models.GccTuParserNode) *NodeTypeFieldDecl { return &NodeTypeFieldDecl{}}
+// func CreateNodeTypeFunctionDecl(v * models.GccTuParserNode) *NodeTypeFunctionDecl { return &NodeTypeFunctionDecl{}}
+// func CreateNodeTypeFunctionType(v * models.GccTuParserNode) *NodeTypeFunctionType { return &NodeTypeFunctionType{}}
+// func CreateNodeTypeIdentifierNode(v * models.GccTuParserNode) *NodeTypeIdentifierNode { return &NodeTypeIdentifierNode{}}
+// func CreateNodeTypeIntegerCst(v * models.GccTuParserNode) *NodeTypeIntegerCst { return &NodeTypeIntegerCst{}}
+// func CreateNodeTypeIntegerType(v * models.GccTuParserNode) *NodeTypeIntegerType { return &NodeTypeIntegerType{}}
+// func CreateNodeTypePointerType(v * models.GccTuParserNode) *NodeTypePointerType { return &NodeTypePointerType{}}
+// func CreateNodeTypeRecordType(v * models.GccTuParserNode) *NodeTypeRecordType { return &NodeTypeRecordType{}}
+// func CreateNodeTypeTreeList(v * models.GccTuParserNode) *NodeTypeTreeList { return &NodeTypeTreeList{}}
+// func CreateNodeTypeTypeDecl(v * models.GccTuParserNode) *NodeTypeTypeDecl { return &NodeTypeTypeDecl{}}
+// func CreateNodeTypeUnionType(v * models.GccTuParserNode) *NodeTypeUnionType { return &NodeTypeUnionType{}}
+// func CreateNodeTypeVoidType(v * models.GccTuParserNode) *NodeTypeVoidType { return &NodeTypeVoidType{}}
+
+
 type NodeFactory struct {
 	Tree * tree.TreeMap
 	Types * TypesMap
@@ -115,7 +118,7 @@ func (t * NodeFactory)EndGraph() {
 }
 
 func (t * NodeFactory)StartNode(v * models.GccTuParserNode)(NodeInterface) {
-
+// replacing this with this tufile class
 	//fmt.Printf("-------------------------------\n")
 	//x := CreateNodeTypeIntegerType
 	//	fmt.Printf("%v\n",x)
@@ -124,18 +127,19 @@ func (t * NodeFactory)StartNode(v * models.GccTuParserNode)(NodeInterface) {
 	
 	//objValue := reflect.ValueOf(v).Elem()
 
-	if _, ok := t.TypeNames[v.NodeType]; ok {
+	// if _, ok := t.TypeNames[v.NodeType]; ok {
 
-	}else {
-		t.TypeNames[v.NodeType]=true
-		if o, ok := NodePrototypes[v.NodeType]; ok {
-			o2:= o.Create(v)
-			t.Types.MapType(v,o2)
-			// 	//fmt.Printf("\tNew Object for type: %s\n",v.NodeType)
-			// 	fmt.Printf("\tObject type: %v\n",o)
-			// 	n1:=o(v)
-			// 	fmt.Printf("\tNew: %v\n",n1)
-		}
-	}
+	
+	// }else {
+	// 	t.TypeNames[v.NodeType]=true
+	// 	if o, ok := NodePrototypes[v.NodeType]; ok {
+	// 		//o2:= o.Create(v)
+	// 		//t.Types.MapType(v,o2)
+	// 		// 	//fmt.Printf("\tNew Object for type: %s\n",v.NodeType)
+	// 		// 	fmt.Printf("\tObject type: %v\n",o)
+	// 		// 	n1:=o(v)
+	// 		// 	fmt.Printf("\tNew: %v\n",n1)
+	// 	}
+	// }
 	return nil
 }

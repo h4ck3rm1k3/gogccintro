@@ -15,6 +15,7 @@ func (r* TUFile) EndGraph(){
 }
 func (r* TUFile) StartGraph(tree * tree.TreeMap){
 	r.Tree= tree
+	fmt.Printf("\n")
 }
 func (t * TUFile) ReferenceNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
 func (t * TUFile) ReferencedNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
@@ -24,19 +25,16 @@ func (t * TUFile) StartNode(v * models.GccTuParserNode){
 	i:=t.DispatchType(v)
 	if i != nil {
 		//fmt.Printf("Created %v from %v type:%s\n",i, v, v.NodeType)
-
-		var buffer bytes.Buffer
-		
+		var buffer bytes.Buffer	
 		body, _ := json.MarshalIndent(i,"\t","\t")
 		buffer.Write(body)
 		buffer.WriteString("\n")
-		
-		fmt.Println(buffer.String())
+		fmt.Printf("%s",buffer.String())
 		//outf.WriteString(buffer.Striang())
 
 		
 	} else {
-		fmt.Printf("Created null from %v\n",v)
+		//fmt.Printf("Created null from %v\n",v)
 	}
 		
 }
@@ -98,7 +96,7 @@ func (t * TUFile) DispatchType(v * models.GccTuParserNode) NodeInterface{
 
 func TestTUFile(*testing.T){
 	t :=CreateTUFile ()
-	fmt.Printf("Test %s",t)
+	//fmt.Printf("Test %s",t)
 
 	const filename = "examples/funct_decl_key_get_conv_rpc_auth.json"
 	treemap := tree.NewTreeMapFromFile(filename)

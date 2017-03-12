@@ -52,7 +52,7 @@ type NameInterface interface {
 }
 type TypeInterface interface {
 	// interface for types
-	RefsSize() * NodeTypeIntegerCst // all have a size
+	GetRefsSize() * NodeTypeIntegerCst // all have a size
 	Load(v sql.NullInt64)
 }
 func NodeIdFromString(in string) (sql.NullInt64) {
@@ -143,12 +143,14 @@ type NodeTypeIntegerCst struct {
 
 type NodeTypeIntegerType struct {
 	Base NodeBase
+	RefsSize * NodeTypeIntegerCst `node: "reference"`
 }
 
 type NodeTypePointerType struct {
 	Base NodeBase
 	// what is pointed to
 	RefsPtd TypeInterface `node: "reference"`
+	RefsSize * NodeTypeIntegerCst `node: "reference"`
 }
 
 type NodeTypeRecordType struct {
@@ -163,10 +165,12 @@ type NodeTypeTreeList struct {
 
 type NodeTypeVoidType struct {
 	Base NodeBase
+	RefsSize * NodeTypeIntegerCst `node: "reference"`
 }
 
 type NodeTypeTypeDecl struct {
 	Base NodeBase
+	Name NameInterface
 }
 
 type NodeTypeUnionType struct {

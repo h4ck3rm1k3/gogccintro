@@ -1,7 +1,9 @@
 package node_types
 import (
 	"github.com/h4ck3rm1k3/gogccintro/models"
+	"github.com/h4ck3rm1k3/gogccintro/tree"
 	"database/sql"
+	
 	"fmt"
 )
 // func (t * TUFile) LookupId(id int64) NodeInterface {
@@ -13,12 +15,19 @@ type TuFileInterface interface {
 }
 
 func (t* TUFile) LookupGccNode(id int64) * models.GccTuParserNode {
-	return t.Ids[id] ///TODO
+	if v,ok := t.Tree.Nodes[int(id)]; ok { ///TODO
+		return v
+	} else {
+		fmt.Printf("did not find id %s\n", id)
+	}
+	panic("Could not find node")
+	return nil
 }
 
 type TUFile struct {
 	SourceFileID int
-	Ids   map[int64] * models.GccTuParserNode// raw data
+	//Ids   map[int64] * models.GccTuParserNode// raw data
+	Tree * tree.TreeMap
 	NodeTypeIntegerTypeMap map[int64] * NodeTypeIntegerType
 	NodeTypeTreeListMap map[int64] * NodeTypeTreeList
 	NodeTypeIntegerCstMap map[int64] * NodeTypeIntegerCst
@@ -46,6 +55,9 @@ func (t * TUFile) LookupNodeType(name string) NodeTypeGeneric{
 }
 
 func (t * TUFile) CreateBase(from *models.GccTuParserNode) NodeBase{
+	if from == nil {
+		panic("null base")
+	} 
 	if t.SourceFileID!=from.SourceFileID{
 		fmt.Errorf("file %d!=%d", t.SourceFileID,from.SourceFileID)
 	}
@@ -76,6 +88,7 @@ func (t * TUFile) CreateNodeTypeFunctionDecl(from *models.GccTuParserNode ) *Nod
 func (t * TUFile) CreateNodeTypeTypeDecl(from *models.GccTuParserNode ) *NodeTypeTypeDecl {
 	return &NodeTypeTypeDecl{
 		Base : t.CreateBase(from),
+		Name : t.CreateRefNameInterface(from.RefsName),
 	}
 }
 func (t * TUFile) CreateNodeTypeIntegerCst(from *models.GccTuParserNode ) *NodeTypeIntegerCst {
@@ -157,8 +170,10 @@ func (t * TUFile) CreateRefNodeTypeIntegerType(id sql.NullInt64 ) *NodeTypeInteg
 		} else {
 			return CreateNodeTypeIntegerType(t.LookupGccNode(id.Int64))
 		}	
+	} else {
+		// not set
+		return nil
 	}
-	return nil
 }
 
 func (t * TUFile) CreateRefNodeTypeTreeList(id sql.NullInt64 ) *NodeTypeTreeList {
@@ -168,8 +183,9 @@ func (t * TUFile) CreateRefNodeTypeTreeList(id sql.NullInt64 ) *NodeTypeTreeList
 		} else {
 			return CreateNodeTypeTreeList(t.LookupGccNode(id.Int64))
 		}	
+	} else {
+		return nil
 	}
-	return nil
 }
 
 func (t * TUFile) CreateRefNodeTypeIntegerCst(id sql.NullInt64 ) *NodeTypeIntegerCst {
@@ -179,8 +195,9 @@ func (t * TUFile) CreateRefNodeTypeIntegerCst(id sql.NullInt64 ) *NodeTypeIntege
 		} else {
 			return CreateNodeTypeIntegerCst(t.LookupGccNode(id.Int64))
 		}	
+	} else {
+		return nil
 	}
-	return nil
 }
 
 func (t * TUFile) CreateRefNodeTypeIdentifierNode(id sql.NullInt64 ) *NodeTypeIdentifierNode {
@@ -190,8 +207,9 @@ func (t * TUFile) CreateRefNodeTypeIdentifierNode(id sql.NullInt64 ) *NodeTypeId
 		} else {
 			return CreateNodeTypeIdentifierNode(t.LookupGccNode(id.Int64))
 		}	
+	} else {
+		return nil
 	}
-	return nil
 }
 
 func (t * TUFile) CreateRefNodeTypeArrayType(id sql.NullInt64 ) *NodeTypeArrayType {
@@ -201,8 +219,9 @@ func (t * TUFile) CreateRefNodeTypeArrayType(id sql.NullInt64 ) *NodeTypeArrayTy
 		} else {
 			return CreateNodeTypeArrayType(t.LookupGccNode(id.Int64))
 		}	
+	} else {
+		return nil
 	}
-	return nil
 }
 
 func (t * TUFile) CreateRefNodeTypeTypeDecl(id sql.NullInt64 ) *NodeTypeTypeDecl {
@@ -212,8 +231,10 @@ func (t * TUFile) CreateRefNodeTypeTypeDecl(id sql.NullInt64 ) *NodeTypeTypeDecl
 		} else {
 			return CreateNodeTypeTypeDecl(t.LookupGccNode(id.Int64))
 		}	
+	} else {
+		return nil
 	}
-	return nil
+
 }
 
 
@@ -224,8 +245,10 @@ func (t * TUFile) CreateRefNodeTypePointerType(id sql.NullInt64 ) *NodeTypePoint
 		} else {
 			return CreateNodeTypePointerType(t.LookupGccNode(id.Int64))
 		}	
+	} else {
+		return nil
 	}
-	return nil
+
 }
 
 
@@ -236,8 +259,10 @@ func (t * TUFile) CreateRefNodeTypeFieldDecl(id sql.NullInt64 ) *NodeTypeFieldDe
 		} else {
 			return CreateNodeTypeFieldDecl(t.LookupGccNode(id.Int64))
 		}	
+	} else {
+		return nil
 	}
-	return nil
+
 }
 
 
@@ -248,8 +273,9 @@ func (t * TUFile) CreateRefNodeTypeUnionType(id sql.NullInt64 ) *NodeTypeUnionTy
 		} else {
 			return CreateNodeTypeUnionType(t.LookupGccNode(id.Int64))
 		}	
+	} else {
+		return nil
 	}
-	return nil
 }
 
 func (t * TUFile) CreateRefNodeTypeVoidType(id sql.NullInt64 ) *NodeTypeVoidType {
@@ -259,9 +285,7 @@ func (t * TUFile) CreateRefNodeTypeVoidType(id sql.NullInt64 ) *NodeTypeVoidType
 		} else {
 			return CreateNodeTypeVoidType(t.LookupGccNode(id.Int64))
 		}	
-	}
-	return nil
-}
+	} else { return nil }}
 
 func (t * TUFile) CreateRefNodeTypeFunctionType(id sql.NullInt64 ) *NodeTypeFunctionType {
 	if id.Valid {
@@ -270,9 +294,7 @@ func (t * TUFile) CreateRefNodeTypeFunctionType(id sql.NullInt64 ) *NodeTypeFunc
 		} else {
 			return CreateNodeTypeFunctionType(t.LookupGccNode(id.Int64))
 		}	
-	}
-	return nil
-}
+	} else { return nil }}
 
 func (t * TUFile) CreateRefNodeTypeFunctionDecl(id sql.NullInt64 ) *NodeTypeFunctionDecl {
 	if id.Valid {
@@ -281,9 +303,7 @@ func (t * TUFile) CreateRefNodeTypeFunctionDecl(id sql.NullInt64 ) *NodeTypeFunc
 		} else {
 			return CreateNodeTypeFunctionDecl(t.LookupGccNode(id.Int64))
 		}	
-	}
-	return nil
-}
+	} else { return nil }}
 
 func (t * TUFile) CreateRefNodeTypeRecordType(id sql.NullInt64 ) *NodeTypeRecordType {
 	if id.Valid {
@@ -292,9 +312,7 @@ func (t * TUFile) CreateRefNodeTypeRecordType(id sql.NullInt64 ) *NodeTypeRecord
 		} else {
 			return CreateNodeTypeRecordType(t.LookupGccNode(id.Int64))
 		}	
-	}
-	return nil
-}
+	} else { return nil }}
 
 func CreateTUFile() *TUFile {
 	return & TUFile {
@@ -319,6 +337,34 @@ func CreateTUFile() *TUFile {
 	}
 }
 
+func(t *NodeTypePointerType) GetRefsSize() * NodeTypeIntegerCst {
+	return t.RefsSize
+}
+
+func(t *NodeTypeVoidType) GetRefsSize() * NodeTypeIntegerCst {
+	return t.RefsSize
+}
+
+func(t *NodeTypeFunctionType) GetRefsSize() * NodeTypeIntegerCst {
+	return t.RefsSize
+}
+
+func(t *NodeTypeIntegerType) GetRefsSize() * NodeTypeIntegerCst {
+	return t.RefsSize
+}
+
+func(t *NodeTypeArrayType) GetRefsSize() * NodeTypeIntegerCst {
+	return t.RefsSize
+}
+
+func(t *NodeTypeUnionType) GetRefsSize() * NodeTypeIntegerCst {
+	return t.RefsSize
+}
+
+func(t *NodeTypeRecordType) GetRefsSize() * NodeTypeIntegerCst {
+	return t.RefsSize
+}
+
 // generics creating interfaces
 func (t * TUFile) CreateRefTypeInterface(id sql.NullInt64 ) TypeInterface {
 	if id.Valid {
@@ -326,12 +372,57 @@ func (t * TUFile) CreateRefTypeInterface(id sql.NullInt64 ) TypeInterface {
 			return node
 		} else {
 			v := t.LookupGccNode(id.Int64)
+			if v == nil {
+				panic("null")
+				return nil
+			}
 			//switch on the type
 			fmt.Printf("TODO switch on type %s",v)
+			nt := v.NodeType
+			switch (nt) {
+			case "pointer_type":
+				return t.CreateNodeTypePointerType(v)
+				break
+			case "void_type":
+				return t.CreateNodeTypeVoidType(v)
+				break
+			case "function_type":
+				return t.CreateNodeTypeFunctionType(v)
+				break
+			case "integer_type":
+				return t.CreateNodeTypeIntegerType(v)
+				break
+			case "array_type":
+				return t.CreateNodeTypeArrayType(v)
+				break
+			case "union_type":
+				return t.CreateNodeTypeUnionType(v)
+				break
+			case "record_type":
+				return t.CreateNodeTypeRecordType(v)
+				break
+
+				default :
+				fmt.Errorf("unhandled node type%s", v.NodeType)
+				panic("null")
+				return nil
+				break
+			}
+				
+
 			//return CreateNodeTypeFunctionDecl(t.LookupGccNode(id.Int64))
 		}	
 	}
+	panic("null")
 	return nil
+}
+
+func (t*NodeTypeIdentifierNode) String() string {
+	return t.Name
+}
+
+func (t*NodeTypeTypeDecl) String() string {
+	return t.Name.String()
 }
 
 // generics creating interfaces
@@ -341,11 +432,28 @@ func (t * TUFile) CreateRefNameInterface(id sql.NullInt64) NameInterface {
 			return node
 		} else {
 			v := t.LookupGccNode(id.Int64)
+			if v == nil {
+					panic("null")
+				return nil }
 			//switch on the type
-			fmt.Printf("TODO switch on type %s",v)
+			//fmt.Printf("TODO switch on type %s",v)
+				switch (v.NodeType) {
+				case "identifier_node":
+					return t.CreateNodeTypeIdentifierNode(v)
+					break
+				case "type_decl":
+					return t.CreateNodeTypeTypeDecl(v)
+					break
+				default:
+					fmt.Errorf("error: %s\n", v.NodeType)
+					panic("null")
+					return nil
+				}
+
 			//return CreateNodeTypeFunctionDecl(t.LookupGccNode(id.Int64))
 		}	
 	}
+	panic("null")
 	return nil
 }
 
@@ -358,9 +466,7 @@ func (t * TUFile) CreateRefNodeTypeParamList(id sql.NullInt64) *NodeTypeParamLis
 		} else {
 			return t.CreateNodeTypeParamList(t.LookupGccNode(id.Int64))
 		}	
-	}
-	return nil
-}
+	} else { return nil }}
 
 func (t * TUFile) CreateNodeTypeParamList(from *models.GccTuParserNode ) *NodeTypeParamList {
 	return &NodeTypeParamList{

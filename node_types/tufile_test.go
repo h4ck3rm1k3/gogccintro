@@ -43,56 +43,6 @@ func (t * TUFile) handle_type(v NodeInterface) NodeInterface{
 	return v
 }
 
-func (t * TUFile) DispatchType(v * models.GccTuParserNode) NodeInterface{
-	if v == nil {
-		return nil
-	}
-	switch (v.NodeType) {
-	case "identifier_node":
-		return t.handle_type(t.CreateNodeTypeIdentifierNode(v))
-		break
-	case "pointer_type":
-		return t.handle_type(t.CreateNodeTypePointerType(v))
-		break
-	case "function_decl":
-		return t.handle_type(t.CreateNodeTypeFunctionDecl(v))
-		break
-	case "void_type":
-		return t.handle_type(t.CreateNodeTypeVoidType(v))
-		break
-	case "function_type":
-		return t.handle_type(t.CreateNodeTypeFunctionType(v))
-		break
-	case "integer_type":
-		return t.handle_type(t.CreateNodeTypeIntegerType(v))
-		break
-	case "type_decl":
-		return t.handle_type(t.CreateNodeTypeTypeDecl(v))
-		break
-	case "array_type":
-		return t.handle_type(t.CreateNodeTypeArrayType(v))
-		break
-	case "integer_cst":
-		return t.handle_type(t.CreateNodeTypeIntegerCst(v))
-		break
-	case "union_type":
-		return t.handle_type(t.CreateNodeTypeUnionType(v))
-		break
-	case "record_type":
-		return t.handle_type(t.CreateNodeTypeRecordType(v))
-		break
-	case "field_decl":
-		return t.handle_type(t.CreateNodeTypeFieldDecl(v))
-		break
-	case "tree_list":
-		return t.handle_type(t.CreateNodeTypeTreeList(v))
-		break
-	default:
-		fmt.Errorf("error: %s\n", v.NodeType)
-		return nil
-	}
-	return nil
-}
 
 func TestTUFile(*testing.T){
 	t :=CreateTUFile ()

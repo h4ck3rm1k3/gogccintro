@@ -121,7 +121,8 @@ type NodeTypeParamList struct {
 	// list of node types
 	Base NodeBase
 	RefsChain * NodeTypeParamList// recursive
-	RefsValu TypeInterface
+	RefsValu NodeInterface// some data
+//	RefsValu TypeInterface
 }
 
 type NodeTypeFunctionType struct {

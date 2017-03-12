@@ -73,7 +73,8 @@ type NamedMixin struct {
 }
 
 type NodeType struct {
-	NodeType string
+	TypeName string
+	NodeType NodeTypeGeneric
 }
 
 /*
@@ -83,8 +84,8 @@ node interface is the base interface into all objects looked up by nodeid
 type NodeBase struct {
 	NodeID int
 	File * TUFile 
-	//NodeType * NodeType
-	NodeType NodeTypeGeneric
+	NodeTypeName NodeType
+
 }
 
 type NodeTypeIdentifierNode struct {
@@ -117,14 +118,11 @@ type NodeTypeFunctionDecl struct {
 }
 
 // just recuse into the type given
-type Recurse struct {
-	Base NodeBase
-}
 
 type NodeTypeParamList struct {
 	// list of node types
 	Base NodeBase
-	RefsChain Recurse
+	RefsChain * NodeTypeParamList// recursive
 	RefsValu TypeInterface
 }
 

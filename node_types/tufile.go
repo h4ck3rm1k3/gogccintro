@@ -3,7 +3,7 @@ import (
 	"github.com/h4ck3rm1k3/gogccintro/models"
 	"github.com/h4ck3rm1k3/gogccintro/tree"
 	"database/sql"
-	
+	//"encoding/json"
 	"fmt"
 )
 // func (t * TUFile) LookupId(id int64) NodeInterface {
@@ -64,8 +64,11 @@ func (t * TUFile) CreateBase(from *models.GccTuParserNode) NodeBase{
 	
 	return NodeBase{
 		NodeID : from.NodeID,
-		File : t,
-		NodeType: t.LookupNodeType(from.NodeType),
+		//File : t,
+		NodeTypeName: NodeType{
+			TypeName: from.NodeType,
+			NodeType: t.LookupNodeType(from.NodeType),
+		},
 	}
 }
 
@@ -377,7 +380,7 @@ func (t * TUFile) CreateRefTypeInterface(id sql.NullInt64 ) TypeInterface {
 				return nil
 			}
 			//switch on the type
-			fmt.Printf("TODO switch on type %s",v)
+			//fmt.Printf("TODO switch on type %s",v)
 			nt := v.NodeType
 			switch (nt) {
 			case "pointer_type":
@@ -471,5 +474,7 @@ func (t * TUFile) CreateRefNodeTypeParamList(id sql.NullInt64) *NodeTypeParamLis
 func (t * TUFile) CreateNodeTypeParamList(from *models.GccTuParserNode ) *NodeTypeParamList {
 	return &NodeTypeParamList{
 		Base : t.CreateBase(from),
+		RefsChain : t.CreateRefNodeTypeParamList(from.RefsChain),
 	}
 }
+

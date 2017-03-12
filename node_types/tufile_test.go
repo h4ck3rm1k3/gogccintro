@@ -39,10 +39,6 @@ func (t * TUFile) StartNode(v * models.GccTuParserNode){
 		
 }
 
-func (t * TUFile) handle_type(v NodeInterface) NodeInterface{
-	return v
-}
-
 
 func TestTUFile(*testing.T){
 	t :=CreateTUFile ()

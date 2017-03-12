@@ -591,3 +591,7 @@ func (t * TUFile) CreateRefNodeGeneric(id sql.NullInt64) NodeInterface {
 	panic("null")
 	return nil
 }
+
+func (t * TUFile) handle_type(v NodeInterface) NodeInterface{
+	return v
+}

@@ -119,6 +119,8 @@ type NodeTypeFunctionDecl struct {
 	RefsType * NodeTypeFunctionType `node: "contained,single"`
 	// the identifier name of the function
 	RefsName * NodeTypeIdentifierNode `node: "contained,single"`
+
+	RefsArgs * NodeTypeArgList `node: "contained,recurse"` // arguments to the function
 }
 
 // just recuse into the type given
@@ -126,7 +128,15 @@ type NodeTypeFunctionDecl struct {
 type NodeTypeParamList struct {
 	// list of node types
 	Base NodeBase
-	RefsChain * NodeTypeParamList// recursive
+	RefsChan * NodeTypeParamList// recursive
+	RefsValu NodeInterface// some data
+//	RefsValu TypeInterface
+}
+
+type NodeTypeArgList struct {
+	// list of node types
+	Base NodeBase
+	RefsChan * NodeTypeArgList// recursive
 	RefsValu NodeInterface// some data
 //	RefsValu TypeInterface
 }

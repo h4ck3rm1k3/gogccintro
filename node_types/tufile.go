@@ -43,7 +43,8 @@ type TUFile struct {
 	NodeTypeFunctionTypeMap map[int] *NodeTypeFunctionType
 	NodeTypeRecordTypeMap map[int] *NodeTypeRecordType
 
-	NodeTypeParamListMap map[int] *NodeTypeParamList
+	//NodeTypeParamListMap map[int] *NodeTypeParamList
+	
 	// interfaces
 	TypeInterfaceMap map[int] TypeInterface
 	NameInterfaceMap map[int] NameInterface
@@ -93,6 +94,7 @@ func (t * TUFile) CreateNodeTypeFunctionDecl(from *models.GccTuParserNode ) *Nod
 	r:= &NodeTypeFunctionDecl{
 		RefsType: rt,
 		RefsName: t.CreateRefNodeTypeIdentifierNode(from.RefsName),
+		RefsArgs: t.CreateRefNodeTypeArgList(from.RefsArgs),
 		Base : t.CreateBase(from),
 	}
 	//fmt.Printf("created func decl %s\n",r)
@@ -401,7 +403,7 @@ func CreateTUFile() *TUFile {
 		NodeTypeTypeDeclMap : make(map[int] * NodeTypeTypeDecl),
 		NodeTypeArrayTypeMap : make(map[int] * NodeTypeArrayType),
 		NodeTypeIdentifierNodeMap : make(map[int] * NodeTypeIdentifierNode),
-		NodeTypeParamListMap: make(map[int] *NodeTypeParamList),
+		//NodeTypeParamListMap: make(map[int] *NodeTypeParamList),
 		//
 		TypeInterfaceMap :make( map[int] TypeInterface),
 		NameInterfaceMap :make( map[int] NameInterface),
@@ -538,18 +540,35 @@ func (t * TUFile) CreateRefNameInterface(id sql.NullInt64) NameInterface {
 // param list
 func (t * TUFile) CreateRefNodeTypeParamList(id sql.NullInt64) *NodeTypeParamList {
 	if id.Valid {
-		if node,ok := t.NodeTypeParamListMap[int(id.Int64)]; ok {
-			return node
-		} else {
-			return t.CreateNodeTypeParamList(t.LookupGccNode(id.Int64))
-		}	
+		//if node,ok := t.NodeTypeParamListMap[int(id.Int64)]; ok {
+		//	return node
+		//} else {
+		return t.CreateNodeTypeParamList(t.LookupGccNode(id.Int64))
+		//}	
+	} else { return nil }}
+
+func (t * TUFile) CreateRefNodeTypeArgList(id sql.NullInt64) *NodeTypeArgList {
+	if id.Valid {
+		//if node,ok := t.NodeTypeArgListMap[int(id.Int64)]; ok {
+		//	return node
+		//} else {
+		return t.CreateNodeTypeArgList(t.LookupGccNode(id.Int64))
+		//}	
 	} else { return nil }}
 
 
 func (t * TUFile) CreateNodeTypeParamList(from *models.GccTuParserNode ) *NodeTypeParamList {
 	return &NodeTypeParamList{
 		Base : t.CreateBase(from),
-		RefsChain : t.CreateRefNodeTypeParamList(from.RefsChain),
+		RefsChan : t.CreateRefNodeTypeParamList(from.RefsChan),
+		RefsValu : t.CreateRefNodeGeneric(from.RefsValu),
+	}
+}
+
+func (t * TUFile) CreateNodeTypeArgList(from *models.GccTuParserNode ) *NodeTypeArgList {
+	return &NodeTypeArgList{
+		Base : t.CreateBase(from),
+		RefsChan : t.CreateRefNodeTypeArgList(from.RefsChan),
 		RefsValu : t.CreateRefNodeGeneric(from.RefsValu),
 	}
 }

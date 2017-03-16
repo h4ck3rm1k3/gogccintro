@@ -29,11 +29,13 @@ func (t * TUFile) StartNode(v * models.GccTuParserNode){
 	i:=t.DispatchType(v)
 	if i != nil {
 		//fmt.Printf("Created %v from %v type:%s\n",i, v, v.NodeType)
-		var buffer bytes.Buffer	
-		body, _ := json.MarshalIndent(i,"\t","\t")
-		buffer.Write(body)
-		buffer.WriteString("\n")
-		fmt.Printf("%s",buffer.String())
+		if v.NodeType =="function_decl" {
+			var buffer bytes.Buffer	
+			body, _ := json.MarshalIndent(i,"\t","\t")
+			buffer.Write(body)
+			buffer.WriteString("\n")
+			fmt.Printf("%s",buffer.String())
+		}
 		//outf.WriteString(buffer.Striang())
 
 		

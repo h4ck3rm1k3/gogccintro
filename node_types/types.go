@@ -39,19 +39,25 @@ type GlobalScope struct {
 
 type NodeInterface interface {
 	Load(v sql.NullInt64)
+	NodeId() int 
 }
 
-type NamedObjectInterface interface {}
+type NamedObjectInterface interface {
+	Name() string // resolve the name of the object
+}
 
 type NameInterface interface {
 	// can be an identifier node or type decl
 	String() string // all have a size
 	Load(v sql.NullInt64)
+	NodeId() int
+	Named(NamedObjectInterface)
 }
 type TypeInterface interface {
 	// interface for types
 	GetRefsSize() * NodeTypeIntegerCst // all have a size
 	Load(v sql.NullInt64)
+	NodeId() int 
 }
 
 func NodeIdFromString(in string) (sql.NullInt64) {
@@ -91,7 +97,7 @@ type NodeTypeIdentifierNode struct {
 	StringVal string
 
 	// referen
-	//Named  NamedObjectInterface // what objects have this name?, can be multiple because names can be local
+	namedObject  NamedObjectInterface // what objects have this name?, can be multiple because names can be local
 	///Scope  NameScope
 }
 
@@ -168,7 +174,8 @@ type NodeTypeVoidType struct {
 
 type NodeTypeTypeDecl struct {
 	Base NodeBase
-	Name NameInterface
+	RefsName NameInterface
+	namedObject  NamedObjectInterface // what objects have this name?, can be multiple because names can be local
 }
 
 type NodeTypeUnionType struct {
@@ -177,6 +184,7 @@ type NodeTypeUnionType struct {
 	RefsUnql * NodeTypeUnionType `node: "reference,backwards"`
 	RefsFlds * NodeTypeFieldDecl `node: "contained,recurse"`
 	RefsName NameInterface `node: "name"`
+//	NameString string
 }
 
 var NodeTypeNames=[]string {
@@ -211,3 +219,42 @@ var NodeTypeMap =
 	"void_type":"NodeTypeVoidType",
 	"function_type":"NodeTypeFunctionType",
 }
+
+func (t * NodeTypeArrayType)NodeId() int { return t.Base.GetNodeId()}
+func (t * NodeTypeFieldDecl)NodeId( ) int { return t.Base.GetNodeId()}
+func (t * NodeTypeFunctionDecl)NodeId() int { return t.Base.GetNodeId()}
+func (t * NodeTypeFunctionType)NodeId() int { return t.Base.GetNodeId()}
+func (t * NodeTypeIdentifierNode) NodeId() int { return t.Base.GetNodeId()}
+func (t * NodeTypeIntegerCst)NodeId() int { return t.Base.GetNodeId()}
+func (t * NodeTypeIntegerType)NodeId() int { return t.Base.GetNodeId()}
+func (t * NodeTypeParamList)NodeId() int { return t.Base.GetNodeId()}
+func (t * NodeTypePointerType)NodeId() int { return t.Base.GetNodeId()}
+func (t * NodeTypeRecordType)NodeId() int { return t.Base.GetNodeId()}
+func (t * NodeTypeTreeList)NodeId() int { return t.Base.GetNodeId()}
+func (t * NodeTypeTypeDecl)NodeId() int { return t.Base.GetNodeId()}
+func (t * NodeTypeUnionType)NodeId() int { return t.Base.GetNodeId()}
+func (t * NodeTypeVoidType)NodeId() int { return t.Base.GetNodeId()}
+
+func (t * NodeBase)GetNodeId() int { return t.NodeID }
+
+
+// named interface
+//Named(NamedObjectInterface d)
+func (t * NodeTypeIdentifierNode) Named(d NamedObjectInterface)() {
+	t.namedObject=d
+//	d.Name(t.String())
+}
+func (t * NodeTypeTypeDecl) Named(d NamedObjectInterface)() {
+	t.namedObject=d
+	//d.Name(t.String())
+}
+
+/// named objects
+func (t *NodeTypeTypeDecl) Name()string {
+	return t.RefsName.String()
+}
+
+func (t *NodeTypeUnionType) Name() string {
+	return t.RefsName.String()
+}
+

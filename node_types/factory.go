@@ -91,7 +91,7 @@ type NodeFactory struct {
 	TypeNames map[string] bool
 }
 
-func GenerateCode(){
+func GenerateCodePrototypes(){
 
 	fmt.Printf("var NodePrototypes =map[string] NodeTypeGeneric {\n")
 	for n,x := range NodeTypeMap {
@@ -108,6 +108,13 @@ func GenerateCode(){
 	}
 }
 
+func GenerateCode(){
+
+	for _,x := range NodeTypeMap {
+		fmt.Printf("func (t * %s)NodeId(v %s) int64 { return v.Base.GetNodeId()}\n",x,x)
+	}
+}
+
 func (t * NodeFactory)StartGraph(tree * tree.TreeMap) {
 	t.Types = CreateTypesMap()
 	t.TypeNames= make(map[string] bool)
@@ -118,7 +125,7 @@ func (t * NodeFactory)EndGraph() {
 }
 
 func (t * NodeFactory)StartNode(v * models.GccTuParserNode)(NodeInterface) {
-// replacing this with this tufile class
+// replacing this wi
 	//fmt.Printf("-------------------------------\n")
 	//x := CreateNodeTypeIntegerType
 	//	fmt.Printf("%v\n",x)

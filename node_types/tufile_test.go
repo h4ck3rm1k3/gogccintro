@@ -18,7 +18,11 @@ func (r* TUFile) StartGraph(tree * tree.TreeMap){
 	fmt.Printf("\n")
 }
 func (t * TUFile) ReferenceNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
-func (t * TUFile) ReferencedNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){}
+
+func (t * TUFile) ReferencedNode(n * models.GccTuParserNode, name string, o * models.GccTuParserNode){
+
+}
+
 func (t * TUFile) ReferenceAttribute(n * models.GccTuParserNode, name string, val string){}
 func (t * TUFile) StartNode(v * models.GccTuParserNode){
 	//t.ids[v.NodeID]=t.NodeFactory.StartNode(v)
@@ -47,5 +51,6 @@ func TestTUFile(*testing.T){
 	const filename = "examples/funct_decl_key_get_conv_rpc_auth.json"
 	treemap := tree.NewTreeMapFromFile(filename)
 	treemap.ResolveReferences(t)
+	//treemap.ResolveReferences(t)// second pass?
 
 }

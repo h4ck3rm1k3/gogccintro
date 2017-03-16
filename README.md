@@ -2,22 +2,17 @@
 golang interfaces for the gcc introspector
 
 [![Build Status](https://travis-ci.org/h4ck3rm1k3/gogccintro.svg?branch=master)](https://travis-ci.org/h4ck3rm1k3/gogccintro)
+[![GoDoc](https://godoc.org/github.com/h4ck3rm1k3/gogccintro?status.png)](http://godoc.org/github.com/h4ck3rm1k3/gogccintro)
 
-[godoc.org]: http://godoc.org/github.com/h4ck3rm1k3/gogccintro "godoc.org"
-
-##Install
+## Install
 
     go get github.com/h4ck3rm1k3/gogccintro
 
-##Docs
-
-On [godoc.org][]
-
-##Author
+## Author
 
 James Michael Du Pont [jamesmikedupont@gmail.com]
 
-##Copyright & License
+## Copyright & License
 
 Copyright (c) 2017, James Michael Du Pont.
 All rights reserved.

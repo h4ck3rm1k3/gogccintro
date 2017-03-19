@@ -1,7 +1,7 @@
 package tests
 
 import (
-
+	"testing"
 	//"reflect"
 	//"fmt"
 
@@ -14,7 +14,7 @@ import (
 	//"Strmap(\(\"0x[a-h0-9]+\)\",&ast\.\([A-Za-z]+\)"
 	// Strmap\2(\1,&ast.\2
 
-func VistAst()  {
+func BenchmarkVistAst(b* testing.B)  {
 	////
 	p:= ast.CreateTable()
 

@@ -1,0 +1,138 @@
+func (t* Table )StrmapBasicLit(id string, f interface{} ) (*BasicLit) {	return nil}
+
+func (t* Table )StrmapField(id string, f *Field ) ( *Field) {
+	fmt.Printf("Field:%v\t",f)
+	for i,v := range f.Names {
+		fmt.Printf("Field.Name %v=%v\t",i,v)
+	}
+	fmt.Printf("Type:%v\n",f.Type)
+	return f}
+
+func (f* Ident ) ToString( ) (string) {
+	return f.Name
+}
+func (f* Field ) ToString( ) (string) {
+	keys := make([]string, 0, len(f.Names))
+	for _,k := range f.Names {
+		keys = append(keys, k.ToString())
+	}
+	return "[" + strings.Join(keys, ", ") + "]"
+}
+	
+func (f *FieldList) ToString( ) (string) {
+	keys := make([]string, 0, len(f.List))
+	for _,k := range f.List {
+		keys = append(keys, k.ToString())
+	}
+	return "[" + strings.Join(keys, ", ") + "]"
+}
+
+func (t* Table )StrmapFieldList(id string, f *FieldList ) (*FieldList) {	
+	fmt.Printf("FieldList:%v\n",f)
+	for i,v := range f.List {
+		fmt.Printf("\tListItem:%n %v\n",i,v.ToString())
+	}
+	return f
+}
+
+func (t* Table )StrmapFile(id string, f interface{} ) (*File) {	return nil}
+func (t* Table )StrmapFuncType(id string, f interface{} ) (*FuncType) {	return nil}
+func (t* Table )StrmapGenDecl(id string, f interface{} ) (*GenDecl) {	return nil}
+func (t* Table )StrmapIdent(id string, f *Ident ) (*Ident) {
+	fmt.Printf("Ident:%v\n",f.Name)
+	t.Idents[id]=f	
+	return f
+}
+func (t* Table )StrmapImportSpec(id string, f interface{} ) (*ImportSpec) {	return nil}
+
+func (t* Table )StrmapInterfaceType(id string, i *InterfaceType ) (*InterfaceType) {
+	fmt.Printf("InterfaceType:%v\t",i)
+	fmt.Printf("InterfaceMethods:%s\n",i.Methods.ToString())
+	return i
+}
+
+func (t* Table )StrmapObject(id string, f * Object  ) (*Object) {
+	fmt.Printf("Object: Name:%v Kind:%v\n",f.Name, f.Kind)
+	t.Objects[id]=f	
+	return f
+}
+func (t* Table )StrmapSelectorExpr(id string, f interface{} ) (*SelectorExpr) {	return nil}
+
+func (t* Table )StrmapStructType(id string, s *StructType ) (*StructType) {
+	fmt.Printf("StructType:%v\n",s)
+	fmt.Printf("StructFields:%s\n",s.Fields.ToString())
+	return s
+}
+func (t* Table )StrmapTypeSpec(id string, f interface{} ) (*TypeSpec) {	return nil}
+func (t* Table) StrmapArrayType(id string, f interface{} ) (*StarArrayType) {	return nil}
+func (t* Table) StrmapAssignStmt(id string, f interface{}) (*AssignStmt){	return nil}
+func (t* Table) StrmapBadDecl(id string, f interface{}) (*BadDecl){	return nil}
+func (t* Table) StrmapBadExpr(id string, f interface{}) (*BadExpr){	return nil}
+func (t* Table) StrmapBadStmt(id string, f interface{}) (*BadStmt){	return nil}
+func (t* Table) StrmapBinaryExpr(id string, f interface{}) (*BinaryExpr){	return nil}
+func (t* Table) StrmapBlockStmt(id string, f interface{}) (*BlockStmt){	return nil}
+func (t* Table) StrmapBranchStmt(id string, f interface{}) (*BranchStmt){	return nil}
+func (t* Table) StrmapCallExpr(id string, f interface{}) (*CallExpr){	return nil}
+func (t* Table) StrmapCaseClause(id string, f interface{}) (*CaseClause){	return nil}
+func (t* Table) StrmapChanDir(id string, f interface{}) (*ChanDir){	return nil}
+func (t* Table) StrmapChanType(id string, f interface{}) (*ChanType){	return nil}
+func (t* Table) StrmapCommClause(id string, f interface{}) (*CommClause){	return nil}
+func (t* Table) StrmapComment(id string, f interface{}) (*Comment){	return nil}
+func (t* Table) StrmapCommentGroup(id string, f interface{}) (*CommentGroup){	return nil}
+func (t* Table) StrmapCompositeLit(id string, f interface{}) (*CompositeLit){	return nil}
+func (t* Table) StrmapDecl(id string, f interface{}) (*Decl){	return nil}
+func (t* Table) StrmapDeclStmt(id string, f interface{}) (*DeclStmt){	return nil}
+func (t* Table) StrmapDeferStmt(id string, f interface{}) (*DeferStmt){	return nil}
+func (t* Table) StrmapEllipsis(id string, f interface{}) (*Ellipsis){	return nil}
+func (t* Table) StrmapEmptyStmt(id string, f interface{}) (*EmptyStmt){	return nil}
+func (t* Table) StrmapExpr(id string, f interface{}) (*Expr){	return nil}
+func (t* Table) StrmapExprStmt(id string, f interface{}) (*ExprStmt){	return nil}
+func (t* Table) StrmapForStmt(id string, f interface{}) (*ForStmt){	return nil}
+func (t* Table) StrmapFuncDecl(id string, f interface{}) (*FuncDecl){	return nil}
+func (t* Table) StrmapFuncLit(id string, f interface{}) (*FuncLit){	return nil}
+func (t* Table) StrmapGoStmt(id string, f interface{}) (*GoStmt){	return nil}
+func (t* Table) StrmapIfStmt(id string, f interface{}) (*IfStmt){	return nil}
+func (t* Table) StrmapIncDecStmt(id string, f interface{}) (*IncDecStmt){	return nil}
+func (t* Table) StrmapIndexExpr(id string, f interface{} ) (*IndexExpr) {	return nil}
+func (t* Table) StrmapIsExported(id string, f interface{}) (*IsExported){	return nil}
+func (t* Table) StrmapKeyValueExpr(id string, f interface{}) (*KeyValueExpr){	return nil}
+func (t* Table) StrmapLabeledStmt(id string, f interface{}) (*LabeledStmt){	return nil}
+func (t* Table) StrmapMapType(id string, f interface{}) (*MapType){	return nil}
+func (t* Table) StrmapNewIdent(id string, f interface{}) (*NewIdent){	return nil}
+func (t* Table) StrmapNode(id string, f interface{}) (*Node){	return nil}
+func (t* Table) StrmapPackage(id string, f interface{}) (*Package){	return nil}
+func (t* Table) StrmapParenExpr(id string, f interface{}) (*ParenExpr){	return nil}
+func (t* Table) StrmapRangeStmt(id string, f interface{}) (*RangeStmt){	return nil}
+func (t* Table) StrmapReturnStmt(id string, f interface{}) (*ReturnStmt){	return nil}
+func (t* Table) StrmapScope(id string, s*Scope) (*Scope){
+	fmt.Printf("Scope:%v\n",s.Objects)
+	return s
+}
+func (t* Table) StrmapSelectStmt(id string, f interface{}) (*SelectStmt){	return nil}
+func (t* Table) StrmapSendStmt(id string, f interface{}) (*SendStmt){	return nil}
+func (t* Table) StrmapSliceExpr(id string, f interface{}) (*SliceExpr){	return nil}
+func (t* Table) StrmapSpec(id string, f interface{}) (*Spec){	return nil}
+func (t* Table) StrmapStarExpr(id string, f interface{}) (*StarExpr){	return nil}
+func (t* Table) StrmapStmt(id string, f interface{}) (*Stmt){	return nil}
+func (t* Table) StrmapSwitchStmt(id string, f interface{}) (*SwitchStmt){	return nil}
+func (t* Table) StrmapTypeAssertExpr(id string, f interface{}) (*TypeAssertExpr){	return nil}
+func (t* Table) StrmapTypeSwitchStmt(id string, f interface{}) (*TypeSwitchStmt){	return nil}
+func (t* Table) StrmapUnaryExpr(id string, f interface{} ) (*UnaryExpr){	return nil}
+func (t* Table) StrmapValueSpec(id string, f interface{}) (*ValueSpec){	return nil}
+
+/// lookups
+func (t* Table )PtrmapImportSpec(id string) (*ImportSpec) {	return nil}
+func (t* Table )PtrmapIdent(id string) (*Ident) {return t.Idents[id]	}
+func (t* Table )PtrmapIdent(id string) (*Ident) {return t.Idents[id]	}
+
+func (t* Table )Strmap(id string, f interface{} ) (*Foo2) {
+	return nil
+}
+
+func (t* Table )Ptrmap(id string) (Foo2) {
+	return nil
+}
+
+func (t* Table )PtrmapObject(id string) (*Object) {
+	return t.Objects[id]	
+}

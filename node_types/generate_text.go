@@ -6,3 +6,4 @@ package node_types
 // start with function_decl  and the do the return type
 
 // find all names of objects, 
+// transform into golang ast and generate code that way?

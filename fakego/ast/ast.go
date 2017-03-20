@@ -40,6 +40,7 @@ type Ident struct {
 	Name string
 	Obj Foo2
 }
+
 type Object struct {
 	Kind Foo3
 	Name Foo3
@@ -463,4 +464,11 @@ type Expr interface {
 
 type Spec interface {
 	Report() string
+}
+
+// deferred
+type Deferred struct {
+	Id    string 
+	Data  Foo2
+	Set   interface{} 
 }

@@ -21,12 +21,12 @@ func Generate() {
 		"CommClause",
 		"Comment",
 		"CompositeLit",
-		"Decl",
+
 		"DeclStmt",
 		"DeferStmt",
 		"Ellipsis",
 		"EmptyStmt",
-		"Expr",
+
 		"ExprStmt",
 		"Field",
 		"FieldList",
@@ -48,7 +48,7 @@ func Generate() {
 		"LabeledStmt",
 		"MapType",
 		"NewIdent",
-		"Node",
+
 		"Package",
 		"ParenExpr",
 //		"RECV",
@@ -61,7 +61,7 @@ func Generate() {
 		"SliceExpr",
 		"Spec",
 		"StarExpr",
-		"Stmt",
+
 		"StructType",
 		"SwitchStmt",
 		"TypeAssertExpr",
@@ -73,10 +73,14 @@ func Generate() {
 		"Spec",
 		"Object",
 	}
-
+	// interfaces
+	//"Expr",
+	//"Stmt",
+	//"Decl",
+	// "Node",
 	for _,n := range Names {
 		fmt.Printf("func (t* %s) Report() (string){ r := fmt.Sprintf(\"%s:%s\",t);fmt.Println(r);return r }\n",n,n,"%+v")
-		fmt.Printf("func (t* Table) Ptrmap%s(id string) (* %s){ return t.%ss[id] }\n",n,n,n)
+		fmt.Printf("func (t* Table) Ptrmap%s(id string) (* %s){ if val,ok := t.%ss[id]; ok { return val } else {  return Future%s(id) } }\n",n,n,n,n)
 		fmt.Printf("func (t* Table) Strmap%s(id string, f * %s) (*%s){ t.%ss[id] =f; f.Report(); return f}\n",n,n,n,n)
 		fmt.Printf("type %s struct {}\n", n)
 		fmt.Printf("%ss map[string]*%s\n", n,n)

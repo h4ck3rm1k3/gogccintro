@@ -10,11 +10,7 @@ import (
 	"github.com/h4ck3rm1k3/gogccintro/fakego/token"
 )
 
-	//"Strmap(\"0x[a-h0-9]+\",&ast\.\([A-Za-z]+\)"
-	//"Strmap(\(\"0x[a-h0-9]+\)\",&ast\.\([A-Za-z]+\)"
-	// Strmap\2(\1,&ast.\2
-
-func BenchmarkVistAst(b* testing.B)  {
+func TestVistAst(b* testing.T)  {
 	////
 	p:= ast.CreateTable()
 

@@ -41,13 +41,6 @@ type Ident struct {
 	Obj Foo2
 }
 
-type Object struct {
-	Kind Foo3
-	Name Foo3
-	Decl Foo2
-	Data Foo3
-}
-
 type InterfaceType struct {
 	Interface Foo3
 	Methods *FieldList
@@ -469,6 +462,30 @@ type Spec interface {
 // deferred
 type Deferred struct {
 	Id    string 
-	Data  Foo2
+	//Data  Foo2
+	//Data  int64
 	Set   interface{} 
+}
+
+type Deferred2 struct {
+	Id    string 
+	Set   interface{} 
+}
+
+
+// type ObjectInternal struct {
+// 	Kind Foo3
+// 	Name Foo3
+// 	Decl Foo2
+// 	Data Foo3
+// }
+
+type Object struct {
+
+	Deferred Deferred2
+	
+	Kind Foo3
+	Name Foo3
+	Decl Foo2
+	Data Foo3
 }

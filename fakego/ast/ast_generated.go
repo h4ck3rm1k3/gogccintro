@@ -3,16 +3,35 @@ package ast
 import (
 	"strings"
 	"fmt"
-	"bytes"
-	"encoding/json"
+	"os"
+	"bufio"
+	//"bytes"
+	//"encoding/json"
+	//"gopkg.in/yaml.v2"
+	lager "github.com/lowentropy/go-lager"
 )
 
-func DoMarshal(i interface{}) {
-	var buffer bytes.Buffer	
-	body, _ := json.MarshalIndent(i,"\t","\t")
-	buffer.Write(body)
-	buffer.WriteString("\n")
-	fmt.Printf("%s",buffer.String())
+func DoMarshal(i interface{}, filename string ) {
+
+	fo, err := os.Create(filename)
+	if err != nil {
+		panic(err)
+	}
+	// close fo on exit and check for its returned error
+	defer func() {
+		if err := fo.Close(); err != nil {
+			panic(err)
+		}
+	}()
+	w := bufio.NewWriter(fo)
+
+	//var buffer bytes.Buffer
+	encoder := lager.NewEncoder(w)
+	encoder.Write(i)
+	encoder.Finish()    
+	//body, _ := yaml.Marshal(i)
+	//buffer.WriteString("\n")
+	//fmt.Printf("%s",buffer.String())
 }
 
 func (f* Ident ) ToString( ) (string) {
@@ -38,9 +57,12 @@ func (f *FieldList) Report( ) (string) {
 
 
 func (t* Scope) Report() (string){
+
+	DoMarshal(t,"scope.gob")
+	
 	for i,j:= range t.Objects {
 		fmt.Printf("Scope:%s :\n\t%v\n",i,j.Report())
-		//DoMarshal(j)
+
 	}
  	return "Scope..." }
 
@@ -121,11 +143,7 @@ func (t* MapType) Report() (string){
 }
     func (t* NewIdent) Report() (string){ r := fmt.Sprintf("NewIdent:%+v",t);/*fmt.Println(r)*/;return r }
     func (t* Node) Report() (string){ r := fmt.Sprintf("Node:%+v",t);/*fmt.Println(r)*/;return r }
-func (t* Object) Report() (string){
-	r := fmt.Sprintf("Object: Kind:%s Name:%s Decl:%+v",t.Kind, t.Name, t.Decl.Report());
-	/*fmt.Println(r)*/;
-	
-	return r }
+
     func (t* Package) Report() (string){ r := fmt.Sprintf("Package:%+v",t);/*fmt.Println(r)*/;return r }
     func (t* ParenExpr) Report() (string){ r := fmt.Sprintf("ParenExpr:%+v",t);/*fmt.Println(r)*/;return r }
     func (t* RangeStmt) Report() (string){ r := fmt.Sprintf("RangeStmt:%+v",t);/*fmt.Println(r)*/;return r }
@@ -169,3 +187,9 @@ func (t* TypeSpec) Report() (string){
     func (t* UnaryExpr) Report() (string){ r := fmt.Sprintf("UnaryExpr:%+v",t);/*fmt.Println(r)*/;return r }
     func (t* ValueSpec) Report() (string){ r := fmt.Sprintf("ValueSpec:%+v",t);/*fmt.Println(r)*/;return r }
 
+
+func (t* Object) Report() (string){
+	r := fmt.Sprintf("Object: Kind:%s Name:%s Decl:%+v",t.Kind, t.Name, t.Decl.Report());
+	/*fmt.Println(r)*/;
+	
+	return r }

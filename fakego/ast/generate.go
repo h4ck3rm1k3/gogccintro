@@ -81,10 +81,13 @@ func Generate() {
 	for _,n := range Names {
 		fmt.Printf("func (t* %s) Report() (string){ r := fmt.Sprintf(\"%s:%s\",t);fmt.Println(r);return r }\n",n,n,"%+v")
 		fmt.Printf("func (t* Table) Ptrmap%s(id string) (* %s){ if val,ok := t.%ss[id]; ok { return val } else {  return Future%s(id) } }\n",n,n,n,n)
+		fmt.Printf("func (t* Table) Ptrmap%s(id string) (* %s){ if val,ok := t.%ss[id]; ok { return val } else {  return Future%s(id) } }\n",n,n,n,n)
+		
 		fmt.Printf("func (t* Table) Strmap%s(id string, f * %s) (*%s){ t.%ss[id] =f; f.Report(); return f}\n",n,n,n,n)
 		fmt.Printf("type %s struct {}\n", n)
 		fmt.Printf("%ss map[string]*%s\n", n,n)
 		fmt.Printf("%ss : make(map[string]*%s),\n", n,n)
+		fmt.Printf("lager.Register(ast.%s{})\n", n)
 
 	}
 }

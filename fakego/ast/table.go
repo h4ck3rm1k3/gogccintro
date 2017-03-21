@@ -94,7 +94,11 @@ func (t* Table) StrmapCompositeLit(id string, f * CompositeLit) (*CompositeLit){
 func (t* Table) StrmapDecl(id string, f Decl) (Decl){ t.Decls[id] =f; f.Report(); return f}
 func (t* Table) StrmapDeclStmt(id string, f * DeclStmt) (*DeclStmt){ t.DeclStmts[id] =f; f.Report(); return f}
 func (t* Table) StrmapDeferStmt(id string, f * DeferStmt) (*DeferStmt){ t.DeferStmts[id] =f; f.Report(); return f}
-func (t* Table) StrmapEllipsis(id string, f * Ellipsis) (*Ellipsis){ t.Ellipsiss[id] =f; f.Report(); return f}
+func (t* Table) StrmapEllipsis(id string, f * Ellipsis) (*Ellipsis){
+	/// 
+	t.Ellipsiss[id] =f;
+	f.Report();
+	return f}
 func (t* Table) StrmapEmptyStmt(id string, f * EmptyStmt) (*EmptyStmt){ t.EmptyStmts[id] =f; f.Report(); return f}
 func (t* Table) StrmapExpr(id string, f Expr) (Expr){ t.Exprs[id] =f; f.Report(); return f}
 func (t* Table) StrmapExprStmt(id string, f * ExprStmt) (*ExprStmt){ t.ExprStmts[id] =f; f.Report(); return f}
@@ -102,7 +106,7 @@ func (t* Table) StrmapField(id string, f * Field) (*Field){ t.Fields[id] =f; f.R
 func (t* Table) StrmapFieldList(id string, f * FieldList) (*FieldList){ t.FieldLists[id] =f; f.Report(); return f}
 func (t* Table) StrmapFile(id string, f * File) (*File){ t.Files[id] =f; f.Report(); return f}
 func (t* Table) StrmapForStmt(id string, f * ForStmt) (*ForStmt){ t.ForStmts[id] =f; f.Report(); return f}
-func (t* Table) StrmapFuncDecl(id string, f * FuncDecl) (*FuncDecl){ t.FuncDecls[id] =f; f.Report(); return f}
+
 func (t* Table) StrmapFuncLit(id string, f * FuncLit) (*FuncLit){ t.FuncLits[id] =f; f.Report(); return f}
 func (t* Table) StrmapFuncType(id string, f * FuncType) (*FuncType){ t.FuncTypes[id] =f; f.Report(); return f}
 func (t* Table) StrmapGenDecl(id string, f * GenDecl) (*GenDecl){ t.GenDecls[id] =f; f.Report(); return f}
@@ -119,7 +123,7 @@ func (t* Table) StrmapLabeledStmt(id string, f * LabeledStmt) (*LabeledStmt){ t.
 func (t* Table) StrmapMapType(id string, f * MapType) (*MapType){ t.MapTypes[id] =f; f.Report(); return f}
 func (t* Table) StrmapNewIdent(id string, f * NewIdent) (*NewIdent){ t.NewIdents[id] =f; f.Report(); return f}
 func (t* Table) StrmapNode(id string, f * Node) (*Node){ t.Nodes[id] =f; f.Report(); return f}
-func (t* Table) StrmapObject(id string, f * Object) (*Object){ t.Objects[id] =f; f.Report(); return f}
+
 func (t* Table) StrmapPackage(id string, f * Package) (*Package){ t.Packages[id] =f; f.Report(); return f}
 func (t* Table) StrmapParenExpr(id string, f * ParenExpr) (*ParenExpr){ t.ParenExprs[id] =f; f.Report(); return f}
 func (t* Table) StrmapRangeStmt(id string, f * RangeStmt) (*RangeStmt){ t.RangeStmts[id] =f; f.Report(); return f}
@@ -138,7 +142,7 @@ func (t* Table) StrmapTypeAssertExpr(id string, f * TypeAssertExpr) (*TypeAssert
 
 func (t* Table) StrmapTypeSwitchStmt(id string, f * TypeSwitchStmt) (*TypeSwitchStmt){ t.TypeSwitchStmts[id] =f; f.Report(); return f}
 func (t* Table) StrmapUnaryExpr(id string, f * UnaryExpr) (*UnaryExpr){ t.UnaryExprs[id] =f; f.Report(); return f}
-func (t* Table) StrmapValueSpec(id string, f * ValueSpec) (*ValueSpec){ t.ValueSpecs[id] =f; f.Report(); return f}
+
 
 
 func (t* Table) PtrmapArrayType(id string) (* ArrayType){ return t.ArrayTypes[id] }
@@ -163,8 +167,6 @@ func (t* Table) PtrmapDeferStmt(id string) (* DeferStmt){ return t.DeferStmts[id
 func (t* Table) PtrmapEllipsis(id string) (* Ellipsis){ return t.Ellipsiss[id] }
 func (t* Table) PtrmapEmptyStmt(id string) (* EmptyStmt){ return t.EmptyStmts[id] }
 func (t* Table) PtrmapExprStmt(id string) (* ExprStmt){ return t.ExprStmts[id] }
-func (t* Table) PtrmapField(id string) (* Field){ return t.Fields[id] }
-func (t* Table) PtrmapFieldList(id string) (* FieldList){ return t.FieldLists[id] }
 func (t* Table) PtrmapFile(id string) (* File){ return t.Files[id] }
 func (t* Table) PtrmapForStmt(id string) (* ForStmt){ return t.ForStmts[id] }
 func (t* Table) PtrmapFuncDecl(id string) (* FuncDecl){ return t.FuncDecls[id] }
@@ -205,7 +207,7 @@ func (t* Table) PtrmapDecl(id string) (Decl){ return t.Decls[id] }
 func (t* Table) PtrmapExpr(id string) (Expr){ return t.Exprs[id] }
 func (t* Table) PtrmapStmt(id string) (Stmt){ return t.Stmts[id] }
 func (t* Table) PtrmapSpec(id string) (Spec){ return t.Specs[id] }
-func (t* Table) PtrmapObject(id string) (*Object){ return t.Objects[id] }
+
 
 func CreateTable() (*Table) {
 	return &Table{
@@ -290,19 +292,37 @@ func (t* Table) StrmapTypeSpec(id string, f * TypeSpec) (*TypeSpec){
 }
 
 func (t* Deferred) Report() (string){
-	if t.Data != nil {
-		return t.Data.Report()
-	} else {
+	//if t.Data != nil {
+	//	return t.Data.Report()
+	//} else {
 		i := t.Set
 		switch v:= i.(type) {
+		case *map[string]*Field :
+			if val, ok := (*v)[t.Id]; ok {
+				if val == nil {
+					fmt.Printf("did not find %s %s",v,t)
+				} else {
+					d := (*v)[t.Id]
+					return d.Report()					
+				}
+			}
+		case *map[string]*FieldList :
+			if val, ok := (*v)[t.Id]; ok {
+				if val == nil {
+					fmt.Printf("did not find %s %s",v,t)
+				} else {
+					d := (*v)[t.Id]
+					return d.Report()					
+				}
+			}
 		case *map[string]*TypeSpec :
 
 			if val, ok := (*v)[t.Id]; ok {
 				if val == nil {
 					fmt.Printf("did not find %s %s",v,t)
 				} else {
-					t.Data = (*v)[t.Id]
-					return t.Data.Report()					
+					d := (*v)[t.Id]
+					return d.Report()					
 				}
 			}
 				
@@ -313,7 +333,7 @@ func (t* Deferred) Report() (string){
 			panic("unknown type")
 			return "unkown"
 		}
-	}
+	//}
 	return "huh?"
 }
 
@@ -327,5 +347,94 @@ func (t* Table) PtrmapTypeSpec(id string) (Foo2){
 		
 	} else {
 		return &Deferred{ Id:id, Set: &t.TypeSpecs  }
+	}
+}
+
+func (t* Table) PtrmapField(id string) (Foo2){
+
+	//return t.Fields[id]
+	if val, ok := t.Fields[id]; ok {
+		if val == nil {
+			return &Deferred{ Id:id, Set: &t.Fields  }
+		} else {
+			return val
+		}
+		
+	} else {
+		return &Deferred{ Id:id, Set: &t.Fields  }
+	}
+}
+func (t* Table) PtrmapFieldList(id string) (Foo2){
+	// return t.FieldLists[id]
+
+	if val, ok := t.FieldLists[id]; ok {
+		if val == nil {
+			return &Deferred{ Id:id, Set: &t.FieldLists  }
+		} else {
+			return val
+		}		
+	} else {
+		return &Deferred{ Id:id, Set: &t.FieldLists  }
+	}
+}
+
+func (t* Table) PtrmapObject(id string) (*Object){
+	//return t.Objects[id]
+	if val, ok := t.Objects[id]; ok {
+		if val == nil {
+			//return &Deferred{ Id:id, Set: &t.Objects  }
+			//panic(id)
+			return &Object{
+				Deferred:Deferred2{
+					Id:id,
+					Set: &t.Objects,
+				},
+				//IsValid:false,
+				//Address:id,
+			}
+
+		} else {
+			return val
+		}
+		
+	} else {
+		return &Object{
+			Deferred:Deferred2{
+				Id:id,
+				Set: &t.TypeSpecs,
+			},
+			//IsValid:false,
+			//Address:id,
+		}
+		//return &Deferred{ Id:id, Set: &t.Objects  }
+		panic(id)
+	}
+}
+
+func (t* Table) StrmapObject(id string, f * Object) (*Object){ t.Objects[id] =f; f.Report(); return f}
+func (t* Table) StrmapValueSpec(id string, f * ValueSpec) (Foo2){
+	//t.ValueSpecs[id] =f; f.Report(); return f
+	s := t.ValueSpecs
+	if val, ok := s[id]; ok {
+		if val == nil {
+			return &Deferred{ Id:id, Set: &s  }
+		} else {
+			return val
+		}		
+	} else {
+		return &Deferred{ Id:id, Set: &s  }
+	}
+}
+func (t* Table) StrmapFuncDecl(id string, f * FuncDecl) (Foo2){
+	//t.FuncDecls[id] =f; f.Report(); return f
+	s := t.FuncDecls
+	if val, ok := s[id]; ok {
+		if val == nil {
+			return &Deferred{ Id:id, Set: &s  }
+		} else {
+			return val
+		}		
+	} else {
+		return &Deferred{ Id:id, Set: &s  }
 	}
 }

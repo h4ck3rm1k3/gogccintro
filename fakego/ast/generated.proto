@@ -96,7 +96,27 @@ enum NodeType {
     VALUESPEC = 57; // ENUM BASE
     COMMENTGROUP = 58; // ENUM BASE
     OBJECT = 59; // ENUM BASE
+
+    DEFERRED = 60; // extras
+    DEFERRED2 = 61; // extras	
 }
+
+message ExprStmt {
+	required Foo2 X=1; // expression	
+}
+
+message StarExpr {}
+message DeclStmt {}
+message BadDecl {}
+message ChanDir {}
+message ChanType {}
+message Comment {}
+message ReturnStmt {}
+message IsExported {}
+message NewIdent {}
+message Node {}
+
+
 
 // An AssignStmt node represents an assignment or
 // a short variable declaration.
@@ -105,13 +125,13 @@ message Expr {
 optional BadExpr badexpr = 3; // Interface:Expr
 optional BinaryExpr binaryexpr = 6; // Interface:Expr
 optional CallExpr callexpr = 9; // Interface:Expr
-//optional ExprStmt exprstmt = 20; // Interface:Expr
+optional ExprStmt exprstmt = 20; // Interface:Expr
 optional IndexExpr indexexpr = 34; // Interface:Expr
 optional KeyValueExpr keyvalueexpr = 37; // Interface:Expr
 optional ParenExpr parenexpr = 42; // Interface:Expr
 optional SelectorExpr selectorexpr = 46; // Interface:Expr
 optional SliceExpr sliceexpr = 48; // Interface:Expr
-//optional StarExpr starexpr = 50; // Interface:Expr
+optional StarExpr starexpr = 50; // Interface:Expr
 optional TypeAssertExpr typeassertexpr = 53; // Interface:Expr
 optional UnaryExpr unaryexpr = 56; // Interface:Expr
 }
@@ -122,17 +142,17 @@ message Stmt {
 optional BadStmt badstmt = 4; // Interface:Stmt
 optional BlockStmt blockstmt = 7; // Interface:Stmt
 optional BranchStmt branchstmt = 8; // Interface:Stmt
-//optional DeclStmt declstmt = 16; // Interface:Stmt
+optional DeclStmt declstmt = 16; // Interface:Stmt
 optional DeferStmt deferstmt = 17; // Interface:Stmt
 optional EmptyStmt emptystmt = 19; // Interface:Stmt
-//optional ExprStmt exprstmt = 20; // Interface:Stmt
+optional ExprStmt exprstmt = 20; // Interface:Stmt
 optional ForStmt forstmt = 24; // Interface:Stmt
 optional GoStmt gostmt = 29; // Interface:Stmt
 optional IfStmt ifstmt = 31; // Interface:Stmt
 optional IncDecStmt incdecstmt = 33; // Interface:Stmt
 optional LabeledStmt labeledstmt = 38; // Interface:Stmt
 optional RangeStmt rangestmt = 43; // Interface:Stmt
-//optional ReturnStmt returnstmt = 44; // Interface:Stmt
+optional ReturnStmt returnstmt = 44; // Interface:Stmt
 optional SelectStmt selectstmt = 45; // Interface:Stmt
 optional SendStmt sendstmt = 47; // Interface:Stmt
 optional SwitchStmt switchstmt = 52; // Interface:Stmt
@@ -142,8 +162,8 @@ optional AssignStmt assignstmt = 56; // Interface:Stmt
 
 message Decl {
 	required NodeType type = 1;
-//optional BadDecl baddecl = 2; // Interface:Decl
-//optional DeclStmt declstmt = 16; // Interface:Decl
+optional BadDecl baddecl = 2; // Interface:Decl
+optional DeclStmt declstmt = 16; // Interface:Decl
 optional FuncDecl funcdecl = 25; // Interface:Decl
 optional GenDecl gendecl = 28; // Interface:Decl
 
@@ -160,7 +180,7 @@ message  Foo3{
 message  Foo2{
 	required NodeType type = 1;
 
-//optional BadDecl baddecl = 2; // Interface:BASE
+optional BadDecl baddecl = 2; // Interface:BASE
 optional BadExpr badexpr = 3; // Interface:BASE
 optional BadStmt badstmt = 4; // Interface:BASE
 optional BasicLit basiclit = 5; // Interface:BASE
@@ -169,16 +189,16 @@ optional BlockStmt blockstmt = 7; // Interface:BASE
 optional BranchStmt branchstmt = 8; // Interface:BASE
 optional CallExpr callexpr = 9; // Interface:BASE
 optional CaseClause caseclause = 10; // Interface:BASE
-//optional ChanDir chandir = 11; // Interface:BASE
-//optional ChanType chantype = 12; // Interface:BASE
+optional ChanDir chandir = 11; // Interface:BASE
+optional ChanType chantype = 12; // Interface:BASE
 optional CommClause commclause = 13; // Interface:BASE
-//optional Comment comment = 14; // Interface:BASE
+optional Comment comment = 14; // Interface:BASE
 optional CompositeLit compositelit = 15; // Interface:BASE
-//optional DeclStmt declstmt = 16; // Interface:BASE
+optional DeclStmt declstmt = 16; // Interface:BASE
 optional DeferStmt deferstmt = 17; // Interface:BASE
 optional Ellipsis ellipsis = 18; // Interface:BASE
 optional EmptyStmt emptystmt = 19; // Interface:BASE
-//optional ExprStmt exprstmt = 20; // Interface:BASE
+optional ExprStmt exprstmt = 20; // Interface:BASE
 optional Field field = 21; // Interface:BASE
 optional FieldList fieldlist = 22; // Interface:BASE
 optional File file = 23; // Interface:BASE
@@ -194,21 +214,21 @@ optional ImportSpec importspec = 32; // Interface:BASE
 optional IncDecStmt incdecstmt = 33; // Interface:BASE
 optional IndexExpr indexexpr = 34; // Interface:BASE
 optional InterfaceType interfacetype = 35; // Interface:BASE
-//optional IsExported isexported = 36; // Interface:BASE
+optional IsExported isexported = 36; // Interface:BASE
 optional KeyValueExpr keyvalueexpr = 37; // Interface:BASE
 optional LabeledStmt labeledstmt = 38; // Interface:BASE
 optional MapType maptype = 39; // Interface:BASE
-//optional NewIdent newident = 40; // Interface:BASE
+optional NewIdent newident = 40; // Interface:BASE
 optional Package package = 41; // Interface:BASE
 optional ParenExpr parenexpr = 42; // Interface:BASE
 optional RangeStmt rangestmt = 43; // Interface:BASE
-//optional ReturnStmt returnstmt = 44; // Interface:BASE
+optional ReturnStmt returnstmt = 44; // Interface:BASE
 optional SelectStmt selectstmt = 45; // Interface:BASE
 optional SelectorExpr selectorexpr = 46; // Interface:BASE
 optional SendStmt sendstmt = 47; // Interface:BASE
 optional SliceExpr sliceexpr = 48; // Interface:BASE
 optional Spec spec = 49; // Interface:BASE
-//optional StarExpr starexpr = 50; // Interface:BASE
+optional StarExpr starexpr = 50; // Interface:BASE
 optional StructType structtype = 51; // Interface:BASE
 optional SwitchStmt switchstmt = 52; // Interface:BASE
 optional TypeAssertExpr typeassertexpr = 53; // Interface:BASE
@@ -217,9 +237,12 @@ optional TypeSwitchStmt typeswitchstmt = 55; // Interface:BASE
 optional UnaryExpr unaryexpr = 56; // Interface:BASE
 optional ValueSpec valuespec = 57; // Interface:BASE
 optional CommentGroup commentgroup = 58; // Interface:BASE
-optional Object object = 60; // Interface:BASE
-///optional ArrayType arraytype = 60; // Interface:BASE
 optional AssignStmt assignstmt = 59; // Interface:BASE
+optional Object object = 60; // Interface:BASE
+optional ArrayType arraytype = 61; // Interface:BASE
+
+optional Deferred deferred = 62; // Interface:BASE
+
 }
 
 message AssignStmt {
@@ -356,14 +379,9 @@ message Deferred {
 
   // Data  Foo2
   // Data  int64
-  //  optional interface{} Set = 2 ;
+   required NodeType type = 2;
 }
 
-message Deferred2 {
-  optional string Id = 1 ;
-
-//  optional interface{} Set = 2 ;
-}
 
 // An Ellipsis node stands for the "..." type in a
 // parameter list or the "..." length in an array type.
@@ -563,7 +581,7 @@ message MapType {
 }
 
 message Object {
-  optional Deferred2 Deferred = 1 ;
+  optional Deferred Deferred = 1 ;
 
   optional Foo3 Kind = 2 ;
 
@@ -689,16 +707,21 @@ message SwitchStmt {
   optional Foo2 Body = 4 ;
 }
 
-message Table {
+message ArrayType {
+	required Foo3 Lbrack =1;
+	required Foo2 Elt  =2;
+}
+
+message AddressTable {
   map<string, Scope> Scopes = 1 ;
 
   map<string, Object> Objects = 2 ;
 
-//  map<string, ArrayType> ArrayTypes = 3 ;
+  map<string, ArrayType> ArrayTypes = 3 ;
 
   map<string, AssignStmt> AssignStmts = 4 ;
 
-//  map<string, BadDecl> BadDecls = 5 ;
+  map<string, BadDecl> BadDecls = 5 ;
 
   map<string, BadExpr> BadExprs = 6 ;
 
@@ -716,19 +739,19 @@ message Table {
 
   map<string, CaseClause> CaseClauses = 13 ;
 
-  //map<string, ChanDir> ChanDirs = 14 ;
+  map<string, ChanDir> ChanDirs = 14 ;
 
-//  map<string, ChanType> ChanTypes = 15 ;
+  map<string, ChanType> ChanTypes = 15 ;
 
   map<string, CommClause> CommClauses = 16 ;
 
   map<string, CommentGroup> CommentGroups = 17 ;
 
-//  map<string, Comment> Comments = 18 ;
+  map<string, Comment> Comments = 18 ;
 
   map<string, CompositeLit> CompositeLits = 19 ;
 
-  //map<string, DeclStmt> DeclStmts = 20 ;
+  map<string, DeclStmt> DeclStmts = 20 ;
 
   map<string, DeferStmt> DeferStmts = 21 ;
 
@@ -736,7 +759,7 @@ message Table {
 
   map<string, EmptyStmt> EmptyStmts = 23 ;
 
-  //map<string, ExprStmt> ExprStmts = 24 ;
+  map<string, ExprStmt> ExprStmts = 24 ;
 
   map<string, FieldList> FieldLists = 25 ;
 
@@ -768,7 +791,7 @@ message Table {
 
   map<string, InterfaceType> InterfaceTypes = 39 ;
 
-//  map<string, IsExported> IsExporteds = 40 ;
+  map<string, IsExported> IsExporteds = 40 ;
 
   map<string, KeyValueExpr> KeyValueExprs = 41 ;
 
@@ -776,9 +799,9 @@ message Table {
 
   map<string, MapType> MapTypes = 43 ;
 
-//  map<string, NewIdent> NewIdents = 44 ;
+  map<string, NewIdent> NewIdents = 44 ;
 
-//  map<string, Node> Nodes = 45 ;
+  map<string, Node> Nodes = 45 ;
 
   map<string, Package> Packages = 46 ;
 
@@ -786,7 +809,7 @@ message Table {
 
   map<string, RangeStmt> RangeStmts = 48 ;
 
-//  map<string, ReturnStmt> ReturnStmts = 49 ;
+  map<string, ReturnStmt> ReturnStmts = 49 ;
 
   map<string, SelectStmt> SelectStmts = 50 ;
 

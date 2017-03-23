@@ -87,7 +87,7 @@ func Generate() {
 		n2 := strings.ToUpper(n)
 		n3 := strings.ToLower(n)
 		fmt.Printf("%s = %d, // ENUM BASE\n",n2,j)
-		fmt.Printf("optional %s %s = %d, // Interface:BASE\n",n,n3,j)			
+		fmt.Printf("optional %s %s = %d, // InterOAface:BASE\n",n,n3,j)			
 		
 		for _,i := range Interfaces {
 			if strings.Contains(n,i) {				

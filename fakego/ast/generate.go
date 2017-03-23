@@ -1,6 +1,7 @@
 package ast
 import(
 	"fmt"
+	"strings"
 )
 func Generate() {
 	Names := []string{
@@ -73,12 +74,28 @@ func Generate() {
 		"Spec",
 		"Object",
 	}
-	// interfaces
-	//"Expr",
-	//"Stmt",
-	//"Decl",
-	// "Node",
-	for _,n := range Names {
+
+	Interfaces := []string{
+		// interfaces
+		"Expr",
+		"Stmt",
+		"Decl",
+		"Node",
+	}
+
+	for j,n := range Names {
+		n2 := strings.ToUpper(n)
+		n3 := strings.ToLower(n)
+		fmt.Printf("%s = %d, // ENUM BASE\n",n2,j)
+		fmt.Printf("optional %s %s = %d, // Interface:BASE\n",n,n3,j)			
+		
+		for _,i := range Interfaces {
+			if strings.Contains(n,i) {				
+				fmt.Printf("%s = %d, // ENUM %s\n",n2,j,i)
+				fmt.Printf("optional %s %s = %d, // Interface:%s\n",n,n3,j,i)			
+			}
+		}
+		
 		fmt.Printf("func (t* %s) Report() (string){ r := fmt.Sprintf(\"%s:%s\",t);fmt.Println(r);return r }\n",n,n,"%+v")
 		fmt.Printf("func (t* Table) Ptrmap%s(id string) (* %s){ if val,ok := t.%ss[id]; ok { return val } else {  return Future%s(id) } }\n",n,n,n,n)
 		fmt.Printf("func (t* Table) Ptrmap%s(id string) (* %s){ if val,ok := t.%ss[id]; ok { return val } else {  return Future%s(id) } }\n",n,n,n,n)

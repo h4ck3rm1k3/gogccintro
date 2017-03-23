@@ -4,7 +4,6 @@ import (
 	//"strings"
 	"fmt"
 	"os"
-	"bufio"
 	lager "github.com/lowentropy/go-lager"
 	"github.com/h4ck3rm1k3/gogccintro/fakego/ast"
 )
@@ -86,11 +85,11 @@ func DoUnmarshal(filename string ) {
 			panic(err)
 		}
 	}()
-	w := bufio.NewReader(fo)
 
-	decoder,err := lager.NewDecoder(w)
+	decoder,err := lager.NewDecoder(fo)
 	if err != nil {
 		panic(err)
+		//fmt.Printf("Error %s\n",err)
 	}
 
 	obj,err := decoder.Read(); 

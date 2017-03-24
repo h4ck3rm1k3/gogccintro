@@ -19,7 +19,7 @@ limitations under the License.
 
 syntax = 'proto2';
 
-package github.com.h4ck3rm1k3.gogccintro.fakego.ast;
+package github.com.h4ck3rm1k3.gogccintro.fakego.ast.proto;
 
 //import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 //import "github.com/h4ck3rm1k3/gogccintro/fakego/ast";

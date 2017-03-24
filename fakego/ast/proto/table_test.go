@@ -1,4 +1,4 @@
-package ast
+package astproto
 
 import (
 	"testing"

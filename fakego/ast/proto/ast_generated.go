@@ -1,4 +1,4 @@
-package ast
+package astproto
 
 import (
 	"strings"
@@ -52,7 +52,6 @@ func (f *FieldList) Report( ) (string) {
 	}
 	return "FieldList[\n\t" + strings.Join(keys, ", ") + "]"
 }
-
 
 func (t* Scope) Report() (string){
 

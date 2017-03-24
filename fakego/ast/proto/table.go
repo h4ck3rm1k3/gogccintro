@@ -1,5 +1,8 @@
-package ast
-import "fmt"
+package astproto
+import (
+	"fmt"
+	"github.com/h4ck3rm1k3/gogccintro/fakego/ast"
+)
 // type Table struct {
 // 	Scopes map[string] *Scope
 // 	Objects map[string] *Object
@@ -136,7 +139,7 @@ func (t* AddressTable) StrmapSliceExpr(id string, f * SliceExpr) (*SliceExpr){ t
 
 //func (t* AddressTable) StrmapStarExpr(id string, f * StarExpr) (*StarExpr){ t.StarExprs[id] =f; f.Report(); return f}
 
-func (t* AddressTable) StrmapStructType(id string, f * StructType) (*StructType){ t.StructTypes[id] =f; f.Report(); return f}
+
 func (t* AddressTable) StrmapSwitchStmt(id string, f * SwitchStmt) (*SwitchStmt){ t.SwitchStmts[id] =f; f.Report(); return f}
 func (t* AddressTable) StrmapTypeAssertExpr(id string, f * TypeAssertExpr) (*TypeAssertExpr){ t.TypeAssertExprs[id] =f; f.Report(); return f}
 
@@ -509,3 +512,25 @@ func (t* AddressTable) PtrmapDecl(id string) (Decl){ return *t.Decls[id] }
 func (t* AddressTable) PtrmapExpr(id string) (Expr){ return *t.Exprs[id] }
 func (t* AddressTable) PtrmapStmt(id string) (Stmt){ return *t.Stmts[id] }
 func (t* AddressTable) PtrmapSpec(id string) (Spec){ return *t.Specs[id] }
+
+
+
+///func (t* AddressTable) StrmapStructType(id string, f * StructType) (*StructType){ t.StructTypes[id] =f; f.Report(); return f}
+func (t* AddressTable) ConvertFoo3(f ast.Foo3) (*Foo3){
+	return nil
+}
+
+func (t* AddressTable) ConvertFieldList(f *ast.FieldList) (*FieldList){
+	return nil
+}
+
+func (t* AddressTable) ConvertStructType(f *ast.StructType) (*StructType){
+	f2 := false
+	return &StructType{
+		Struct : t.ConvertFoo3(f.Struct),
+		Fields : t.ConvertFieldList(f.Fields),
+		Incomplete : &f2,
+	}
+}
+
+func (t* AddressTable) StrmapStructType(id string, f * ast.StructType) (*ast.StructType){ t.StructTypes[id] = t.ConvertStructType(f); f.Report(); return f}

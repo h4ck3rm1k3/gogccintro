@@ -1,5 +1,5 @@
 //generated.pb.go
-package ast
+package astproto
 
 import (
 	"testing"

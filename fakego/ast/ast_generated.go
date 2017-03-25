@@ -58,7 +58,7 @@ func (f *FieldList) Report( ) (string) {
 
 func (t* Scope) Report() (string){
 
-	DoMarshal(t,"scope.gob")
+	//DoMarshal(t,"scope.gob")
 	
 	for i,j:= range t.Objects {
 		fmt.Printf("Scope:%s :\n\t%v\n",i,j.Report())

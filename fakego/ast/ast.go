@@ -459,6 +459,10 @@ type Spec interface {
 	Report() string
 }
 
+type Type interface {
+	Report() string
+}
+
 // deferred
 type Deferred struct {
 	Id    string 

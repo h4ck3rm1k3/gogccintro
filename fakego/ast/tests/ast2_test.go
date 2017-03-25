@@ -12,7 +12,9 @@ import (
 
 func TestVistAst(b* testing.T)  {
 	////
+	visitor := &CreateCopyVisitor{}
 	p:= ast.CreateTable()
+	p.AddVisitor(visitor)
 
 	p.StrmapFile("0xc4200a2380",&ast.File/*struct*/{
   Package: 249,

@@ -1,6 +1,24 @@
 package ast
-import "fmt"
+import (
+	//"fmt"
+//	"github.com/h4ck3rm1k3/gogccintro/fakego/ast"
+)
+
+type Visitor interface {
+	VisitScope(t *Table, s * Scope)
+	// VisitStructType(t *Table, s * Scope, sn * Ident, st * StructType)
+	// VisitFieldList(t *Table, s * Scope, st * StructType, fl *FieldList)
+	// VisitStructIdent(t *Table, s * Scope, st * StructType, i * Ident)
+	// VisitField(t *Table, s * Scope, st * StructType, fl *FieldList, f * Field)
+	// VisitFieldType(t *Table, s * Scope, st * StructType, fl *FieldList, f * Field, ft * Type)
+}
+
+func (t* Table) AddVisitor(v Visitor){
+	t.Visitors = append(t.Visitors,v)
+}
+
 type Table struct {
+	Visitors []Visitor
 	Scopes map[string] *Scope
 	Objects map[string] *Object
 	ArrayTypes map[string]*ArrayType
@@ -21,12 +39,10 @@ type Table struct {
 	Comments map[string]*Comment
 	CompositeLits map[string]*CompositeLit
 	DeclStmts map[string]*DeclStmt
-
 	DeferStmts map[string]*DeferStmt
 	Ellipsiss map[string]*Ellipsis
 	EmptyStmts map[string]*EmptyStmt
 	ExprStmts map[string]*ExprStmt
-
 	FieldLists map[string]*FieldList
 	Fields map[string]*Field
 	Files map[string]*File
@@ -56,9 +72,7 @@ type Table struct {
 	SelectorExprs map[string]*SelectorExpr
 	SendStmts map[string]*SendStmt
 	SliceExprs map[string]*SliceExpr
-
 	StarExprs map[string]*StarExpr
-
 	StructTypes map[string]*StructType
 	SwitchStmts map[string]*SwitchStmt
 	TypeAssertExprs map[string]*TypeAssertExpr
@@ -66,7 +80,6 @@ type Table struct {
 	TypeSwitchStmts map[string]*TypeSwitchStmt
 	UnaryExprs map[string]*UnaryExpr
 	ValueSpecs map[string]*ValueSpec
-
 	// interfaces
 	Specs map[string]Spec
 	Decls map[string]Decl
@@ -128,7 +141,7 @@ func (t* Table) StrmapPackage(id string, f * Package) (*Package){ t.Packages[id]
 func (t* Table) StrmapParenExpr(id string, f * ParenExpr) (*ParenExpr){ t.ParenExprs[id] =f; f.Report(); return f}
 func (t* Table) StrmapRangeStmt(id string, f * RangeStmt) (*RangeStmt){ t.RangeStmts[id] =f; f.Report(); return f}
 func (t* Table) StrmapReturnStmt(id string, f * ReturnStmt) (*ReturnStmt){ t.ReturnStmts[id] =f; f.Report(); return f}
-func (t* Table) StrmapScope(id string, f * Scope) (*Scope){ t.Scopes[id] =f; f.Report(); return f}
+
 func (t* Table) StrmapSelectStmt(id string, f * SelectStmt) (*SelectStmt){ t.SelectStmts[id] =f; f.Report(); return f}
 func (t* Table) StrmapSelectorExpr(id string, f * SelectorExpr) (*SelectorExpr){ t.SelectorExprs[id] =f; f.Report(); return f}
 func (t* Table) StrmapSendStmt(id string, f * SendStmt) (*SendStmt){ t.SendStmts[id] =f; f.Report(); return f}
@@ -295,44 +308,14 @@ func (t* Deferred) Report() (string){
 	//if t.Data != nil {
 	//	return t.Data.Report()
 	//} else {
-		i := t.Set
-		switch v:= i.(type) {
-		case *map[string]*Field :
-			if val, ok := (*v)[t.Id]; ok {
-				if val == nil {
-					fmt.Printf("did not find %s %s",v,t)
-				} else {
-					d := (*v)[t.Id]
-					return d.Report()					
-				}
-			}
-		case *map[string]*FieldList :
-			if val, ok := (*v)[t.Id]; ok {
-				if val == nil {
-					fmt.Printf("did not find %s %s",v,t)
-				} else {
-					d := (*v)[t.Id]
-					return d.Report()					
-				}
-			}
-		case *map[string]*TypeSpec :
-
-			if val, ok := (*v)[t.Id]; ok {
-				if val == nil {
-					fmt.Printf("did not find %s %s",v,t)
-				} else {
-					d := (*v)[t.Id]
-					return d.Report()					
-				}
-			}
 				
 						
-		default:
-			//t.Data = v[t.Id]
-			fmt.Printf("unknown type %s %s",v,t)
-			panic("unknown type")
-			return "unkown"
-		}
+		// default:
+		// 	//t.Data = v[t.Id]
+		// 	fmt.Printf("\nunknown type %s %s\n",v,t)
+		// 	panic("unknown type")
+		// 	return "unkown"
+		// }
 	//}
 	return "huh?"
 }
@@ -438,3 +421,13 @@ func (t* Table) StrmapFuncDecl(id string, f * FuncDecl) (Foo2){
 		return &Deferred{ Id:id, Set: &s  }
 	}
 }
+
+
+// outer section is scope
+func (t* Table) StrmapScope(id string, f * Scope) (*Scope){
+	t.Scopes[id] =f;
+	for _,j := range t.Visitors {
+		j.VisitScope(t,f)
+	}
+	//f.Report();
+	return f}

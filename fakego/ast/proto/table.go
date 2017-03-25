@@ -2,6 +2,7 @@ package astproto
 import (
 	"fmt"
 	"github.com/h4ck3rm1k3/gogccintro/fakego/ast"
+	//"github.com/h4ck3rm1k3/gogccintro/fakego/token"
 )
 // type Table struct {
 // 	Scopes map[string] *Scope
@@ -520,17 +521,785 @@ func (t* AddressTable) ConvertFoo3(f ast.Foo3) (*Foo3){
 	return nil
 }
 
-func (t* AddressTable) ConvertFieldList(f *ast.FieldList) (*FieldList){
+// func (t* AddressTable) ConvertFieldList(f *ast.FieldList) (*FieldList){
+// 	return nil
+// }
+
+// func (t* AddressTable) ConvertStructType(f *ast.StructType) (*StructType){
+// 	
+// 	return &StructType{
+// 		Struct : t.ConvertFoo3(f.Struct),
+// 		Fields : t.ConvertFieldList(f.Fields),
+// 		Incomplete : &f2,
+// 	}
+// }
+
+func (t* AddressTable) StrmapStructType(id string, f * ast.StructType) (*ast.StructType){ t.StructTypes[id] = t.ConvertStructType(f); f.Report(); return f}
+
+
+func (t* AddressTable) Converttoken_Pos(f ast.Foo3) (*Foo3){
 	return nil
 }
 
-func (t* AddressTable) ConvertStructType(f *ast.StructType) (*StructType){
-	f2 := false
-	return &StructType{
-		Struct : t.ConvertFoo3(f.Struct),
-		Fields : t.ConvertFieldList(f.Fields),
-		Incomplete : &f2,
+func (t* AddressTable) Converttoken_Pos2(f ast.Foo3) (*Foo2){
+	return nil
+}
+
+func (t* AddressTable) Converttoken_Token(f ast.Foo3) (*Foo3){
+	return nil
+}
+
+func (t* AddressTable) ConvertTypeExpr(f ast.Foo3) (*Foo2){
+	return nil
+}
+
+func (t* AddressTable) ConvertPointerFieldList(f ast.Foo3) (*FieldList){
+	return nil
+}
+
+func (t* AddressTable) ConvertArrayStarIdent(f ast.Foo3) ([]*Ident){
+	return nil
+}
+
+func (t* AddressTable) ConvertTypebool(f ast.Foo3) (*bool){
+	return nil
+}
+
+func (t* AddressTable) ConvertArrayExpr(f ast.Foo3) ([]*Expr){
+	return nil
+}
+
+func (t* AddressTable) ConvertPointerBasicLit(f ast.Foo3) (*Foo2){
+	return nil
+}
+
+func (t* AddressTable) ConvertTypeStmt(f ast.Foo3) (*Foo2){
+	return nil
+}
+
+func (t* AddressTable) ConvertPointerBlockStmt(f ast.Foo3) (*Foo2){
+	return nil
+}
+
+	
+func (t* AddressTable) ConvertMapType(f *ast.MapType) (*MapType){
+//o	
+	return &MapType{
+		Map : t.Converttoken_Pos( f.Map),
+		Key : t.ConvertTypeExpr( f.Key),
+		Value : t.ConvertTypeExpr( f.Value),
+		//Incomplete: &f2,
 	}
 }
 
-func (t* AddressTable) StrmapStructType(id string, f * ast.StructType) (*ast.StructType){ t.StructTypes[id] = t.ConvertStructType(f); f.Report(); return f}
+func (t* AddressTable) ConvertField(f *ast.Field) (*Field){
+	
+	return &Field{
+		//Doc : t.ConvertPointerCommentGroup( f.Doc),
+		Names : t.ConvertArrayStarIdent( f.Names),
+		Type : t.ConvertTypeExpr( f.Type),
+		Tag : t.ConvertPointerBasicLit( f.Tag),
+		//Comment : t.ConvertPointerCommentGroup( f.Comment),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertSliceExpr(f *ast.SliceExpr) (*SliceExpr){
+	
+	return &SliceExpr{
+		X : t.ConvertTypeExpr( f.X),
+		Lbrack : t.Converttoken_Pos( f.Lbrack),
+		Low : t.ConvertTypeExpr( f.Low),
+		High : t.ConvertTypeExpr( f.High),
+		Max : t.ConvertTypeExpr( f.Max),
+		Slice3 : t.ConvertTypebool( f.Slice3),
+		Rbrack : t.Converttoken_Pos( f.Rbrack),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertExprStmt(f *ast.ExprStmt) (*ExprStmt){
+	
+	return &ExprStmt{
+		X : t.ConvertTypeExpr( f.X),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertAssignStmt(f *ast.AssignStmt) (*AssignStmt){
+	
+	return &AssignStmt{
+		Lhs : t.ConvertArrayExpr( f.Lhs),
+		TokPos : t.Converttoken_Pos( f.TokPos),
+		Tok : t.Converttoken_Token( f.Tok),
+		Rhs : t.ConvertArrayExpr( f.Rhs),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertInterfaceType(f *ast.InterfaceType) (*InterfaceType){
+	
+	return &InterfaceType{
+		Interface : t.Converttoken_Pos( f.Interface),
+		Methods : t.ConvertPointerFieldList( f.Methods),
+		Incomplete : t.ConvertTypebool( f.Incomplete),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertIfStmt(f *ast.IfStmt) (*IfStmt){
+	
+	return &IfStmt{
+		If : t.Converttoken_Pos( f.If),
+		Init : t.ConvertTypeStmt( f.Init),
+		Cond : t.ConvertTypeExpr( f.Cond),
+		Body : t.ConvertPointerBlockStmt( f.Body),
+		Else : t.ConvertTypeStmt( f.Else),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertBadExpr(f *ast.BadExpr) (*BadExpr){
+	
+	return &BadExpr{
+		From : t.Converttoken_Pos2( f.From),
+		To : t.Converttoken_Pos2( f.To),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertChanDir(f *ast.ChanDir) (*ChanDir){
+	
+	return &ChanDir{
+		//identifier &{NamePos:10175 Name:ChanDir Obj:0xc420148720} 
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertBinaryExpr(f *ast.BinaryExpr) (*BinaryExpr){
+	
+	return &BinaryExpr{
+		X : t.ConvertTypeExpr( f.X),
+		OpPos : t.Converttoken_Pos( f.OpPos),
+		Op : t.Converttoken_Token( f.Op),
+		Y : t.ConvertTypeExpr( f.Y),
+		//Incomplete: &f2,
+	}
+}
+
+// func (t* AddressTable) ConvertBadDecl(f *ast.BadDecl) (*BadDecl){
+// 	
+// 	return &BadDecl{
+// 		From : t.Converttoken_Pos( f.From),
+// 		To : t.Converttoken_Pos( f.To),
+// 		Incomplete: &f2,
+// 	}
+// }
+
+func (t* AddressTable) ConvertIncDecStmt(f *ast.IncDecStmt) (*IncDecStmt){
+	
+	return &IncDecStmt{
+		X : t.ConvertTypeExpr( f.X),
+		TokPos : t.Converttoken_Pos( f.TokPos),
+		Tok : t.Converttoken_Token( f.Tok),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertPointerCallExpr(f *ast.CallExpr) (*CallExpr){
+	return nil
+}
+
+func (t* AddressTable) ConvertDeferStmt(f *ast.DeferStmt) (*DeferStmt){
+	
+	return &DeferStmt{
+		Defer : t.Converttoken_Pos( f.Defer),
+		Call : t.ConvertPointerCallExpr( f.Call),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertKeyValueExpr(f *ast.KeyValueExpr) (*KeyValueExpr){
+	
+	return &KeyValueExpr{
+		Key : t.ConvertTypeExpr( f.Key),
+		Colon : t.Converttoken_Pos2( f.Colon),
+		Value : t.ConvertTypeExpr( f.Value),
+		//Incomplete: &f2,
+	}
+}
+
+// func (t* AddressTable) ConvertSEND(f *ast.SEND) (*SEND){
+// 	
+// 	return &SEND{
+// // other type &{}
+// 		Incomplete: &f2,
+// 	}
+// }
+
+// func (t* AddressTable) ConvertisWhitespace(f *ast.isWhitespace) (*isWhitespace){
+// 	
+// 	return &isWhitespace{
+// // other type &{}
+// 		Incomplete: &f2,
+// 	}
+// }
+
+func (t* AddressTable) ConvertSelectorExpr(f *ast.SelectorExpr) (*SelectorExpr){
+	
+	return &SelectorExpr{
+		X : t.ConvertTypeExpr( f.X),
+		Sel : t.ConvertPointerIdent2( f.Sel),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertCompositeLit(f *ast.CompositeLit) (*CompositeLit){
+	
+	return &CompositeLit{
+		Type : t.ConvertTypeExpr( f.Type),
+		Lbrace : t.Converttoken_Pos( f.Lbrace),
+		Elts : t.ConvertArrayExpr( f.Elts),
+		Rbrace : t.Converttoken_Pos( f.Rbrace),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertNewIdent(f *ast.NewIdent) (*NewIdent){
+	
+	return &NewIdent{
+// other type &{}
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertSwitchStmt(f *ast.SwitchStmt) (*SwitchStmt){
+	
+	return &SwitchStmt{
+		Switch : t.Converttoken_Pos( f.Switch),
+		Init : t.ConvertTypeStmt( f.Init),
+		Tag : t.ConvertTypeExpr( f.Tag),
+		Body : t.ConvertPointerBlockStmt( f.Body),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertStructType(f *ast.StructType) (*StructType){
+	
+	return &StructType{
+		Struct : t.Converttoken_Pos( f.Struct),
+		Fields : t.ConvertPointerFieldList( f.Fields),
+		Incomplete : t.ConvertTypebool( f.Incomplete),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertArrayType(f *ast.ArrayType) (*ArrayType){
+	
+	return &ArrayType{
+		Lbrack : t.Converttoken_Pos( f.Lbrack),
+		//Len : t.ConvertTypeExpr( f.Len),
+		Elt : t.ConvertTypeExpr( f.Elt),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertArrayStmt(args []ast.Stmt) ([]*Stmt){
+	return nil
+}
+
+func (t* AddressTable) ConvertCaseClause(f *ast.CaseClause) (*CaseClause){
+	
+	return &CaseClause{
+		Case : t.Converttoken_Pos( f.Case),
+		List : t.ConvertArrayExpr( f.List),
+		Colon : t.Converttoken_Pos( f.Colon),
+		Body : t.ConvertArrayStmt( f.Body),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertExpr(f *ast.Expr) (*Expr){
+	
+	return &Expr{
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertCallExpr(f *ast.CallExpr) (*CallExpr){
+	
+	return &CallExpr{
+		Fun : t.ConvertTypeExpr( f.Fun),
+		Lparen : t.Converttoken_Pos( f.Lparen),
+		Args : t.ConvertArrayExpr( f.Args),
+		Ellipsis : t.Converttoken_Pos( f.Ellipsis),
+		Rparen : t.Converttoken_Pos( f.Rparen),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertValueSpec(f *ast.ValueSpec) (*ValueSpec){
+	
+	return &ValueSpec{
+		//Doc : t.ConvertPointerCommentGroup( f.Doc),
+		Names : t.ConvertArrayStarIdent( f.Names),
+		Type : t.ConvertTypeExpr( f.Type),
+		Values : t.ConvertArrayExpr( f.Values),
+		//Comment : t.ConvertPointerCommentGroup( f.Comment),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertStmt(f *ast.Stmt) (*Stmt){
+	
+	return &Stmt{
+		//Incomplete: &f2,
+	}
+}
+
+// func (t* AddressTable) ConvertRECV(f *ast.RECV) (*RECV){
+// 	
+// 	return &RECV{
+// // other type &{}
+// 		//Incomplete: &f2,
+// 	}
+// }
+
+func (t* AddressTable) ConvertComment(f *ast.Comment) (*Comment){
+	
+	return &Comment{
+		//Slash : t.Converttoken_Pos( f.Slash),
+		//Text : t.ConvertTypestring( f.Text),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertBadStmt(f *ast.BadStmt) (*BadStmt){
+	
+	return &BadStmt{
+		From : t.Converttoken_Pos2( f.From),
+		To : t.Converttoken_Pos2( f.To),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertLabeledStmt(f *ast.LabeledStmt) (*LabeledStmt){
+	
+	return &LabeledStmt{
+		Label : t.ConvertPointerIdent( f.Label),
+		Colon : t.Converttoken_Pos2( f.Colon),
+		Stmt : t.ConvertTypeStmt( f.Stmt),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertBasicLit(f *ast.BasicLit) (*BasicLit){
+	
+	return &BasicLit{
+// other type &{}
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertTypeSpec(f *ast.TypeSpec) (*TypeSpec){
+	
+	return &TypeSpec{
+		//Doc : t.ConvertPointerCommentGroup( f.Doc),
+		Name : t.ConvertPointerIdent2( f.Name),
+		Type : t.ConvertTypeExpr( f.Type),
+		//Comment : t.ConvertPointerCommentGroup( f.Comment),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertDecl(f *ast.Decl) (*Decl){
+	
+	return &Decl{
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertPointerFuncType(f *ast.FuncType) (*FuncType){
+	return nil
+}
+
+func (t* AddressTable) ConvertPointerFuncType2(f ast.Foo2) (*Foo2){
+	return nil
+}
+
+func (t* AddressTable) ConvertFuncDecl(f *ast.FuncDecl) (*FuncDecl){
+	
+	return &FuncDecl{
+		//Doc : t.ConvertPointerCommentGroup( f.Doc),
+		Recv : t.ConvertPointerFieldList2( f.Recv),
+		Name : t.ConvertPointerIdent3( f.Name),
+		Type : t.ConvertPointerFuncType2( f.Type),
+		Body : t.ConvertPointerBlockStmt( f.Body),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertFuncLit(f *ast.FuncLit) (*FuncLit){
+	
+	return &FuncLit{
+		Type : t.ConvertPointerFuncType( f.Type),
+		Body : t.ConvertPointerBlockStmt2( f.Body),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertForStmt(f *ast.ForStmt) (*ForStmt){
+	
+	return &ForStmt{
+		For : t.Converttoken_Pos( f.For),
+		Init : t.ConvertTypeStmt( f.Init),
+		Cond : t.ConvertTypeExpr( f.Cond),
+		Post : t.ConvertTypeStmt( f.Post),
+		Body : t.ConvertPointerBlockStmt( f.Body),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertPointerIdent2(f ast.Foo2) (*Foo2){
+	return nil
+}
+
+func (t* AddressTable) ConvertPointerIdent3(f ast.Foo3) (*Foo3){
+	return nil
+}
+
+func (t* AddressTable) ConvertPointerIdent(f ast.Foo2) (*Ident){
+	return nil
+}
+func (t* AddressTable) ConvertIdent(f *ast.Ident) (*Ident){
+	
+	return &Ident{
+// other type &{}
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertSelectStmt(f *ast.SelectStmt) (*SelectStmt){
+	
+	return &SelectStmt{
+		Select : t.Converttoken_Pos2( f.Select),
+		Body : t.ConvertPointerBlockStmt( f.Body),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertSendStmt(f *ast.SendStmt) (*SendStmt){
+	
+	return &SendStmt{
+		Chan : t.ConvertTypeExpr( f.Chan),
+		Arrow : t.Converttoken_Pos2( f.Arrow),
+		Value : t.ConvertTypeExpr( f.Value),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertPackage(f *ast.Package) (*Package){
+	
+	return &Package{
+		Name : t.ConvertTypestring( f.Name),
+		Scope : t.ConvertPointerScope2( f.Scope),
+		Imports : t.ConvertMapstringToPointerObject( f.Imports),
+		Files : t.ConvertMapstringToPointerFile( f.Files),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertPointerFieldList2(f ast.Foo2) (*Foo2){
+	return nil
+}
+	
+func (t* AddressTable) ConvertFieldList(f *ast.FieldList) (*FieldList){
+	
+	return &FieldList{
+		Opening : t.Converttoken_Pos( f.Opening),
+		List : t.ConvertArrayStarField( f.List),
+		Closing : t.Converttoken_Pos( f.Closing),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertImportSpec(f *ast.ImportSpec) (*ImportSpec){
+	
+	return &ImportSpec{
+		//Doc : t.ConvertPointerCommentGroup( f.Doc),
+		//Name : t.ConvertPointerIdent( f.Name),
+		//Path : t.ConvertPointerBasicLit( f.Path),
+		//Comment : t.ConvertPointerCommentGroup( f.Comment),
+		//EndPos : t.Converttoken_Pos( f.EndPos),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertReturnStmt(f *ast.ReturnStmt) (*ReturnStmt){
+	
+	return &ReturnStmt{
+		//Return : t.Converttoken_Pos( f.Return),
+		//Results : t.ConvertArrayExpr( f.Results),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertMapstringToPointerObject(f map[string]*ast.Object) (map[string]*Object){
+	return nil
+}
+
+func (t* AddressTable) ConvertMapstringToPointerFile(f map[string]*ast.File) (map[string]*File){
+	return nil
+}
+
+func (t* AddressTable) ConvertArrayStarField(f []*ast.Field) ([]*Field){
+	return nil
+}
+
+
+func (t* AddressTable) ConvertPointerBlockStmt2(f *ast.BlockStmt) (*BlockStmt){
+	return nil
+}
+
+func (t* AddressTable) ConvertPointerScope(f *ast.Scope) (*Scope){
+	return nil
+}
+
+func (t* AddressTable) ConvertPointerScope2(f ast.Foo2) (*Foo2){
+	return nil
+}
+
+func (t* AddressTable) ConvertTypestring(f string) (*string){
+	return nil
+}
+
+func (t* AddressTable) ConvertBlockStmt(f *ast.BlockStmt) (*BlockStmt){
+	
+	return &BlockStmt{
+// other type &{}
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertTypeSwitchStmt(f *ast.TypeSwitchStmt) (*TypeSwitchStmt){
+	
+	return &TypeSwitchStmt{
+		Switch : t.Converttoken_Pos2( f.Switch),
+		Init : t.ConvertTypeStmt( f.Init),
+		Assign : t.ConvertTypeStmt( f.Assign),
+		Body : t.ConvertPointerBlockStmt( f.Body),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertSpec(f *ast.Spec) (*Spec){
+	
+	return &Spec{
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertStarExpr(f *ast.StarExpr) (*StarExpr){
+	
+	return &StarExpr{
+		//Star : t.Converttoken_Pos( f.Star),
+		//X : t.ConvertTypeExpr( f.X),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertGenDecl(f *ast.GenDecl) (*GenDecl){
+	
+	return &GenDecl{
+		//Doc : t.ConvertPointerCommentGroup( f.Doc),
+		TokPos : t.Converttoken_Pos( f.TokPos),
+		Tok : t.Converttoken_Token( f.Tok),
+		Lparen : t.Converttoken_Pos( f.Lparen),
+		Specs : t.ConvertArraySpec( f.Specs),
+		Rparen : t.Converttoken_Pos( f.Rparen),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertRangeStmt(f *ast.RangeStmt) (*RangeStmt){
+	
+	return &RangeStmt{
+		For : t.Converttoken_Pos( f.For),
+		Key : t.ConvertTypeExpr( f.Key),
+		Value : t.ConvertTypeExpr( f.Value),
+		TokPos : t.Converttoken_Pos( f.TokPos),
+		Tok : t.Converttoken_Token( f.Tok),
+		X : t.ConvertTypeExpr( f.X),
+		Body : t.ConvertPointerBlockStmt( f.Body),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertParenExpr(f *ast.ParenExpr) (*ParenExpr){
+	
+	return &ParenExpr{
+		Lparen : t.Converttoken_Pos( f.Lparen),
+		X : t.ConvertTypeExpr( f.X),
+		Rparen : t.Converttoken_Pos( f.Rparen),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertDeclStmt(f *ast.DeclStmt) (*DeclStmt){
+	
+	return &DeclStmt{
+		//Decl : t.ConvertTypeDecl( f.Decl),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertTypeAssertExpr(f *ast.TypeAssertExpr) (*TypeAssertExpr){
+	
+	return &TypeAssertExpr{
+		X : t.ConvertTypeExpr( f.X),
+		Lparen : t.Converttoken_Pos( f.Lparen),
+		Type : t.ConvertTypeExpr( f.Type),
+		Rparen : t.Converttoken_Pos( f.Rparen),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertEmptyStmt(f *ast.EmptyStmt) (*EmptyStmt){
+	
+	return &EmptyStmt{
+		Semicolon : t.Converttoken_Pos2( f.Semicolon),
+		Implicit : t.ConvertTypebool( f.Implicit),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertIndexExpr(f *ast.IndexExpr) (*IndexExpr){
+	
+	return &IndexExpr{
+		X : t.ConvertTypeExpr( f.X),
+		Lbrack : t.Converttoken_Pos( f.Lbrack),
+		Index : t.ConvertTypeExpr( f.Index),
+		Rbrack : t.Converttoken_Pos( f.Rbrack),
+		//Incomplete: &f2,
+	}
+}
+func (t* AddressTable) ConvertArrayDecl(f []ast.Decl)([]*Decl){ return nil}
+
+func (t* AddressTable) ConvertArrayStarImportSpec (f []*ast.ImportSpec)([]*ImportSpec){ return nil}
+func (t* AddressTable) ConvertArrayStarCommentGroup(f []*ast.CommentGroup)([]*CommentGroup){ return nil}
+	
+func (t* AddressTable) ConvertFile(f *ast.File) (*File){
+	
+	return &File{
+		//Doc : t.ConvertPointerCommentGroup( f.Doc),
+		Package : t.Converttoken_Pos( f.Package),
+		Name : t.ConvertPointerIdent3( f.Name),
+		Decls : t.ConvertArrayDecl( f.Decls),
+		Scope : t.ConvertPointerScope2( f.Scope),
+		Imports : t.ConvertArrayStarImportSpec( f.Imports),
+		Unresolved : t.ConvertArrayStarIdent( f.Unresolved),
+		Comments : t.ConvertArrayStarCommentGroup( f.Comments),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertBranchStmt(f *ast.BranchStmt) (*BranchStmt){
+	
+	return &BranchStmt{
+		TokPos : t.Converttoken_Pos( f.TokPos),
+		Tok : t.Converttoken_Token( f.Tok),
+		Label : t.ConvertPointerIdent( f.Label),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertCommentGroup(f *ast.CommentGroup) (*CommentGroup){
+	
+	return &CommentGroup{
+		//List : t.ConvertArrayStarComment( f.List),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertArraySpec(f []ast.Spec) ([]*Spec){return nil}
+
+func (t* AddressTable) ConvertCommClause(f *ast.CommClause) (*CommClause){
+	
+	return &CommClause{
+		Case : t.Converttoken_Pos2( f.Case),
+		Comm : t.ConvertTypeStmt( f.Comm),
+		Colon : t.Converttoken_Pos2( f.Colon),
+		Body : t.ConvertArrayStmt( f.Body),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertIsExported(f *ast.IsExported) (*IsExported){
+	
+	return &IsExported{
+// other type &{}
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertChanType(f *ast.ChanType) (*ChanType){
+	
+	return &ChanType{
+		//Begin : t.Converttoken_Pos( f.Begin),
+//		Arrow : t.Converttoken_Pos( f.Arrow),
+//		Dir : t.ConvertTypeChanDir( f.Dir),
+//		Value : t.ConvertTypeExpr( f.Value),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertGoStmt(f *ast.GoStmt) (*GoStmt){
+	
+	return &GoStmt{
+		Go : t.Converttoken_Pos2( f.Go),
+		Call : t.ConvertPointerCallExpr( f.Call),
+		//Incomplete: &f2,
+	}
+}
+
+// func (t* AddressTable) ConvertstripTrailingWhitespace(f *ast.stripTrailingWhitespace) (*stripTrailingWhitespace){
+// 	
+// 	return &stripTrailingWhitespace{
+// // other type &{}
+// 		//Incomplete: &f2,
+// 	}
+// }
+
+func (t* AddressTable) ConvertEllipsis(f *ast.Ellipsis) (*Ellipsis){
+	
+	return &Ellipsis{
+		Ellipsis : t.Converttoken_Pos2( f.Ellipsis),
+		Elt : t.ConvertTypeExpr( f.Elt),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertFuncType(f *ast.FuncType) (*FuncType){
+	
+	return &FuncType{
+// other type &{}
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertUnaryExpr(f *ast.UnaryExpr) (*UnaryExpr){
+	
+	return &UnaryExpr{
+		OpPos : t.Converttoken_Pos( f.OpPos),
+		Op : t.Converttoken_Token( f.Op),
+		X : t.ConvertTypeExpr( f.X),
+		//Incomplete: &f2,
+	}
+}
+
+func (t* AddressTable) ConvertNode(f *ast.Node) (*Node){
+	
+	return &Node{
+		//Incomplete: &f2,
+	}
+}

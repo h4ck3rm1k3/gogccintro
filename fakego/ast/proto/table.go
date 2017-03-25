@@ -2,294 +2,230 @@ package astproto
 import (
 	"fmt"
 	"github.com/h4ck3rm1k3/gogccintro/fakego/ast"
+	//"github.com/h4ck3rm1k3/gogccintro/fakego/ast/proto"
 	//"github.com/h4ck3rm1k3/gogccintro/fakego/token"
 )
-// type Table struct {
-// 	Scopes map[string] *Scope
-// 	Objects map[string] *Object
-// 	ArrayTypes map[string]*ArrayType
-// 	AssignStmts map[string]*AssignStmt
-// 	BadDecls map[string]*BadDecl
-// 	BadExprs map[string]*BadExpr
-// 	BadStmts map[string]*BadStmt
-// 	BasicLits map[string]*BasicLit
-// 	BinaryExprs map[string]*BinaryExpr
-// 	BlockStmts map[string]*BlockStmt
-// 	BranchStmts map[string]*BranchStmt
-// 	CallExprs map[string]*CallExpr
-// 	CaseClauses map[string]*CaseClause
-// 	ChanDirs map[string]*ChanDir
-// 	ChanTypes map[string]*ChanType
-// 	CommClauses map[string]*CommClause
-// 	CommentGroups map[string]*CommentGroup
-// 	Comments map[string]*Comment
-// 	CompositeLits map[string]*CompositeLit
-// 	DeclStmts map[string]*DeclStmt
 
-// 	DeferStmts map[string]*DeferStmt
-// 	Ellipsiss map[string]*Ellipsis
-// 	EmptyStmts map[string]*EmptyStmt
-// 	ExprStmts map[string]*ExprStmt
+type AddressTable struct {
+	Idsold          map[string] interface{}
+	Idsnew          map[string] interface{}
+	OldNew          map[interface{}] interface{}
 
-// 	FieldLists map[string]*FieldList
-// 	Fields map[string]*Field
-// 	Files map[string]*File
-// 	ForStmts map[string]*ForStmt
-// 	FuncDecls map[string]*FuncDecl
-// 	FuncLits map[string]*FuncLit
-// 	FuncTypes map[string]*FuncType
-// 	GenDecls map[string]*GenDecl
-// 	GoStmts map[string]*GoStmt
-// 	Idents map[string]*Ident
-// 	IfStmts map[string]*IfStmt
-// 	ImportSpecs map[string]*ImportSpec
-// 	IncDecStmts map[string]*IncDecStmt
-// 	IndexExprs map[string]*IndexExpr
-// 	InterfaceTypes map[string]*InterfaceType
-// 	IsExporteds map[string]*IsExported
-// 	KeyValueExprs map[string]*KeyValueExpr
-// 	LabeledStmts map[string]*LabeledStmt
-// 	MapTypes map[string]*MapType
-// 	NewIdents map[string]*NewIdent
-// 	Nodes map[string]*Node
-// 	Packages map[string]*Package
-// 	ParenExprs map[string]*ParenExpr
-// 	RangeStmts map[string]*RangeStmt
-// 	ReturnStmts map[string]*ReturnStmt
-// 	SelectStmts map[string]*SelectStmt
-// 	SelectorExprs map[string]*SelectorExpr
-// 	SendStmts map[string]*SendStmt
-// 	SliceExprs map[string]*SliceExpr
-
-// 	StarExprs map[string]*StarExpr
-
-// 	StructTypes map[string]*StructType
-// 	SwitchStmts map[string]*SwitchStmt
-// 	TypeAssertExprs map[string]*TypeAssertExpr
-// 	TypeSpecs map[string]*TypeSpec
-// 	TypeSwitchStmts map[string]*TypeSwitchStmt
-// 	UnaryExprs map[string]*UnaryExpr
-// 	ValueSpecs map[string]*ValueSpec
-
-// 	// interfaces
-// 	Specs map[string]Spec
-// 	Decls map[string]Decl
-// 	Exprs map[string]Expr
-// 	Stmts map[string]Stmt
-// }
-
-//func (t* AddressTable) StrmapArrayType(id string, f * ArrayType) (*ArrayType){ t.ArrayTypes[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapAssignStmt(id string, f * AssignStmt) (*AssignStmt){ t.AssignStmts[id] =f; f.Report(); return f}
-//func (t* AddressTable) StrmapBadDecl(id string, f * BadDecl) (*BadDecl){ t.BadDecls[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapBadExpr(id string, f * BadExpr) (*BadExpr){ t.BadExprs[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapBadStmt(id string, f * BadStmt) (*BadStmt){ t.BadStmts[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapBasicLit(id string, f * BasicLit) (*BasicLit){ t.BasicLits[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapBinaryExpr(id string, f * BinaryExpr) (*BinaryExpr){ t.BinaryExprs[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapBlockStmt(id string, f * BlockStmt) (*BlockStmt){ t.BlockStmts[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapBranchStmt(id string, f * BranchStmt) (*BranchStmt){ t.BranchStmts[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapCallExpr(id string, f * CallExpr) (*CallExpr){ t.CallExprs[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapCaseClause(id string, f * CaseClause) (*CaseClause){ t.CaseClauses[id] =f; f.Report(); return f}
-//func (t* AddressTable) StrmapChanDir(id string, f * ChanDir) (*ChanDir){ t.ChanDirs[id] =f; f.Report(); return f}
-//func (t* AddressTable) StrmapChanType(id string, f * ChanType) (*ChanType){ t.ChanTypes[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapCommClause(id string, f * CommClause) (*CommClause){ t.CommClauses[id] =f; f.Report(); return f}
-//func (t* AddressTable) StrmapComment(id string, f * Comment) (*Comment){ t.Comments[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapCommentGroup(id string, f * CommentGroup) (*CommentGroup){ t.CommentGroups[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapCompositeLit(id string, f * CompositeLit) (*CompositeLit){ t.CompositeLits[id] =f; f.Report(); return f}
-
-//func (t* AddressTable) StrmapDeclStmt(id string, f * DeclStmt) (*DeclStmt){ t.DeclStmts[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapDeferStmt(id string, f * DeferStmt) (*DeferStmt){ t.DeferStmts[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapEllipsis(id string, f * Ellipsis) (*Ellipsis){
-	/// 
-	t.Ellipsiss[id] =f;
-	f.Report();
-	return f}
-func (t* AddressTable) StrmapEmptyStmt(id string, f * EmptyStmt) (*EmptyStmt){ t.EmptyStmts[id] =f; f.Report(); return f}
-
-//func (t* AddressTable) StrmapExprStmt(id string, f * ExprStmt) (*ExprStmt){ t.ExprStmts[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapField(id string, f * Field) (*Field){ t.Fields[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapFieldList(id string, f * FieldList) (*FieldList){ t.FieldLists[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapFile(id string, f * File) (*File){ t.Files[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapForStmt(id string, f * ForStmt) (*ForStmt){ t.ForStmts[id] =f; f.Report(); return f}
-
-func (t* AddressTable) StrmapFuncLit(id string, f * FuncLit) (*FuncLit){ t.FuncLits[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapFuncType(id string, f * FuncType) (*FuncType){ t.FuncTypes[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapGenDecl(id string, f * GenDecl) (*GenDecl){ t.GenDecls[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapGoStmt(id string, f * GoStmt) (*GoStmt){ t.GoStmts[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapIdent(id string, f * Ident) (*Ident){ t.Idents[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapIfStmt(id string, f * IfStmt) (*IfStmt){ t.IfStmts[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapImportSpec(id string, f * ImportSpec) (*ImportSpec){ t.ImportSpecs[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapIncDecStmt(id string, f * IncDecStmt) (*IncDecStmt){ t.IncDecStmts[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapIndexExpr(id string, f * IndexExpr) (*IndexExpr){ t.IndexExprs[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapInterfaceType(id string, f * InterfaceType) (*InterfaceType){ t.InterfaceTypes[id] =f; f.Report(); return f}
-//func (t* AddressTable) StrmapIsExported(id string, f * IsExported) (*IsExported){ t.IsExporteds[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapKeyValueExpr(id string, f * KeyValueExpr) (*KeyValueExpr){ t.KeyValueExprs[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapLabeledStmt(id string, f * LabeledStmt) (*LabeledStmt){ t.LabeledStmts[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapMapType(id string, f * MapType) (*MapType){ t.MapTypes[id] =f; f.Report(); return f}
-//func (t* AddressTable) StrmapNewIdent(id string, f * NewIdent) (*NewIdent){ t.NewIdents[id] =f; f.Report(); return f}
-//func (t* AddressTable) StrmapNode(id string, f * Node) (*Node){ t.Nodes[id] =f; f.Report(); return f}
-
-func (t* AddressTable) StrmapPackage(id string, f * Package) (*Package){ t.Packages[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapParenExpr(id string, f * ParenExpr) (*ParenExpr){ t.ParenExprs[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapRangeStmt(id string, f * RangeStmt) (*RangeStmt){ t.RangeStmts[id] =f; f.Report(); return f}
-//func (t* AddressTable) StrmapReturnStmt(id string, f * ReturnStmt) (*ReturnStmt){ t.ReturnStmts[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapScope(id string, f * Scope) (*Scope){ t.Scopes[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapSelectStmt(id string, f * SelectStmt) (*SelectStmt){ t.SelectStmts[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapSelectorExpr(id string, f * SelectorExpr) (*SelectorExpr){ t.SelectorExprs[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapSendStmt(id string, f * SendStmt) (*SendStmt){ t.SendStmts[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapSliceExpr(id string, f * SliceExpr) (*SliceExpr){ t.SliceExprs[id] =f; f.Report(); return f}
-
-//func (t* AddressTable) StrmapStarExpr(id string, f * StarExpr) (*StarExpr){ t.StarExprs[id] =f; f.Report(); return f}
-
-
-func (t* AddressTable) StrmapSwitchStmt(id string, f * SwitchStmt) (*SwitchStmt){ t.SwitchStmts[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapTypeAssertExpr(id string, f * TypeAssertExpr) (*TypeAssertExpr){ t.TypeAssertExprs[id] =f; f.Report(); return f}
-
-func (t* AddressTable) StrmapTypeSwitchStmt(id string, f * TypeSwitchStmt) (*TypeSwitchStmt){ t.TypeSwitchStmts[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapUnaryExpr(id string, f * UnaryExpr) (*UnaryExpr){ t.UnaryExprs[id] =f; f.Report(); return f}
-
-
+	
+	Scopes          map[string]*ast.Scope          `protobuf:"bytes,1,rep,name=Scopes,json=scopes" json:"Scopes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Objects         map[string]*ast.Object         `protobuf:"bytes,2,rep,name=Objects,json=objects" json:"Objects,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	ArrayTypes      map[string]*ast.ArrayType      `protobuf:"bytes,3,rep,name=ArrayTypes,json=arrayTypes" json:"ArrayTypes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	AssignStmts     map[string]*ast.AssignStmt     `protobuf:"bytes,4,rep,name=AssignStmts,json=assignStmts" json:"AssignStmts,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	BadDecls        map[string]*ast.BadDecl        `protobuf:"bytes,5,rep,name=BadDecls,json=badDecls" json:"BadDecls,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	BadExprs        map[string]*ast.BadExpr        `protobuf:"bytes,6,rep,name=BadExprs,json=badExprs" json:"BadExprs,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	BadStmts        map[string]*ast.BadStmt        `protobuf:"bytes,7,rep,name=BadStmts,json=badStmts" json:"BadStmts,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	BasicLits       map[string]*ast.BasicLit       `protobuf:"bytes,8,rep,name=BasicLits,json=basicLits" json:"BasicLits,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	BinaryExprs     map[string]*ast.BinaryExpr     `protobuf:"bytes,9,rep,name=BinaryExprs,json=binaryExprs" json:"BinaryExprs,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	BlockStmts      map[string]*ast.BlockStmt      `protobuf:"bytes,10,rep,name=BlockStmts,json=blockStmts" json:"BlockStmts,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	BranchStmts     map[string]*ast.BranchStmt     `protobuf:"bytes,11,rep,name=BranchStmts,json=branchStmts" json:"BranchStmts,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	CallExprs       map[string]*ast.CallExpr       `protobuf:"bytes,12,rep,name=CallExprs,json=callExprs" json:"CallExprs,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	CaseClauses     map[string]*ast.CaseClause     `protobuf:"bytes,13,rep,name=CaseClauses,json=caseClauses" json:"CaseClauses,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	ChanDirs        map[string]*ast.ChanDir        `protobuf:"bytes,14,rep,name=ChanDirs,json=chanDirs" json:"ChanDirs,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	ChanTypes       map[string]*ast.ChanType       `protobuf:"bytes,15,rep,name=ChanTypes,json=chanTypes" json:"ChanTypes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	CommClauses     map[string]*ast.CommClause     `protobuf:"bytes,16,rep,name=CommClauses,json=commClauses" json:"CommClauses,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	CommentGroups   map[string]*ast.CommentGroup   `protobuf:"bytes,17,rep,name=CommentGroups,json=commentGroups" json:"CommentGroups,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Comments        map[string]*ast.Comment        `protobuf:"bytes,18,rep,name=Comments,json=comments" json:"Comments,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	CompositeLits   map[string]*ast.CompositeLit   `protobuf:"bytes,19,rep,name=CompositeLits,json=compositeLits" json:"CompositeLits,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	DeclStmts       map[string]*ast.DeclStmt       `protobuf:"bytes,20,rep,name=DeclStmts,json=declStmts" json:"DeclStmts,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	DeferStmts      map[string]*ast.DeferStmt      `protobuf:"bytes,21,rep,name=DeferStmts,json=deferStmts" json:"DeferStmts,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Ellipsiss       map[string]*ast.Ellipsis       `protobuf:"bytes,22,rep,name=Ellipsiss,json=ellipsiss" json:"Ellipsiss,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	EmptyStmts      map[string]*ast.EmptyStmt      `protobuf:"bytes,23,rep,name=EmptyStmts,json=emptyStmts" json:"EmptyStmts,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	ExprStmts       map[string]*ast.ExprStmt       `protobuf:"bytes,24,rep,name=ExprStmts,json=exprStmts" json:"ExprStmts,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	FieldLists      map[string]*ast.FieldList      `protobuf:"bytes,25,rep,name=FieldLists,json=fieldLists" json:"FieldLists,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Fields          map[string]*ast.Field          `protobuf:"bytes,26,rep,name=Fields,json=fields" json:"Fields,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Files           map[string]*ast.File           `protobuf:"bytes,27,rep,name=Files,json=files" json:"Files,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	ForStmts        map[string]*ast.ForStmt        `protobuf:"bytes,28,rep,name=ForStmts,json=forStmts" json:"ForStmts,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	FuncDecls       map[string]*ast.FuncDecl       `protobuf:"bytes,29,rep,name=FuncDecls,json=funcDecls" json:"FuncDecls,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	FuncLits        map[string]*ast.FuncLit        `protobuf:"bytes,30,rep,name=FuncLits,json=funcLits" json:"FuncLits,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	FuncTypes       map[string]*ast.FuncType       `protobuf:"bytes,31,rep,name=FuncTypes,json=funcTypes" json:"FuncTypes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	GenDecls        map[string]*ast.GenDecl        `protobuf:"bytes,32,rep,name=GenDecls,json=genDecls" json:"GenDecls,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	GoStmts         map[string]*ast.GoStmt         `protobuf:"bytes,33,rep,name=GoStmts,json=goStmts" json:"GoStmts,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Idents          map[string]*ast.Ident          `protobuf:"bytes,34,rep,name=Idents,json=idents" json:"Idents,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	IfStmts         map[string]*ast.IfStmt         `protobuf:"bytes,35,rep,name=IfStmts,json=ifStmts" json:"IfStmts,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	ImportSpecs     map[string]*ast.ImportSpec     `protobuf:"bytes,36,rep,name=ImportSpecs,json=importSpecs" json:"ImportSpecs,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	IncDecStmts     map[string]*ast.IncDecStmt     `protobuf:"bytes,37,rep,name=IncDecStmts,json=incDecStmts" json:"IncDecStmts,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	IndexExprs      map[string]*ast.IndexExpr      `protobuf:"bytes,38,rep,name=IndexExprs,json=indexExprs" json:"IndexExprs,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	InterfaceTypes  map[string]*ast.InterfaceType  `protobuf:"bytes,39,rep,name=InterfaceTypes,json=interfaceTypes" json:"InterfaceTypes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	IsExporteds     map[string]*ast.IsExported     `protobuf:"bytes,40,rep,name=IsExporteds,json=isExporteds" json:"IsExporteds,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	KeyValueExprs   map[string]*ast.KeyValueExpr   `protobuf:"bytes,41,rep,name=KeyValueExprs,json=keyValueExprs" json:"KeyValueExprs,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	LabeledStmts    map[string]*ast.LabeledStmt    `protobuf:"bytes,42,rep,name=LabeledStmts,json=labeledStmts" json:"LabeledStmts,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	MapTypes        map[string]*ast.MapType        `protobuf:"bytes,43,rep,name=MapTypes,json=mapTypes" json:"MapTypes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	NewIdents       map[string]*ast.NewIdent       `protobuf:"bytes,44,rep,name=NewIdents,json=newIdents" json:"NewIdents,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Nodes           map[string]*ast.Node           `protobuf:"bytes,45,rep,name=Nodes,json=nodes" json:"Nodes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Packages        map[string]*ast.Package        `protobuf:"bytes,46,rep,name=Packages,json=packages" json:"Packages,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	ParenExprs      map[string]*ast.ParenExpr      `protobuf:"bytes,47,rep,name=ParenExprs,json=parenExprs" json:"ParenExprs,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	RangeStmts      map[string]*ast.RangeStmt      `protobuf:"bytes,48,rep,name=RangeStmts,json=rangeStmts" json:"RangeStmts,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	ReturnStmts     map[string]*ast.ReturnStmt     `protobuf:"bytes,49,rep,name=ReturnStmts,json=returnStmts" json:"ReturnStmts,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	SelectStmts     map[string]*ast.SelectStmt     `protobuf:"bytes,50,rep,name=SelectStmts,json=selectStmts" json:"SelectStmts,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	SelectorExprs   map[string]*ast.SelectorExpr   `protobuf:"bytes,51,rep,name=SelectorExprs,json=selectorExprs" json:"SelectorExprs,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	SendStmts       map[string]*ast.SendStmt       `protobuf:"bytes,52,rep,name=SendStmts,json=sendStmts" json:"SendStmts,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	SliceExprs      map[string]*ast.SliceExpr      `protobuf:"bytes,53,rep,name=SliceExprs,json=sliceExprs" json:"SliceExprs,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	StarExprs       map[string]*ast.StarExpr       `protobuf:"bytes,54,rep,name=StarExprs,json=starExprs" json:"StarExprs,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	StructTypes     map[string]*ast.StructType     `protobuf:"bytes,55,rep,name=StructTypes,json=structTypes" json:"StructTypes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	SwitchStmts     map[string]*ast.SwitchStmt     `protobuf:"bytes,56,rep,name=SwitchStmts,json=switchStmts" json:"SwitchStmts,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	TypeAssertExprs map[string]*ast.TypeAssertExpr `protobuf:"bytes,57,rep,name=TypeAssertExprs,json=typeAssertExprs" json:"TypeAssertExprs,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	TypeSpecs       map[string]*ast.TypeSpec       `protobuf:"bytes,58,rep,name=TypeSpecs,json=typeSpecs" json:"TypeSpecs,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	TypeSwitchStmts map[string]*ast.TypeSwitchStmt `protobuf:"bytes,59,rep,name=TypeSwitchStmts,json=typeSwitchStmts" json:"TypeSwitchStmts,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	UnaryExprs      map[string]*ast.UnaryExpr      `protobuf:"bytes,60,rep,name=UnaryExprs,json=unaryExprs" json:"UnaryExprs,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	ValueSpecs      map[string]*ast.ValueSpec      `protobuf:"bytes,61,rep,name=ValueSpecs,json=valueSpecs" json:"ValueSpecs,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	// interfaces
+	Specs            map[string]*ast.Spec `protobuf:"bytes,62,rep,name=Specs,json=specs" json:"Specs,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Decls            map[string]*ast.Decl `protobuf:"bytes,63,rep,name=Decls,json=decls" json:"Decls,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Exprs            map[string]*ast.Expr `protobuf:"bytes,64,rep,name=Exprs,json=exprs" json:"Exprs,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Stmts            map[string]*ast.Stmt `protobuf:"bytes,65,rep,name=Stmts,json=stmts" json:"Stmts,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	XXX_unrecognized []byte           `json:"-"`
+}
 
 //func (t* AddressTable) PtrmapArrayType(id string) (* ArrayType){ return t.ArrayTypes[id] }
-func (t* AddressTable) PtrmapAssignStmt(id string) (* AssignStmt){ return t.AssignStmts[id] }
-//func (t* AddressTable) PtrmapBadDecl(id string) (* BadDecl){ return t.BadDecls[id] }
-func (t* AddressTable) PtrmapBadExpr(id string) (* BadExpr){ return t.BadExprs[id] }
-func (t* AddressTable) PtrmapBadStmt(id string) (* BadStmt){ return t.BadStmts[id] }
-func (t* AddressTable) PtrmapBasicLit(id string) (* BasicLit){ return t.BasicLits[id] }
-func (t* AddressTable) PtrmapBinaryExpr(id string) (* BinaryExpr){ return t.BinaryExprs[id] }
-func (t* AddressTable) PtrmapBlockStmt(id string) (* BlockStmt){ return t.BlockStmts[id] }
-func (t* AddressTable) PtrmapBranchStmt(id string) (* BranchStmt){ return t.BranchStmts[id] }
-func (t* AddressTable) PtrmapCallExpr(id string) (* CallExpr){ return t.CallExprs[id] }
-func (t* AddressTable) PtrmapCaseClause(id string) (* CaseClause){ return t.CaseClauses[id] }
-//func (t* AddressTable) PtrmapChanDir(id string) (* ChanDir){ return t.ChanDirs[id] }
-//func (t* AddressTable) PtrmapChanType(id string) (* ChanType){ return t.ChanTypes[id] }
-func (t* AddressTable) PtrmapCommClause(id string) (* CommClause){ return t.CommClauses[id] }
-//func (t* AddressTable) PtrmapComment(id string) (* Comment){ return t.Comments[id] }
-func (t* AddressTable) PtrmapCommentGroup(id string) (* CommentGroup){ return t.CommentGroups[id] }
-func (t* AddressTable) PtrmapCompositeLit(id string) (* CompositeLit){ return t.CompositeLits[id] }
-//func (t* AddressTable) PtrmapDeclStmt(id string) (* DeclStmt){ return t.DeclStmts[id] }
-func (t* AddressTable) PtrmapDeferStmt(id string) (* DeferStmt){ return t.DeferStmts[id] }
-func (t* AddressTable) PtrmapEllipsis(id string) (* Ellipsis){ return t.Ellipsiss[id] }
-func (t* AddressTable) PtrmapEmptyStmt(id string) (* EmptyStmt){ return t.EmptyStmts[id] }
-//func (t* AddressTable) PtrmapExprStmt(id string) (* ExprStmt){ return t.ExprStmts[id] }
-func (t* AddressTable) PtrmapFile(id string) (* File){ return t.Files[id] }
-func (t* AddressTable) PtrmapForStmt(id string) (* ForStmt){ return t.ForStmts[id] }
-func (t* AddressTable) PtrmapFuncDecl(id string) (* FuncDecl){ return t.FuncDecls[id] }
-func (t* AddressTable) PtrmapFuncLit(id string) (* FuncLit){ return t.FuncLits[id] }
-func (t* AddressTable) PtrmapFuncType(id string) (* FuncType){ return t.FuncTypes[id] }
-func (t* AddressTable) PtrmapGenDecl(id string) (* GenDecl){ return t.GenDecls[id] }
-func (t* AddressTable) PtrmapGoStmt(id string) (* GoStmt){ return t.GoStmts[id] }
-func (t* AddressTable) PtrmapIdent(id string) (* Ident){ return t.Idents[id] }
-func (t* AddressTable) PtrmapIfStmt(id string) (* IfStmt){ return t.IfStmts[id] }
-func (t* AddressTable) PtrmapImportSpec(id string) (* ImportSpec){ return t.ImportSpecs[id] }
-func (t* AddressTable) PtrmapIncDecStmt(id string) (* IncDecStmt){ return t.IncDecStmts[id] }
-func (t* AddressTable) PtrmapIndexExpr(id string) (* IndexExpr){ return t.IndexExprs[id] }
-func (t* AddressTable) PtrmapInterfaceType(id string) (* InterfaceType){ return t.InterfaceTypes[id] }
-//func (t* AddressTable) PtrmapIsExported(id string) (* IsExported){ return t.IsExporteds[id] }
-func (t* AddressTable) PtrmapKeyValueExpr(id string) (* KeyValueExpr){ return t.KeyValueExprs[id] }
-func (t* AddressTable) PtrmapLabeledStmt(id string) (* LabeledStmt){ return t.LabeledStmts[id] }
-func (t* AddressTable) PtrmapMapType(id string) (* MapType){ return t.MapTypes[id] }
-//func (t* AddressTable) PtrmapNewIdent(id string) (* NewIdent){ return t.NewIdents[id] }
-//func (t* AddressTable) PtrmapNode(id string) (* Node){ return t.Nodes[id] }
-func (t* AddressTable) PtrmapPackage(id string) (* Package){ return t.Packages[id] }
-func (t* AddressTable) PtrmapParenExpr(id string) (* ParenExpr){ return t.ParenExprs[id] }
-func (t* AddressTable) PtrmapRangeStmt(id string) (* RangeStmt){ return t.RangeStmts[id] }
-//func (t* AddressTable) PtrmapReturnStmt(id string) (* ReturnStmt){ return t.ReturnStmts[id] }
-func (t* AddressTable) PtrmapSelectStmt(id string) (* SelectStmt){ return t.SelectStmts[id] }
-func (t* AddressTable) PtrmapSelectorExpr(id string) (* SelectorExpr){ return t.SelectorExprs[id] }
-func (t* AddressTable) PtrmapSendStmt(id string) (* SendStmt){ return t.SendStmts[id] }
-func (t* AddressTable) PtrmapSliceExpr(id string) (* SliceExpr){ return t.SliceExprs[id] }
-//func (t* AddressTable) PtrmapStarExpr(id string) (* StarExpr){ return t.StarExprs[id] }
-func (t* AddressTable) PtrmapStructType(id string) (* StructType){ return t.StructTypes[id] }
-func (t* AddressTable) PtrmapSwitchStmt(id string) (* SwitchStmt){ return t.SwitchStmts[id] }
-func (t* AddressTable) PtrmapTypeAssertExpr(id string) (* TypeAssertExpr){ return t.TypeAssertExprs[id] }
+func (t* AddressTable) PtrmapAssignStmt(id string) (* ast.AssignStmt){ return t.AssignStmts[id] }
+//func (t* AddressTable) PtrmapBadDecl(id string) (* ast.BadDecl){ return t.BadDecls[id] }
+func (t* AddressTable) PtrmapBadExpr(id string) (* ast.BadExpr){ return t.BadExprs[id] }
+func (t* AddressTable) PtrmapBadStmt(id string) (* ast.BadStmt){ return t.BadStmts[id] }
+func (t* AddressTable) PtrmapBasicLit(id string) (* ast.BasicLit){ return t.BasicLits[id] }
+func (t* AddressTable) PtrmapBinaryExpr(id string) (* ast.BinaryExpr){ return t.BinaryExprs[id] }
+func (t* AddressTable) PtrmapBlockStmt(id string) (* ast.BlockStmt){ return t.BlockStmts[id] }
+func (t* AddressTable) PtrmapBranchStmt(id string) (* ast.BranchStmt){ return t.BranchStmts[id] }
+func (t* AddressTable) PtrmapCallExpr(id string) (* ast.CallExpr){ return t.CallExprs[id] }
+func (t* AddressTable) PtrmapCaseClause(id string) (* ast.CaseClause){ return t.CaseClauses[id] }
+//func (t* AddressTable) PtrmapChanDir(id string) (* ast.ChanDir){ return t.ChanDirs[id] }
+//func (t* AddressTable) PtrmapChanType(id string) (* ast.ChanType){ return t.ChanTypes[id] }
+func (t* AddressTable) PtrmapCommClause(id string) (* ast.CommClause){ return t.CommClauses[id] }
+//func (t* AddressTable) PtrmapComment(id string) (* ast.Comment){ return t.Comments[id] }
+func (t* AddressTable) PtrmapCommentGroup(id string) (* ast.CommentGroup){ return t.CommentGroups[id] }
+func (t* AddressTable) PtrmapCompositeLit(id string) (* ast.CompositeLit){ return t.CompositeLits[id] }
+//func (t* AddressTable) PtrmapDeclStmt(id string) (* ast.DeclStmt){ return t.DeclStmts[id] }
+func (t* AddressTable) PtrmapDeferStmt(id string) (* ast.DeferStmt){ return t.DeferStmts[id] }
+func (t* AddressTable) PtrmapEllipsis(id string) (* ast.Ellipsis){ return t.Ellipsiss[id] }
+func (t* AddressTable) PtrmapEmptyStmt(id string) (* ast.EmptyStmt){ return t.EmptyStmts[id] }
+//func (t* AddressTable) PtrmapExprStmt(id string) (* ast.ExprStmt){ return t.ExprStmts[id] }
+func (t* AddressTable) PtrmapFile(id string) (* ast.File){ return t.Files[id] }
+func (t* AddressTable) PtrmapForStmt(id string) (* ast.ForStmt){ return t.ForStmts[id] }
+func (t* AddressTable) PtrmapFuncDecl(id string) (* ast.FuncDecl){ return t.FuncDecls[id] }
+func (t* AddressTable) PtrmapFuncLit(id string) (* ast.FuncLit){ return t.FuncLits[id] }
+func (t* AddressTable) PtrmapFuncType(id string) (* ast.FuncType){ return t.FuncTypes[id] }
+func (t* AddressTable) PtrmapGenDecl(id string) (* ast.GenDecl){ return t.GenDecls[id] }
+func (t* AddressTable) PtrmapGoStmt(id string) (* ast.GoStmt){ return t.GoStmts[id] }
+func (t* AddressTable) PtrmapIdent(id string) (* ast.Ident){ return t.Idents[id] }
+func (t* AddressTable) PtrmapIfStmt(id string) (* ast.IfStmt){ return t.IfStmts[id] }
+func (t* AddressTable) PtrmapImportSpec(id string) (* ast.ImportSpec){ return t.ImportSpecs[id] }
+func (t* AddressTable) PtrmapIncDecStmt(id string) (* ast.IncDecStmt){ return t.IncDecStmts[id] }
+func (t* AddressTable) PtrmapIndexExpr(id string) (* ast.IndexExpr){ return t.IndexExprs[id] }
+func (t* AddressTable) PtrmapInterfaceType(id string) (* ast.InterfaceType){ return t.InterfaceTypes[id] }
+//func (t* AddressTable) PtrmapIsExported(id string) (* ast.IsExported){ return t.IsExporteds[id] }
+func (t* AddressTable) PtrmapKeyValueExpr(id string) (* ast.KeyValueExpr){ return t.KeyValueExprs[id] }
+func (t* AddressTable) PtrmapLabeledStmt(id string) (* ast.LabeledStmt){ return t.LabeledStmts[id] }
+func (t* AddressTable) PtrmapMapType(id string) (* ast.MapType){ return t.MapTypes[id] }
+//func (t* AddressTable) PtrmapNewIdent(id string) (* ast.NewIdent){ return t.NewIdents[id] }
+//func (t* AddressTable) PtrmapNode(id string) (* ast.Node){ return t.Nodes[id] }
+func (t* AddressTable) PtrmapPackage(id string) (* ast.Package){ return t.Packages[id] }
+func (t* AddressTable) PtrmapParenExpr(id string) (* ast.ParenExpr){ return t.ParenExprs[id] }
+func (t* AddressTable) PtrmapRangeStmt(id string) (* ast.RangeStmt){ return t.RangeStmts[id] }
+//func (t* AddressTable) PtrmapReturnStmt(id string) (* ast.ReturnStmt){ return t.ReturnStmts[id] }
+func (t* AddressTable) PtrmapSelectStmt(id string) (* ast.SelectStmt){ return t.SelectStmts[id] }
+func (t* AddressTable) PtrmapSelectorExpr(id string) (* ast.SelectorExpr){ return t.SelectorExprs[id] }
+func (t* AddressTable) PtrmapSendStmt(id string) (* ast.SendStmt){ return t.SendStmts[id] }
+func (t* AddressTable) PtrmapSliceExpr(id string) (* ast.SliceExpr){ return t.SliceExprs[id] }
+//func (t* AddressTable) PtrmapStarExpr(id string) (* ast.StarExpr){ return t.StarExprs[id] }
+func (t* AddressTable) PtrmapStructType(id string) (* ast.StructType){ return t.StructTypes[id] }
+func (t* AddressTable) PtrmapSwitchStmt(id string) (* ast.SwitchStmt){ return t.SwitchStmts[id] }
+func (t* AddressTable) PtrmapTypeAssertExpr(id string) (* ast.TypeAssertExpr){ return t.TypeAssertExprs[id] }
 
 
-func (t* AddressTable) PtrmapTypeSwitchStmt(id string) (* TypeSwitchStmt){ return t.TypeSwitchStmts[id] }
-func (t* AddressTable) PtrmapUnaryExpr(id string) (* UnaryExpr){ return t.UnaryExprs[id] }
-func (t* AddressTable) PtrmapValueSpec(id string) (* ValueSpec){ return t.ValueSpecs[id] }
+func (t* AddressTable) PtrmapTypeSwitchStmt(id string) (* ast.TypeSwitchStmt){ return t.TypeSwitchStmts[id] }
+func (t* AddressTable) PtrmapUnaryExpr(id string) (* ast.UnaryExpr){ return t.UnaryExprs[id] }
+func (t* AddressTable) PtrmapValueSpec(id string) (* ast.ValueSpec){ return t.ValueSpecs[id] }
 
 
 func CreateTable() (*AddressTable) {
 	return &AddressTable{
-		Scopes:make( map[string] *Scope),
-		Objects:make( map[string] *Object),
-//		ArrayTypes : make(map[string]*ArrayType),
-		AssignStmts : make(map[string]*AssignStmt),
-//		BadDecls : make(map[string]*BadDecl),
-		BadExprs : make(map[string]*BadExpr),
-		BadStmts : make(map[string]*BadStmt),
-		BasicLits : make(map[string]*BasicLit),
-BinaryExprs : make(map[string]*BinaryExpr),
-BlockStmts : make(map[string]*BlockStmt),
-BranchStmts : make(map[string]*BranchStmt),
-CallExprs : make(map[string]*CallExpr),
-     CaseClauses : make(map[string]*CaseClause),
-//     ChanDirs : make(map[string]*ChanDir),
-//     ChanTypes : make(map[string]*ChanType),
-     CommClauses : make(map[string]*CommClause),
-     CommentGroups : make(map[string]*CommentGroup),
-//     Comments : make(map[string]*Comment),
-     CompositeLits : make(map[string]*CompositeLit),
-//     DeclStmts : make(map[string]*DeclStmt),
+		Idsold:          make(map[string] interface{}),
+		Idsnew :         make(map[string] interface{}),
+		OldNew  :        make(map[interface{}] interface{}),
+		
+		Scopes:make( map[string] *ast.Scope),
+		Objects:make( map[string] *ast.Object),
+		ArrayTypes : make(map[string]*ast.ArrayType),
+		AssignStmts : make(map[string]*ast.AssignStmt),
+		BadDecls : make(map[string]*ast.BadDecl),
+		BadExprs : make(map[string]*ast.BadExpr),
+		BadStmts : make(map[string]*ast.BadStmt),
+		BasicLits : make(map[string]*ast.BasicLit),
+BinaryExprs : make(map[string]*ast.BinaryExpr),
+BlockStmts : make(map[string]*ast.BlockStmt),
+BranchStmts : make(map[string]*ast.BranchStmt),
+CallExprs : make(map[string]*ast.CallExpr),
+     CaseClauses : make(map[string]*ast.CaseClause),
+     ChanDirs : make(map[string]*ast.ChanDir),
+     ChanTypes : make(map[string]*ast.ChanType),
+     CommClauses : make(map[string]*ast.CommClause),
+     CommentGroups : make(map[string]*ast.CommentGroup),
+     Comments : make(map[string]*ast.Comment),
+     CompositeLits : make(map[string]*ast.CompositeLit),
+     DeclStmts : make(map[string]*ast.DeclStmt),
 
-     DeferStmts : make(map[string]*DeferStmt),
-     Ellipsiss : make(map[string]*Ellipsis),
-     EmptyStmts : make(map[string]*EmptyStmt),
-//     ExprStmts : make(map[string]*ExprStmt),
+     DeferStmts : make(map[string]*ast.DeferStmt),
+     Ellipsiss : make(map[string]*ast.Ellipsis),
+     EmptyStmts : make(map[string]*ast.EmptyStmt),
+     ExprStmts : make(map[string]*ast.ExprStmt),
 
-     FieldLists : make(map[string]*FieldList),
-     Fields : make(map[string]*Field),
-     Files : make(map[string]*File),
-     ForStmts : make(map[string]*ForStmt),
-     FuncDecls : make(map[string]*FuncDecl),
-     FuncLits : make(map[string]*FuncLit),
-     FuncTypes : make(map[string]*FuncType),
-     GenDecls : make(map[string]*GenDecl),
-     GoStmts : make(map[string]*GoStmt),
-     Idents : make(map[string]*Ident),
-     IfStmts : make(map[string]*IfStmt),
-     ImportSpecs : make(map[string]*ImportSpec),
-     IncDecStmts : make(map[string]*IncDecStmt),
-     IndexExprs : make(map[string]*IndexExpr),
-     InterfaceTypes : make(map[string]*InterfaceType),
-//     IsExporteds : make(map[string]*IsExported),
-     KeyValueExprs : make(map[string]*KeyValueExpr),
-     LabeledStmts : make(map[string]*LabeledStmt),
-     MapTypes : make(map[string]*MapType),
-///     NewIdents : make(map[string]*NewIdent),
-//     Nodes : make(map[string]*Node),
-     Packages : make(map[string]*Package),
-     ParenExprs : make(map[string]*ParenExpr),
-     RangeStmts : make(map[string]*RangeStmt),
-//     ReturnStmts : make(map[string]*ReturnStmt),
-    SelectStmts : make(map[string]*SelectStmt),
-    SelectorExprs : make(map[string]*SelectorExpr),
-    SendStmts : make(map[string]*SendStmt),
-    SliceExprs : make(map[string]*SliceExpr),
+     FieldLists : make(map[string]*ast.FieldList),
+     Fields : make(map[string]*ast.Field),
+     Files : make(map[string]*ast.File),
+     ForStmts : make(map[string]*ast.ForStmt),
+     FuncDecls : make(map[string]*ast.FuncDecl),
+     FuncLits : make(map[string]*ast.FuncLit),
+     FuncTypes : make(map[string]*ast.FuncType),
+     GenDecls : make(map[string]*ast.GenDecl),
+     GoStmts : make(map[string]*ast.GoStmt),
+     Idents : make(map[string]*ast.Ident),
+     IfStmts : make(map[string]*ast.IfStmt),
+     ImportSpecs : make(map[string]*ast.ImportSpec),
+     IncDecStmts : make(map[string]*ast.IncDecStmt),
+     IndexExprs : make(map[string]*ast.IndexExpr),
+     InterfaceTypes : make(map[string]*ast.InterfaceType),
+     IsExporteds : make(map[string]*ast.IsExported),
+     KeyValueExprs : make(map[string]*ast.KeyValueExpr),
+     LabeledStmts : make(map[string]*ast.LabeledStmt),
+     MapTypes : make(map[string]*ast.MapType),
+     NewIdents : make(map[string]*ast.NewIdent),
+     Nodes : make(map[string]*ast.Node),
+     Packages : make(map[string]*ast.Package),
+     ParenExprs : make(map[string]*ast.ParenExpr),
+     RangeStmts : make(map[string]*ast.RangeStmt),
+     ReturnStmts : make(map[string]*ast.ReturnStmt),
+    SelectStmts : make(map[string]*ast.SelectStmt),
+    SelectorExprs : make(map[string]*ast.SelectorExpr),
+    SendStmts : make(map[string]*ast.SendStmt),
+    SliceExprs : make(map[string]*ast.SliceExpr),
 
-//    StarExprs : make(map[string]*StarExpr),
+    StarExprs : make(map[string]*ast.StarExpr),
 
-    StructTypes : make(map[string]*StructType),
-    SwitchStmts : make(map[string]*SwitchStmt),
-    TypeAssertExprs : make(map[string]*TypeAssertExpr),
-    TypeSpecs : make(map[string]*TypeSpec),
-    TypeSwitchStmts : make(map[string]*TypeSwitchStmt),
-    UnaryExprs : make(map[string]*UnaryExpr),
-    ValueSpecs : make(map[string]*ValueSpec),
+    StructTypes : make(map[string]*ast.StructType),
+    SwitchStmts : make(map[string]*ast.SwitchStmt),
+    TypeAssertExprs : make(map[string]*ast.TypeAssertExpr),
+    TypeSpecs : make(map[string]*ast.TypeSpec),
+    TypeSwitchStmts : make(map[string]*ast.TypeSwitchStmt),
+    UnaryExprs : make(map[string]*ast.UnaryExpr),
+    ValueSpecs : make(map[string]*ast.ValueSpec),
 
 		// interfaces
-		Stmts : make(map[string]*Stmt),
-		Exprs : make(map[string]*Expr),
-		Specs : make(map[string]*Spec),
-		Decls : make(map[string]*Decl),
+		Stmts : make(map[string]*ast.Stmt),
+		Exprs : make(map[string]*ast.Expr),
+		Specs : make(map[string]*ast.Spec),
+		Decls : make(map[string]*ast.Decl),
 	}
 }
 
-func (t* AddressTable) StrmapTypeSpec(id string, f * TypeSpec) (*TypeSpec){
-	t.TypeSpecs[id] =f;
-	f.Report();
-	return f
-}
+// func (t* AddressTable) StrmapTypeSpec(id string, f * TypeSpec) (*TypeSpec){
+// 	t.TypeSpecs[id] =f;
+// 	f.Report();
+// 	return f
+// }
 
 
 func (t* Deferred) Report() (string){
@@ -340,184 +276,206 @@ func (t* Deferred) Report() (string){
 	// return "huh?"
 }
 
-func (t* AddressTable) PtrmapTypeSpec(id string) (Foo2){
-	if val, ok := t.TypeSpecs[id]; ok {
-		if val == nil {
-			t := NodeType_TYPESPEC
-			t2 := NodeType_DEFERRED
-			return Foo2{
-				Type: &t2,
-				Deferred:&Deferred{
-				Id:&id,
-				Type: &t,
-				},
-			}
-		} else {
-			t := NodeType_TYPESPEC
-			return Foo2{
-				Type: &t,
-				Typespec : val,
-			}
-		}
-		
-	} else {
-		//return &Deferred{ Id:id, Set: &t.TypeSpecs  }
-		t := NodeType_TYPESPEC
-		t2 := NodeType_DEFERRED
-		return Foo2{
-			Type: &t2,
-			Deferred:&Deferred{
-				Id:&id,
-				Type: &t,
-			},
-		}
-	}
+
+func (t* AddressTable) PtrmapTypeSpec(id string) (ast.Foo2){
+	return nil
+}
+	
+func (t* AddressTable) PtrmapTypeSpec2(id string) (ast.Foo2){
+	return nil
+	// if val, ok := t.TypeSpecs[id]; ok {
+	// 	if val == nil {
+	// 		t := NodeType_TYPESPEC
+	// 		t2 := NodeType_DEFERRED
+	// 		return &Foo2{
+	// 			Type: &t2,
+	// 			Deferred:&Deferred{
+	// 			Id:&id,
+	// 			Type: &t,
+	// 			},
+	// 		}
+	// 	} else {
+	// 		t := NodeType_TYPESPEC
+	// 		return &Foo2{
+	// 			Type: &t,
+	// 			Typespec : val,
+	// 		}
+	// 	}		
+	// } else {
+	// 	//return &Deferred{ Id:id, Set: &t.TypeSpecs  }
+	// 	t := NodeType_TYPESPEC
+	// 	t2 := NodeType_DEFERRED
+	// 	return &Foo2{
+	// 		Type: &t2,
+	// 		Deferred:&Deferred{
+	// 			Id:&id,
+	// 			Type: &t,
+	// 		},
+	// 	}
+	// }
 }
 
-func (t* AddressTable) PtrmapField(id string) (Foo2){
-	t3 := NodeType_FIELD
-	//return t.Fields[id]
-	if val, ok := t.Fields[id]; ok {
-		if val == nil {
-			//return &Deferred{ Id:id, Set: &t.Fields  }
+func (t* AddressTable) PtrmapField(id string) (ast.Foo2){
+	return nil
+	// t3 := NodeType_FIELD
+	// //return t.Fields[id]
+	// if val, ok := t.Fields[id]; ok {
+	// 	if val == nil {
+	// 		//return &Deferred{ Id:id, Set: &t.Fields  }
 
-			t2 := NodeType_DEFERRED
-			return Foo2{
-				Type: &t2,
-				Deferred:&Deferred{
-				Id:&id,
-				Type: &t3,
-				},
-			}
+	// 		t2 := NodeType_DEFERRED
+	// 		return &Foo2{
+	// 			Type: &t2,
+	// 			Deferred:&Deferred{
+	// 			Id:&id,
+	// 			Type: &t3,
+	// 			},
+	// 		}
 			
-		} else {
-			//return val
-			return Foo2{
-				Type: &t3,
-				Field : val,
-			}
-		}
+	// 	} else {
+	// 		//return val
+	// 		return &Foo2{
+	// 			Type: &t3,
+	// 			Field : val,
+	// 		}
+	// 	}
 		
-	} else {
-		//return &Deferred{ Id:id, Set: &t.Fields  }
-		t := NodeType_FIELD
-		t2 := NodeType_DEFERRED
-		return Foo2{
-			Type: &t2,
-			Deferred:&Deferred{
-				Id:&id,
-				Type: &t,
-			},
-		}
+	// } else {
+	// 	//return &Deferred{ Id:id, Set: &t.Fields  }
+	// 	t := NodeType_FIELD
+	// 	t2 := NodeType_DEFERRED
+	// 	return &Foo2{
+	// 		Type: &t2,
+	// 		Deferred:&Deferred{
+	// 			Id:&id,
+	// 			Type: &t,
+	// 		},
+	// 	}
 
-	}
+	// }
 }
-func (t* AddressTable) PtrmapFieldList(id string) (Foo2){
+func (t* AddressTable) PtrmapFieldList(id string) (ast.Foo2){
+	return nil
 	// return t.FieldLists[id]
-	t3 := NodeType_FIELDLIST
-	if val, ok := t.FieldLists[id]; ok {
-		if val != nil {
-			return Foo2{
-				Type: &t3,
-				Fieldlist : val,
-			}			
-		}		
-	}
-
-	t2 := NodeType_DEFERRED
-	return Foo2{
-		Type: &t2,
-		Deferred:&Deferred{
-			Id:&id,
-			Type: &t3,
-		},
-	}
+	// t3 := NodeType_FIELDLIST
+	// if val, ok := t.FieldLists[id]; ok {
+	// 	if val != nil {
+	// 		return Foo2{
+	// 			Type: &t3,
+	// 			Fieldlist : val,
+	// 		}			
+	// 	}		
+	// }
+	// t2 := NodeType_DEFERRED
+	// return Foo2{
+	// 	Type: &t2,
+	// 	Deferred:&Deferred{
+	// 		Id:&id,
+	// 		Type: &t3,
+	// 	},
+	// }
 	
 }
 
-func (t* AddressTable) PtrmapObject(id string) (*Object){
-
-	t2 := NodeType_OBJECT
-	if val, ok := t.Objects[id]; ok {
-		if val != nil {
-			return val			
-		}		
-	} 
-
-	return &Object{
-		Deferred:&Deferred{
-			Id:&id,
-			Type: &t2,
-		},
-	}
-
+func (t* AddressTable) PtrmapObject(id string) (*ast.Object){
+	// todo
+	return nil
 }
 
-func (t* AddressTable) StrmapObject(id string, f * Object) (*Object){ t.Objects[id] =f; f.Report(); return f}
-func (t* AddressTable) StrmapValueSpec(id string, f * ValueSpec) (Foo2){
-	//t.ValueSpecs[id] =f; f.Report(); return f
-	s := t.ValueSpecs
-	t2 := NodeType_VALUESPEC
-	if val, ok := s[id]; ok {
-		if val != nil {
-			return Foo2{
-				Type: &t2,
-				Valuespec : val,
-			}				
-		}		
-	}
+// func (t* AddressTable) PtrmapObject(id string) (*ast.Object){
+// 	t2 := NodeType_OBJECT
+// 	if val, ok := t.Objects[id]; ok {
+// 		if val != nil {
+// 			return val			
+// 		}		
+// 	} 
+// 	return &Object{
+// 		Deferred:&Deferred{
+// 			Id:&id,
+// 			Type: &t2,
+// 		},
+// 	}
+// }
+
+// func (t* AddressTable) StrmapObject(id string, f * Object) (*Object){ t.Objects[id] =f; f.Report(); return f}
+// func (t* AddressTable) StrmapValueSpec(id string, f * ValueSpec) (Foo2){
+// 	//t.ValueSpecs[id] =f; f.Report(); return f
+// 	s := t.ValueSpecs
+// 	t2 := NodeType_VALUESPEC
+// 	if val, ok := s[id]; ok {
+// 		if val != nil {
+// 			return Foo2{
+// 				Type: &t2,
+// 				Valuespec : val,
+// 			}				
+// 		}		
+// 	}
 
 
-	t3 := NodeType_DEFERRED
-	return Foo2{
-		Type: &t2,
-		Deferred:&Deferred{
-			Id:&id,
-			Type: &t3,
-		},
-	}
+// 	t3 := NodeType_DEFERRED
+// 	return Foo2{
+// 		Type: &t2,
+// 		Deferred:&Deferred{
+// 			Id:&id,
+// 			Type: &t3,
+// 		},
+// 	}
 
+// }
+
+// func (t* AddressTable) StrmapFuncDecl(id string, f * FuncDecl) (Foo2){
+// 	fmt.Printf("test")
+// 	t2 := NodeType_FUNCDECL
+// 	//t.FuncDecls[id] =f; f.Report(); return f
+// 	s := t.FuncDecls
+// 	if val, ok := s[id]; ok {
+// 		if val != nil {
+// 			return Foo2{
+// 				Type: &t2,
+// 				Funcdecl : val,
+// 			}				
+// 		}		
+// 	}
+// 	t3 := NodeType_DEFERRED
+// 	return Foo2{
+// 		Type: &t2,
+// 		Deferred:&Deferred{
+// 			Id:&id,
+// 			Type: &t3,
+// 		},
+// 	}
+
+// }
+
+
+// func (t* AddressTable) StrmapDecl(id string, f Decl) (Decl){ t.Decls[id] = &f; f.Report(); return f}
+// func (t* AddressTable) StrmapExpr(id string, f Expr) (Expr){ t.Exprs[id] = &f; f.Report(); return f}
+// func (t* AddressTable) StrmapSpec(id string, f Spec) (Spec){ t.Specs[id] = &f; f.Report(); return f}
+// func (t* AddressTable) StrmapStmt(id string, f Stmt) (Stmt){ t.Stmts[id] = &f; f.Report(); return f}
+
+func (t* AddressTable) PtrmapDecl(id string) (ast.Decl){
+	//return nil
+	return *t.Decls[id]
 }
-
-func (t* AddressTable) StrmapFuncDecl(id string, f * FuncDecl) (Foo2){
-	fmt.Printf("test")
-	t2 := NodeType_FUNCDECL
-	//t.FuncDecls[id] =f; f.Report(); return f
-	s := t.FuncDecls
-	if val, ok := s[id]; ok {
-		if val != nil {
-			return Foo2{
-				Type: &t2,
-				Funcdecl : val,
-			}				
-		}		
-	}
-	t3 := NodeType_DEFERRED
-	return Foo2{
-		Type: &t2,
-		Deferred:&Deferred{
-			Id:&id,
-			Type: &t3,
-		},
-	}
-
-}
-
-
-func (t* AddressTable) StrmapDecl(id string, f Decl) (Decl){ t.Decls[id] = &f; f.Report(); return f}
-func (t* AddressTable) StrmapExpr(id string, f Expr) (Expr){ t.Exprs[id] = &f; f.Report(); return f}
-func (t* AddressTable) StrmapSpec(id string, f Spec) (Spec){ t.Specs[id] = &f; f.Report(); return f}
-func (t* AddressTable) StrmapStmt(id string, f Stmt) (Stmt){ t.Stmts[id] = &f; f.Report(); return f}
-
-func (t* AddressTable) PtrmapDecl(id string) (Decl){ return *t.Decls[id] }
-func (t* AddressTable) PtrmapExpr(id string) (Expr){ return *t.Exprs[id] }
-func (t* AddressTable) PtrmapStmt(id string) (Stmt){ return *t.Stmts[id] }
-func (t* AddressTable) PtrmapSpec(id string) (Spec){ return *t.Specs[id] }
+func (t* AddressTable) PtrmapExpr(id string) (ast.Expr){ return *t.Exprs[id] }
+func (t* AddressTable) PtrmapStmt(id string) (ast.Stmt){ return *t.Stmts[id] }
+func (t* AddressTable) PtrmapSpec(id string) (ast.Spec){ return *t.Specs[id] }
 
 
 
 ///func (t* AddressTable) StrmapStructType(id string, f * StructType) (*StructType){ t.StructTypes[id] =f; f.Report(); return f}
 func (t* AddressTable) ConvertFoo3(f ast.Foo3) (*Foo3){
+	// fmt.Printf("Foo3 %#v\n", f)
+	switch v:= f.(type) {
+	case int:
+		var  v2 int64 = (int64(v))
+		return &Foo3{
+			Tokenpos : &v2,
+		}		
+	default:
+		fmt.Printf("other %T\n", v)
+	}
+
 	return nil
 }
 
@@ -534,7 +492,7 @@ func (t* AddressTable) ConvertFoo3(f ast.Foo3) (*Foo3){
 // 	}
 // }
 
-func (t* AddressTable) StrmapStructType(id string, f * ast.StructType) (*ast.StructType){ t.StructTypes[id] = t.ConvertStructType(f); f.Report(); return f}
+// func (t* AddressTable) StrmapStructType(id string, f * ast.StructType) (*ast.StructType){ t.StructTypes[id] = t.ConvertStructType(f); f.Report(); return f}
 
 
 func (t* AddressTable) Converttoken_Pos(f ast.Foo3) (*Foo3){
@@ -557,9 +515,6 @@ func (t* AddressTable) ConvertPointerFieldList(f ast.Foo3) (*FieldList){
 	return nil
 }
 
-func (t* AddressTable) ConvertArrayStarIdent(f ast.Foo3) ([]*Ident){
-	return nil
-}
 
 func (t* AddressTable) ConvertTypebool(f ast.Foo3) (*bool){
 	return nil
@@ -960,24 +915,7 @@ func (t* AddressTable) ConvertForStmt(f *ast.ForStmt) (*ForStmt){
 	}
 }
 
-func (t* AddressTable) ConvertPointerIdent2(f ast.Foo2) (*Foo2){
-	return nil
-}
 
-func (t* AddressTable) ConvertPointerIdent3(f ast.Foo3) (*Foo3){
-	return nil
-}
-
-func (t* AddressTable) ConvertPointerIdent(f ast.Foo2) (*Ident){
-	return nil
-}
-func (t* AddressTable) ConvertIdent(f *ast.Ident) (*Ident){
-	
-	return &Ident{
-// other type &{}
-		//Incomplete: &f2,
-	}
-}
 
 func (t* AddressTable) ConvertSelectStmt(f *ast.SelectStmt) (*SelectStmt){
 	
@@ -1302,4 +1240,196 @@ func (t* AddressTable) ConvertNode(f *ast.Node) (*Node){
 	return &Node{
 		//Incomplete: &f2,
 	}
+}
+
+
+// func (t* AddressTable) StrmapIdent(id string, f * ast.Ident) (*Ident){
+// 	f2 := t.ConvertPointerIdent(f)
+// 	t.Idents[id] = f2;
+// 	f.Report();
+// 	return f2
+// }
+
+// //func (t* AddressTable) StrmapBasicLit(id string, f * BasicLit) (*BasicLit){ t.BasicLits[id] =f; f.Report(); return f}
+// func (t* AddressTable) StrmapBasicLit(id string, f * ast.BasicLit) (*BasicLit){
+// 	f2 := t.ConvertBasicLit(f)
+// 	t.BasicLits[id] = f2;
+// 	f.Report();
+// 	return f2
+// }
+
+// func (t* AddressTable) StrmapImportSpec(id string, f * ast.ImportSpec) (*ImportSpec){
+// 	f2 := t.ConvertImportSpec(f)
+// 	t.ImportSpecs[id] =f2;
+// 	f.Report();
+// 	return f2
+
+// }
+// func (t* AddressTable) StrmapGenDecl(id string, f * ast.GenDecl) (*GenDecl){
+// 	f2 := t.ConvertGenDecl(f)
+// 	t.GenDecls[id] =f2;
+// 	f.Report();
+// 	return f2
+// }
+
+func (t* AddressTable) ConvertBadDecl(f * ast.BadDecl) (*BadDecl){
+	return nil
+}
+
+func (t* AddressTable) ConvertScope(f * ast.Scope) (*Scope){
+	return nil
+}
+
+func (t* AddressTable) StrmapScope(id string, f * ast.Scope) (*ast.Scope){
+	f2 := t.ConvertScope(f);
+	t.Check(id,f2,f)
+	t.Scopes[id] =f;
+	//f.Report();
+	return f}
+
+
+func (t* AddressTable) StrmapArrayType(id string, f * ast.ArrayType) (*ast.ArrayType){
+	f2 := t.ConvertArrayType(f);
+	t.Check(id,f2,f)
+	t.ArrayTypes[id] =f;
+	return f
+}
+func (t* AddressTable) StrmapAssignStmt(id string, f * ast.AssignStmt) (*ast.AssignStmt){ f2 := t.ConvertAssignStmt(f); t.AssignStmts[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapBadDecl(id string, f * ast.BadDecl) (*ast.BadDecl){ f2 := t.ConvertBadDecl(f); t.BadDecls[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapBadExpr(id string, f * ast.BadExpr) (*ast.BadExpr){ f2 := t.ConvertBadExpr(f); t.BadExprs[id] =f; t.Check(id,f2,f); return f}
+     func (t* AddressTable) StrmapBadStmt(id string, f * ast.BadStmt) (*ast.BadStmt){ f2 := t.ConvertBadStmt(f); t.BadStmts[id] =f; t.Check(id,f2,f); return f}
+     func (t* AddressTable) StrmapBasicLit(id string, f * ast.BasicLit) (*ast.BasicLit){ f2 := t.ConvertBasicLit(f); t.BasicLits[id] =f; t.Check(id,f2,f); return f}
+     func (t* AddressTable) StrmapBinaryExpr(id string, f * ast.BinaryExpr) (*ast.BinaryExpr){ f2 := t.ConvertBinaryExpr(f); t.BinaryExprs[id] =f; t.Check(id,f2,f); return f}
+     func (t* AddressTable) StrmapBlockStmt(id string, f * ast.BlockStmt) (*ast.BlockStmt){ f2 := t.ConvertBlockStmt(f); t.BlockStmts[id] =f; t.Check(id,f2,f); return f}
+    func (t* AddressTable) StrmapBranchStmt(id string, f * ast.BranchStmt) (*ast.BranchStmt){ f2 := t.ConvertBranchStmt(f); t.BranchStmts[id] =f; t.Check(id,f2,f); return f}
+    func (t* AddressTable) StrmapCallExpr(id string, f * ast.CallExpr) (*ast.CallExpr){ f2 := t.ConvertCallExpr(f); t.CallExprs[id] =f; t.Check(id,f2,f); return f}
+    func (t* AddressTable) StrmapCaseClause(id string, f * ast.CaseClause) (*ast.CaseClause){ f2 := t.ConvertCaseClause(f); t.CaseClauses[id] =f; t.Check(id,f2,f); return f}
+    func (t* AddressTable) StrmapChanDir(id string, f * ast.ChanDir) (*ast.ChanDir){ f2 := t.ConvertChanDir(f); t.ChanDirs[id] =f; t.Check(id,f2,f); return f}
+    func (t* AddressTable) StrmapChanType(id string, f * ast.ChanType) (*ast.ChanType){ f2 := t.ConvertChanType(f); t.ChanTypes[id] =f; t.Check(id,f2,f); return f}
+    func (t* AddressTable) StrmapCommClause(id string, f * ast.CommClause) (*ast.CommClause){ f2 := t.ConvertCommClause(f); t.CommClauses[id] =f; t.Check(id,f2,f); return f}
+    func (t* AddressTable) StrmapComment(id string, f * ast.Comment) (*ast.Comment){ f2 := t.ConvertComment(f); t.Comments[id] =f; t.Check(id,f2,f); return f}
+    func (t* AddressTable) StrmapCompositeLit(id string, f * ast.CompositeLit) (*ast.CompositeLit){ f2 := t.ConvertCompositeLit(f); t.CompositeLits[id] =f; t.Check(id,f2,f); return f}
+    func (t* AddressTable) StrmapDeclStmt(id string, f * ast.DeclStmt) (*ast.DeclStmt){ f2 := t.ConvertDeclStmt(f); t.DeclStmts[id] =f; t.Check(id,f2,f); return f}
+    func (t* AddressTable) StrmapDeferStmt(id string, f * ast.DeferStmt) (*ast.DeferStmt){ f2 := t.ConvertDeferStmt(f); t.DeferStmts[id] =f; t.Check(id,f2,f); return f}
+    func (t* AddressTable) StrmapEllipsis(id string, f * ast.Ellipsis) (*ast.Ellipsis){ f2 := t.ConvertEllipsis(f); t.Ellipsiss[id] =f; t.Check(id,f2,f); return f}
+    func (t* AddressTable) StrmapEmptyStmt(id string, f * ast.EmptyStmt) (*ast.EmptyStmt){ f2 := t.ConvertEmptyStmt(f); t.EmptyStmts[id] =f; t.Check(id,f2,f); return f}
+    func (t* AddressTable) StrmapExprStmt(id string, f * ast.ExprStmt) (*ast.ExprStmt){ f2 := t.ConvertExprStmt(f); t.ExprStmts[id] =f; t.Check(id,f2,f); return f}
+    func (t* AddressTable) StrmapField(id string, f * ast.Field) (*ast.Field){ f2 := t.ConvertField(f); t.Fields[id] =f; t.Check(id,f2,f); return f}
+    func (t* AddressTable) StrmapFieldList(id string, f * ast.FieldList) (*ast.FieldList){ f2 := t.ConvertFieldList(f); t.FieldLists[id] =f; t.Check(id,f2,f); return f}
+    func (t* AddressTable) StrmapFile(id string, f * ast.File) (*ast.File){ f2 := t.ConvertFile(f); t.Files[id] =f; t.Check(id,f2,f); return f}
+    func (t* AddressTable) StrmapForStmt(id string, f * ast.ForStmt) (*ast.ForStmt){ f2 := t.ConvertForStmt(f); t.ForStmts[id] =f; t.Check(id,f2,f); return f}
+    func (t* AddressTable) StrmapFuncDecl(id string, f * ast.FuncDecl) (*ast.FuncDecl){ f2 := t.ConvertFuncDecl(f); t.FuncDecls[id] =f; t.Check(id,f2,f); return f}
+    func (t* AddressTable) StrmapFuncLit(id string, f * ast.FuncLit) (*ast.FuncLit){ f2 := t.ConvertFuncLit(f); t.FuncLits[id] =f; t.Check(id,f2,f); return f}
+    func (t* AddressTable) StrmapFuncType(id string, f * ast.FuncType) (*ast.FuncType){ f2 := t.ConvertFuncType(f); t.FuncTypes[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapGenDecl(id string, f * ast.GenDecl) (*ast.GenDecl){ f2 := t.ConvertGenDecl(f); t.GenDecls[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapGoStmt(id string, f * ast.GoStmt) (*ast.GoStmt){ f2 := t.ConvertGoStmt(f); t.GoStmts[id] =f; t.Check(id,f2,f); return f}
+
+func (t* AddressTable) StrmapIfStmt(id string, f * ast.IfStmt) (*ast.IfStmt){ f2 := t.ConvertIfStmt(f); t.IfStmts[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapImportSpec(id string, f * ast.ImportSpec) (*ast.ImportSpec){ f2 := t.ConvertImportSpec(f); t.ImportSpecs[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapIncDecStmt(id string, f * ast.IncDecStmt) (*ast.IncDecStmt){ f2 := t.ConvertIncDecStmt(f); t.IncDecStmts[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapIndexExpr(id string, f * ast.IndexExpr) (*ast.IndexExpr){ f2 := t.ConvertIndexExpr(f); t.IndexExprs[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapInterfaceType(id string, f * ast.InterfaceType) (*ast.InterfaceType){ f2 := t.ConvertInterfaceType(f); t.InterfaceTypes[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapIsExported(id string, f * ast.IsExported) (*ast.IsExported){ f2 := t.ConvertIsExported(f); t.IsExporteds[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapKeyValueExpr(id string, f * ast.KeyValueExpr) (*ast.KeyValueExpr){ f2 := t.ConvertKeyValueExpr(f); t.KeyValueExprs[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapLabeledStmt(id string, f * ast.LabeledStmt) (*ast.LabeledStmt){ f2 := t.ConvertLabeledStmt(f); t.LabeledStmts[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapMapType(id string, f * ast.MapType) (*ast.MapType){ f2 := t.ConvertMapType(f); t.MapTypes[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapNewIdent(id string, f * ast.NewIdent) (*ast.NewIdent){ f2 := t.ConvertNewIdent(f); t.NewIdents[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapPackage(id string, f * ast.Package) (*ast.Package){ f2 := t.ConvertPackage(f); t.Packages[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapParenExpr(id string, f * ast.ParenExpr) (*ast.ParenExpr){ f2 := t.ConvertParenExpr(f); t.ParenExprs[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapRangeStmt(id string, f * ast.RangeStmt) (*ast.RangeStmt){ f2 := t.ConvertRangeStmt(f); t.RangeStmts[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapReturnStmt(id string, f * ast.ReturnStmt) (*ast.ReturnStmt){ f2 := t.ConvertReturnStmt(f); t.ReturnStmts[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapSelectStmt(id string, f * ast.SelectStmt) (*ast.SelectStmt){ f2 := t.ConvertSelectStmt(f); t.SelectStmts[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapSelectorExpr(id string, f * ast.SelectorExpr) (*ast.SelectorExpr){ f2 := t.ConvertSelectorExpr(f); t.SelectorExprs[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapSendStmt(id string, f * ast.SendStmt) (*ast.SendStmt){ f2 := t.ConvertSendStmt(f); t.SendStmts[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapSliceExpr(id string, f * ast.SliceExpr) (*ast.SliceExpr){ f2 := t.ConvertSliceExpr(f); t.SliceExprs[id] =f; t.Check(id,f2,f); return f}
+//func (t* AddressTable) StrmapSpec(id string, f * ast.Spec) (*ast.Spec){ f2 := t.ConvertSpec(f); t.Specs[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapStarExpr(id string, f * ast.StarExpr) (*ast.StarExpr){
+	f2 := t.ConvertStarExpr(f);
+	t.StarExprs[id] =f; t.Check(id,f2,f);
+	return f
+}
+
+func (t* AddressTable) StrmapStructType(id string, f * ast.StructType) (*ast.StructType){ f2 := t.ConvertStructType(f); t.StructTypes[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapSwitchStmt(id string, f * ast.SwitchStmt) (*ast.SwitchStmt){ f2 := t.ConvertSwitchStmt(f); t.SwitchStmts[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapTypeAssertExpr(id string, f * ast.TypeAssertExpr) (*ast.TypeAssertExpr){ f2 := t.ConvertTypeAssertExpr(f); t.TypeAssertExprs[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapTypeSpec(id string, f * ast.TypeSpec) (*ast.TypeSpec){ f2 := t.ConvertTypeSpec(f); t.TypeSpecs[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapTypeSwitchStmt(id string, f * ast.TypeSwitchStmt) (*ast.TypeSwitchStmt){ f2 := t.ConvertTypeSwitchStmt(f); t.TypeSwitchStmts[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapUnaryExpr(id string, f * ast.UnaryExpr) (*ast.UnaryExpr){ f2 := t.ConvertUnaryExpr(f); t.UnaryExprs[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapValueSpec(id string, f * ast.ValueSpec) (*ast.ValueSpec){ f2 := t.ConvertValueSpec(f); t.ValueSpecs[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapCommentGroup(id string, f * ast.CommentGroup) (*ast.CommentGroup){ f2 := t.ConvertCommentGroup(f); t.CommentGroups[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapSpec(id string, f * ast.Spec) (*ast.Spec){ f2 := t.ConvertSpec(f); t.Specs[id] =f; t.Check(id,f2,f); return f}
+func (t* AddressTable) StrmapObject(id string, f * ast.Object) (*ast.Object){ f2 := t.ConvertObject(f); t.Objects[id] =f; t.Check(id,f2,f); return f}
+
+func (t* AddressTable) ConvertObject(f * ast.Object) (*Object){
+	return nil
+}
+
+
+func (t* AddressTable) ConvertArrayStarIdent(f ast.Foo3) ([]*Ident){
+	fmt.Printf("ConvertArrayStarIdent %#v\n", f)
+
+	switch v:= f.(type) {
+	case []*ast.Ident:
+		v2 := make([]*Ident, len(v))
+		for i,j := range(v) {
+			x:=t.ConvertIdent(j)
+			fmt.Printf("created %d %#v\n", i,*x.Name)
+			v2[i]=x
+		}
+		fmt.Printf("created %#v\n", f)
+		return v2
+	}
+	return nil
+}
+
+func (t* AddressTable) StrmapIdent(id string, f * ast.Ident) (*ast.Ident){
+	f2 := t.ConvertIdent(f);
+	t.Idents[id] =f;
+	t.Check(id,f2,f);
+	return f
+}
+
+func (t* AddressTable) ConvertIdent(f *ast.Ident) (*Ident){
+	//fmt.Printf("ConvertIdent %#v\n", f)
+	return &Ident{
+		NamePos:t.ConvertFoo3(f.NamePos),
+		Name:&f.Name,
+		Obj:t.ConvertFoo2(f.Obj),
+	}
+}
+
+func (t* AddressTable) ConvertPointerIdent3(f ast.Foo3) (*Foo3){
+	switch v:= f.(type) {
+		case * ast.Ident:
+		fmt.Printf("ConvertPointerIdent3 %#v\n", v)
+	default:
+		panic("no gittity")
+	}
+	return nil
+}
+
+func (t* AddressTable) ConvertPointerIdent(f ast.Foo2) (*Ident){
+	fmt.Printf("ConvertPointerIdent %#v\n", f)
+	return nil
+}
+
+func (t* AddressTable) ConvertFoo2(f ast.Foo2) (*Foo2){
+	if f!= nil  {
+		//fmt.Printf("ConvertFoo2 %s %#v %T\n", f,f,f)
+
+
+		switch v:= f.(type) {
+		case *ast.Object:
+			fmt.Printf("Convert Object %#v\n", v)
+		default:
+			fmt.Printf("ConvertFoo2 %T\n val :%#v\n str:%s\n", f,f,f)
+			fmt.Printf("unknown %T\n", v)
+		}
+	}	
+	return nil
+}
+
+func (t* AddressTable) ConvertPointerIdent2(f ast.Foo2) (*Foo2){
+	fmt.Printf("ConvertPointerIdent2 %#v\n", f)
+	return nil
 }

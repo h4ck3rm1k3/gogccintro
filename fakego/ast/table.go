@@ -304,6 +304,10 @@ func (t* Table) StrmapTypeSpec(id string, f * TypeSpec) (*TypeSpec){
 	return f
 }
 
+func (t* FieldDeferred) Report() (string){
+	return "FieldDeferred"
+}
+	
 func (t* Deferred) Report() (string){
 	//if t.Data != nil {
 	//	return t.Data.Report()
@@ -368,7 +372,7 @@ func (t* Table) PtrmapObject(id string) (*Object){
 			//return &Deferred{ Id:id, Set: &t.Objects  }
 			//panic(id)
 			return &Object{
-				Deferred:Deferred2{
+				Deferred:&Deferred{
 					Id:id,
 					Set: &t.Objects,
 				},
@@ -382,7 +386,7 @@ func (t* Table) PtrmapObject(id string) (*Object){
 		
 	} else {
 		return &Object{
-			Deferred:Deferred2{
+			Deferred:&Deferred{
 				Id:id,
 				Set: &t.TypeSpecs,
 			},

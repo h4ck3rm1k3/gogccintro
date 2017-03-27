@@ -193,3 +193,8 @@ func (t* Object) Report() (string){
 	/*fmt.Println(r)*/;
 	
 	return r }
+
+func (t* ObjectDeferred) Report() (string){
+	return "Todo Object"
+
+}

@@ -29,8 +29,8 @@ type FuncType struct {
 }
 
 type SelectorExpr struct {
-	X Foo2
-	Sel Foo2
+	X Expr
+	Sel * Ident
 }
 
 
@@ -53,10 +53,26 @@ type StructType struct {
 	Incomplete bool
 }
 
+type FieldInterface interface {
+	Report() string
+}
+
+type FieldDeferred struct {
+	Id    string 
+}
+
+type ObjectDeferred struct {
+	Id    string 
+}
+
 type Field struct {
+
+	
+	Doc     *CommentGroup
 	Names []*Ident
-	Type Foo2
-	Tag Foo2
+	Type Expr
+	Tag *BasicLit
+	Comment *CommentGroup
 }
 
 
@@ -81,8 +97,10 @@ type Scope struct {
 
 
 type TypeSpec struct {
-	Name Foo2
-	Type Foo2
+	Doc * CommentGroup
+	Name * Ident
+	Type Expr
+	Comment * CommentGroup
 }
 
 type BasicLit struct {
@@ -94,7 +112,8 @@ type BasicLit struct {
 
 
 type ImportSpec struct {
-	Path Foo2
+	Name * Ident
+	Path * BasicLit
 	EndPos Foo3
 }
 
@@ -108,11 +127,13 @@ type GenDecl struct {
 }
 
 type FuncDecl struct {
-	Recv Foo2
-	Name Foo3
-	Type Foo2
-	Body Foo2
+	Doc  *CommentGroup // associated documentation; or nil
+	Recv *FieldList    // receiver (methods); or nil (functions)
+	Name *Ident        // function/method name
+	Type *FuncType     // function signature: parameters, results, and position of "func" keyword
+	Body *BlockStmt    // function body; or nil (forward declaration)
 }
+
 type BlockStmt struct {
 	Lbrace Foo3
 	List []Stmt
@@ -131,8 +152,8 @@ type(
 	// parameter list or the "..." length in an array type.
 	//
 	Ellipsis struct {
-		Ellipsis Foo2 // position of "..."
-		Elt      Foo2      // ellipsis element type (parameter lists only); or nil
+		Ellipsis Foo3 // position of "..."
+		Elt      Expr      // ellipsis element type (parameter lists only); or nil
 	}
 
 	// A BasicLit node represents a literal of basic type.
@@ -146,7 +167,7 @@ type(
 
 	// A CompositeLit node represents a composite literal.
 	CompositeLit struct {
-		Type   Foo2      // literal type; or nil
+		Type   Expr      // literal type; or nil
 		Lbrace Foo3
 		Elts   []Expr    // []list of composite elements; or nil
 		Rbrace Foo3
@@ -171,11 +192,11 @@ type(
 
 	// An SliceExpr node represents an expression followed by slice indices.
 	SliceExpr struct {
-		X      Foo2      // expression
+		X      Expr      // expression
 		Lbrack Foo3
-		Low    Foo2      // begin of slice range; or nil
-		High   Foo2      // end of slice range; or nil
-		Max    Foo2      // maximum capacity of slice; or nil
+		Low    Expr      // begin of slice range; or nil
+		High   Expr      // end of slice range; or nil
+		Max    Expr      // maximum capacity of slice; or nil
 		Slice3 bool      // true if 3-index slice (2 colons present)
 		Rbrack Foo3
 	}
@@ -184,15 +205,15 @@ type(
 	// type assertion.
 	//
 	TypeAssertExpr struct {
-		X      Foo2      // expression
+		X      Expr      // expression
 		Lparen Foo3
-		Type   Foo2      // asserted type; nil means type switch X.(type)
+		Type   Expr      // asserted type; nil means type switch X.(type)
 		Rparen Foo3
 	}
 
 	// A CallExpr node represents an expression followed by an argument list.
 	CallExpr struct {
-		Fun      Foo2      // function expression
+		Fun      Expr  // function expression
 		Lparen   Foo3
 		Args     []Expr
 		Ellipsis Foo3
@@ -210,7 +231,7 @@ type(
 	UnaryExpr struct {
 		OpPos Foo3
 		Op    Foo3 // operator
-		X     Foo2        // operand
+		X     Expr        // operand
 	}
 
 	// A BinaryExpr node represents a binary expression.
@@ -259,8 +280,8 @@ type (
 	// A LabeledStmt node represents a labeled statement.
 	LabeledStmt struct {
 		Label *Ident
-		Colon Foo2 // position of ":"
-		Stmt  Foo2
+		Colon Foo3 // position of ":"
+		Stmt  Stmt
 	}
 
 	// An ExprStmt node represents a (stand-alone) expression
@@ -272,9 +293,9 @@ type (
 
 	// A SendStmt node represents a send statement.
 	SendStmt struct {
-		Chan  Foo2
+		Chan  Expr
 		Arrow Foo2 // position of "<-"
-		Value Foo2
+		Value Expr
 	}
 
 	// An IncDecStmt node represents an increment or decrement statement.
@@ -329,10 +350,10 @@ type (
 	// An IfStmt node represents an if statement.
 	IfStmt struct {
 		If   Foo3
-		Init Foo2      // initialization statement; or nil
-		Cond Foo2      // condition
-		Body Foo2
-		Else Foo2 // else branch; or nil
+		Init Stmt      // initialization statement; or nil
+		Cond Expr      // condition
+		Body * BlockStmt
+		Else Stmt // else branch; or nil
 	}
 
 	// A CaseClause represents a case of an expression or type switch statement.
@@ -346,50 +367,50 @@ type (
 	// A SwitchStmt node represents an expression switch statement.
 	SwitchStmt struct {
 		Switch Foo3  // position of "switch" keyword
-		Init   Foo2       // initialization statement; or nil
-		Tag    Foo2       // tag expression; or nil
-		Body   Foo2 // CaseClauses only
+		Init   Stmt       // initialization statement; or nil
+		Tag    Expr       // tag expression; or nil
+		Body   * BlockStmt // CaseClauses only
 	}
 
 	// An TypeSwitchStmt node represents a type switch statement.
 	TypeSwitchStmt struct {
-		Switch Foo2  // position of "switch" keyword
-		Init   Foo2       // initialization statement; or nil
-		Assign Foo2       // x := y.(type) or y.(type)
-		Body   Foo2 // CaseClauses only
+		Switch Foo3  // position of "switch" keyword
+		Init   Stmt       // initialization statement; or nil
+		Assign Stmt       // x := y.(type) or y.(type)
+		Body   * BlockStmt // CaseClauses only
 	}
 
 	// A CommClause node represents a case of a select statement.
 	CommClause struct {
-		Case  Foo2 // position of "case" or "default" keyword
-		Comm  Foo2      // send or receive statement; nil means default case
-		Colon Foo2 // position of ":"
+		Case  Foo3 // position of "case" or "default" keyword
+		Comm  Stmt      // send or receive statement; nil means default case
+		Colon Foo3 // position of ":"
 		Body  []Stmt    // statement list; or nil
 	}
 
 	// An SelectStmt node represents a select statement.
 	SelectStmt struct {
-		Select Foo2  // position of "select" keyword
-		Body   Foo2 // CommClauses only
+		Select Foo3  // position of "select" keyword
+		Body   *BlockStmt // CommClauses only
 	}
 
 	// A ForStmt represents a for statement.
 	ForStmt struct {
 		For  Foo3 // position of "for" keyword
-		Init Foo2      // initialization statement; or nil
-		Cond Foo2      // condition; or nil
-		Post Foo2      // post iteration statement; or nil
-		Body Foo2
+		Init Stmt      // initialization statement; or nil
+		Cond Expr      // condition; or nil
+		Post Stmt      // post iteration statement; or nil
+		Body *BlockStmt
 	}
 
 	// A RangeStmt represents a for statement with a range clause.
 	RangeStmt struct {
 		For        Foo3
-		Key, Value Foo2       // Key, Value may be nil
+		Key, Value Expr       // Key, Value may be nil
 		TokPos     Foo3
 		Tok         Foo3 // ILLEGAL if Key == nil, ASSIGN, DEFINE
-		X          Foo2//Expr        // value to range over
-		Body       Foo2//BlockStmt
+		X          Expr//Expr        // value to range over
+		Body       *BlockStmt
 	}
 
 
@@ -404,15 +425,16 @@ type ArrayType struct{
 type StarArrayType struct{}
 type SwitchCaseClause struct{}
 type ValueSpec struct{
+	Doc     *CommentGroup
 	Names []*Ident
-	Type Foo2
+	Type Expr
 	Values []Expr
 }
 
 type MapType struct{
 	Map Foo3
-	Key Foo2
-	Value Foo2
+	Key Expr
+	Value Expr
 }
 
 type BadDecl struct {}
@@ -471,10 +493,10 @@ type Deferred struct {
 	Set   interface{} 
 }
 
-type Deferred2 struct {
-	Id    string 
-	Set   interface{} 
-}
+// type Deferred2 struct {
+// 	Id    string 
+// 	Set   interface{} 
+// }
 
 
 // type ObjectInternal struct {
@@ -486,7 +508,7 @@ type Deferred2 struct {
 
 type Object struct {
 
-	Deferred Deferred2
+	Deferred * Deferred
 	
 	Kind Foo3
 	Name Foo3

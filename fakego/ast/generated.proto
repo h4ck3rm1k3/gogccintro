@@ -33,7 +33,7 @@ package github.com.h4ck3rm1k3.gogccintro.fakego.ast.proto;
 // option (gogoproto.goproto_unrecognized_all) = false;
 // option (gogoproto.goproto_enum_prefix_all) = false;
 // option (gogoproto.goproto_getters_all) = false;
-option go_package = "ast";
+option go_package = "astproto";
 
 enum NodeType {
      ARRAYTYPE = 0; // ENUM BASE
@@ -102,7 +102,7 @@ enum NodeType {
 }
 
 message ExprStmt {
-	required Foo2 X=1; // expression	
+	required Expr X=1; // expression	
 }
 
 message StarExpr {}
@@ -110,7 +110,10 @@ message DeclStmt {}
 message BadDecl {}
 message ChanDir {}
 message ChanType {}
-message Comment {}
+message Comment {
+	required Foo3 Slash=1;
+	required string	Text=2;
+}
 message ReturnStmt {}
 message IsExported {}
 message NewIdent {}
@@ -134,6 +137,14 @@ optional SliceExpr sliceexpr = 48; // Interface:Expr
 optional StarExpr starexpr = 50; // Interface:Expr
 optional TypeAssertExpr typeassertexpr = 53; // Interface:Expr
 optional UnaryExpr unaryexpr = 56; // Interface:Expr
+
+// look like we need to add these extra fields for expr
+optional FuncType functype = 27; // Interface:BASE
+optional Ident ident = 30; // Interface:BASE
+optional InterfaceType interfacetype = 35; // Interface:BASE
+optional StructType structtype = 51; // Interface:BASE
+optional ArrayType arraytype = 61; // Interface:BASE
+optional BasicLit basiclit = 5; // Interface:BASE
 }
 
 message Stmt {
@@ -169,7 +180,11 @@ optional GenDecl gendecl = 28; // Interface:Decl
 
 }
 message Spec {}
-message ImportSpec {}
+message ImportSpec {
+	optional Ident Name=1;
+	required BasicLit Path=2;
+	optional Foo3 EndPos=3;
+}
 message CommentGroup {}
 
 
@@ -276,14 +291,14 @@ message BadStmt {
 message BasicLit {
   optional Foo3 ValuePos = 1 ;
 
-  optional Foo3 Kind = 2 ;
+  optional string Kind = 2 ;
 
-  optional Foo3 Value = 3 ;
+  optional string Value = 3 ;
 }
 
 // A BinaryExpr node represents a binary expression.
 message BinaryExpr {
-  optional Foo2 X = 1 ;
+  optional Expr X = 1 ;
 
   // left operand
   optional Foo3 OpPos = 2 ;
@@ -292,7 +307,7 @@ message BinaryExpr {
   optional Foo3 Op = 3 ;
 
   // operator
-  optional Foo2 Y = 4 ;
+  optional Expr Y = 4 ;
 }
 
 message BlockStmt {
@@ -316,7 +331,7 @@ message BranchStmt {
 
 // A CallExpr node represents an expression followed by an argument list.
 message CallExpr {
-  optional Foo2 Fun = 1 ;
+  required Expr Fun = 1 ;
 
   // function expression
   optional Foo3 Lparen = 2 ;
@@ -345,7 +360,7 @@ message CommClause {
   optional Foo2 Case = 1 ;
 
   // position of "case" or "default" keyword
-  optional Foo2 Comm = 2 ;
+  required Stmt Comm = 2 ;
 
   // send or receive statement; nil means default case
   optional Foo2 Colon = 3 ;
@@ -356,7 +371,7 @@ message CommClause {
 
 // A CompositeLit node represents a composite literal.
 message CompositeLit {
-  optional Foo2 Type = 1 ;
+  required Expr Type = 1 ;
 
   // literal type; or nil
   optional Foo3 Lbrace = 2 ;
@@ -387,10 +402,10 @@ message Deferred {
 // An Ellipsis node stands for the "..." type in a
 // parameter list or the "..." length in an array type.
 message Ellipsis {
-  optional Foo2 Ellipsis = 1 ;
+  optional Foo3 Ellipsis = 1 ;
 
   // position of "..."
-  optional Foo2 Elt = 2 ;
+  optional Expr Elt = 2 ;
 }
 
 // An EmptyStmt node represents an empty statement.
@@ -406,9 +421,11 @@ message EmptyStmt {
 message Field {
   repeated Ident Names = 1;
 
-  optional Foo2 Type = 2 ;
+  required Expr Type = 2 ;
 
-  optional Foo2 Tag = 3 ;
+  optional BasicLit Tag = 3 ;
+
+  optional CommentGroup Comment =4;
 }
 
 message FieldList {
@@ -440,26 +457,24 @@ message ForStmt {
   optional Foo3 For = 1 ;
 
   // position of "for" keyword
-  optional Foo2 Init = 2 ;
+  required Stmt Init = 2 ;
 
   // initialization statement; or nil
-  optional Foo2 Cond = 3 ;
+  required Expr Cond = 3 ;
 
   // condition; or nil
-  optional Foo2 Post = 4 ;
+  required Stmt Post = 4 ;
 
   // post iteration statement; or nil
-  optional Foo2 Body = 5 ;
+  optional BlockStmt Body = 5 ;
 }
 
 message FuncDecl {
-  optional Foo2 Recv = 1 ;
-
-  optional Foo3 Name = 2 ;
-
-  optional Foo2 Type = 3 ;
-
-  optional Foo2 Body = 4 ;
+  optional FieldList Recv = 1 ;
+  optional Ident Name = 2 ;
+  optional FuncType Type = 3 ;
+  optional BlockStmt Body = 4 ;
+  optional CommentGroup Doc = 5;	
 }
 
 // A FuncLit node represents a function literal.
@@ -510,20 +525,20 @@ message Ident {
 message IfStmt {
   optional Foo3 If = 1 ;
 
-  optional Foo2 Init = 2 ;
+  required Stmt Init = 2 ;
 
   // initialization statement; or nil
-  optional Foo2 Cond = 3 ;
+  required Expr Cond = 3 ;
 
   // condition
-  optional Foo2 Body = 4 ;
+  optional BlockStmt Body = 4 ;
 
-  optional Foo2 Else = 5 ;
+  optional Stmt Else = 5 ;
 }
 
 // An IncDecStmt node represents an increment or decrement statement.
 message IncDecStmt {
-  optional Foo2 X = 1 ;
+  optional Expr X = 1 ;
 
   optional Foo3 TokPos = 2 ;
 
@@ -533,12 +548,12 @@ message IncDecStmt {
 
 // An IndexExpr node represents an expression followed by an index.
 message IndexExpr {
-  optional Foo2 X = 1 ;
+  required Expr X = 1 ;
 
   // expression
   optional Foo3 Lbrack = 2 ;
 
-  optional Foo2 Index = 3 ;
+  required Expr Index = 3 ;
 
   // index expression
   optional Foo3 Rbrack = 4 ;
@@ -555,38 +570,38 @@ message InterfaceType {
 // A KeyValueExpr node represents (key : value) pairs
 // in composite literals.
 message KeyValueExpr {
-  optional Foo2 Key = 1 ;
+  optional Expr Key = 1 ;
 
-  optional Foo2 Colon = 2 ;
+  optional Foo3 Colon = 2 ;
 
   // position of ":"
-  optional Foo2 Value = 3 ;
+  optional Expr Value = 3 ;
 }
 
 // A LabeledStmt node represents a labeled statement.
 message LabeledStmt {
   optional Ident Label = 1;
 
-  optional Foo2 Colon = 2 ;
+  optional Foo3 Colon = 2 ;
 
   // position of ":"
-  optional Foo2 Stmt = 3 ;
+  required Stmt Stmt = 3 ;
 }
 
 message MapType {
   optional Foo3 Map = 1 ;
 
-  optional Foo2 Key = 2 ;
+  optional Expr Key = 2 ;
 
-  optional Foo2 Value = 3 ;
+  optional Expr Value = 3 ;
 }
 
 message Object {
   optional Deferred Deferred = 1 ;
 
-  optional Foo3 Kind = 2 ;
+  optional string Kind = 2 ;
 
-  optional Foo3 Name = 3 ;
+  optional string Name = 3 ;
 
   optional Foo2 Decl = 4 ;
 
@@ -608,32 +623,32 @@ message Package {
 
 // A ParenFoo2 node represents a parenthesized expression.
 message ParenExpr {
-  optional Foo3 Lparen = 1 ;
+  required Foo3 Lparen = 1 ;
 
-  optional Foo2 X = 2 ;
+  required Expr X = 2 ;
 
   // parenthesized expression
-  optional Foo3 Rparen = 3 ;
+  required Foo3 Rparen = 3 ;
 }
 
 // A RangeStmt represents a for statement with a range clause.
 message RangeStmt {
-  optional Foo3 For = 1 ;
+  required Foo3 For = 1 ;
 
-  optional Foo2 Key = 2 ;
+  required Expr Key = 2 ;
 
-  optional Foo2 Value = 3 ;
+  required Expr Value = 3 ;
 
   // Key, Value may be nil
-  optional Foo3 TokPos = 4 ;
+  required Foo3 TokPos = 4 ;
 
-  optional Foo3 Tok = 5 ;
+  required Foo3 Tok = 5 ;
 
   // ILLEGAL if Key == nil, ASSIGN, DEFINE
-  optional Foo2 X = 6 ;
+  required Expr X = 6 ;
 
   // Expr        // value to range over
-  optional Foo2 Body = 7 ;
+  optional BlockStmt Body = 7 ;
 }
 
 message Scope {
@@ -645,39 +660,38 @@ message SelectStmt {
   optional Foo2 Select = 1 ;
 
   // position of "select" keyword
-  optional Foo2 Body = 2 ;
+  optional BlockStmt Body = 2 ;
 }
 
 message SelectorExpr {
-  optional Foo2 X = 1 ;
+  required Expr X = 1 ;
 
-  optional Foo2 Sel = 2 ;
+  optional Ident Sel = 2 ;
 }
 
 // A SendStmt node represents a send statement.
 message SendStmt {
-  optional Foo2 Chan = 1 ;
+  required Expr Chan = 1 ;
 
   optional Foo2 Arrow = 2 ;
 
-  // position of "<-"
-  optional Foo2 Value = 3 ;
+  required   Expr Value = 3 ;
 }
 
 // An SliceExpr node represents an expression followed by slice indices.
 message SliceExpr {
-  optional Foo2 X = 1 ;
+  optional Expr X = 1 ;
 
   // expression
   optional Foo3 Lbrack = 2 ;
 
-  optional Foo2 Low = 3 ;
+  optional Expr Low = 3 ;
 
   // begin of slice range; or nil
-  optional Foo2 High = 4 ;
+  optional Expr High = 4 ;
 
   // end of slice range; or nil
-  optional Foo2 Max = 5 ;
+  optional Expr Max = 5 ;
 
   // maximum capacity of slice; or nil
   optional bool Slice3 = 6 ;
@@ -699,171 +713,39 @@ message SwitchStmt {
   optional Foo3 Switch = 1 ;
 
   // position of "switch" keyword
-  optional Foo2 Init = 2 ;
+  required Stmt Init = 2 ;
 
   // initialization statement; or nil
-  optional Foo2 Tag = 3 ;
+  required Expr Tag = 3 ;
 
   // tag expression; or nil
-  optional Foo2 Body = 4 ;
+  optional BlockStmt Body = 4 ;
 }
 
 message ArrayType {
 	required Foo3 Lbrack =1;
-	required Foo2 Elt  =2;
+	required Expr Elt  =2;
 }
-
-// message AddressTable {
-//   map<string, Scope> Scopes = 1 ;
-
-//   map<string, Object> Objects = 2 ;
-
-//   map<string, ArrayType> ArrayTypes = 3 ;
-
-//   map<string, AssignStmt> AssignStmts = 4 ;
-
-//   map<string, BadDecl> BadDecls = 5 ;
-
-//   map<string, BadExpr> BadExprs = 6 ;
-
-//   map<string, BadStmt> BadStmts = 7 ;
-
-//   map<string, BasicLit> BasicLits = 8 ;
-
-//   map<string, BinaryExpr> BinaryExprs = 9 ;
-
-//   map<string, BlockStmt> BlockStmts = 10 ;
-
-//   map<string, BranchStmt> BranchStmts = 11 ;
-
-//   map<string, CallExpr> CallExprs = 12 ;
-
-//   map<string, CaseClause> CaseClauses = 13 ;
-
-//   map<string, ChanDir> ChanDirs = 14 ;
-
-//   map<string, ChanType> ChanTypes = 15 ;
-
-//   map<string, CommClause> CommClauses = 16 ;
-
-//   map<string, CommentGroup> CommentGroups = 17 ;
-
-//   map<string, Comment> Comments = 18 ;
-
-//   map<string, CompositeLit> CompositeLits = 19 ;
-
-//   map<string, DeclStmt> DeclStmts = 20 ;
-
-//   map<string, DeferStmt> DeferStmts = 21 ;
-
-//   map<string, Ellipsis> Ellipsiss = 22 ;
-
-//   map<string, EmptyStmt> EmptyStmts = 23 ;
-
-//   map<string, ExprStmt> ExprStmts = 24 ;
-
-//   map<string, FieldList> FieldLists = 25 ;
-
-//   map<string, Field> Fields = 26 ;
-
-//   map<string, File> Files = 27 ;
-
-//   map<string, ForStmt> ForStmts = 28 ;
-
-//   map<string, FuncDecl> FuncDecls = 29 ;
-
-//   map<string, FuncLit> FuncLits = 30 ;
-
-//   map<string, FuncType> FuncTypes = 31 ;
-
-//   map<string, GenDecl> GenDecls = 32 ;
-
-//   map<string, GoStmt> GoStmts = 33 ;
-
-//   map<string, Ident> Idents = 34 ;
-
-//   map<string, IfStmt> IfStmts = 35 ;
-
-//   map<string, ImportSpec> ImportSpecs = 36 ;
-
-//   map<string, IncDecStmt> IncDecStmts = 37 ;
-
-//   map<string, IndexExpr> IndexExprs = 38 ;
-
-//   map<string, InterfaceType> InterfaceTypes = 39 ;
-
-//   map<string, IsExported> IsExporteds = 40 ;
-
-//   map<string, KeyValueExpr> KeyValueExprs = 41 ;
-
-//   map<string, LabeledStmt> LabeledStmts = 42 ;
-
-//   map<string, MapType> MapTypes = 43 ;
-
-//   map<string, NewIdent> NewIdents = 44 ;
-
-//   map<string, Node> Nodes = 45 ;
-
-//   map<string, Package> Packages = 46 ;
-
-//   map<string, ParenExpr> ParenExprs = 47 ;
-
-//   map<string, RangeStmt> RangeStmts = 48 ;
-
-//   map<string, ReturnStmt> ReturnStmts = 49 ;
-
-//   map<string, SelectStmt> SelectStmts = 50 ;
-
-//   map<string, SelectorExpr> SelectorExprs = 51 ;
-
-//   map<string, SendStmt> SendStmts = 52 ;
-
-//   map<string, SliceExpr> SliceExprs = 53 ;
-
-//   map<string, StarExpr> StarExprs = 54 ;
-
-//   map<string, StructType> StructTypes = 55 ;
-
-//   map<string, SwitchStmt> SwitchStmts = 56 ;
-
-//   map<string, TypeAssertExpr> TypeAssertExprs = 57 ;
-
-//   map<string, TypeSpec> TypeSpecs = 58 ;
-
-//   map<string, TypeSwitchStmt> TypeSwitchStmts = 59 ;
-
-//   map<string, UnaryExpr> UnaryExprs = 60 ;
-
-//   map<string, ValueSpec> ValueSpecs = 61 ;
-
-//   // interfaces
-//   map<string, Spec> Specs = 62 ;
-
-//   map<string, Decl> Decls = 63 ;
-
-//   map<string, Expr> Exprs = 64 ;
-
-//   map<string, Stmt> Stmts = 65 ;
-// }
 
 // A TypeAssertExpr node represents an expression followed by a
 // type assertion.
 message TypeAssertExpr {
-  optional Foo2 X = 1 ;
+  required Expr X = 1 ;
 
   // expression
   optional Foo3 Lparen = 2 ;
 
-  optional Foo2 Type = 3 ;
+  optional Expr Type = 3 ;
 
   // asserted type; nil means type switch X.(type)
   optional Foo3 Rparen = 4 ;
 }
 
 message TypeSpec {
-  optional Foo2 Name = 1 ;
-
-  optional Foo2 Type = 2 ;
+  optional Ident Name = 1 ;
+  required Expr Type = 2 ;
+  optional CommentGroup Doc = 3;
+  optional CommentGroup Comment = 4;
 }
 
 // An TypeSwitchStmt node represents a type switch statement.
@@ -871,13 +753,13 @@ message TypeSwitchStmt {
   optional Foo2 Switch = 1 ;
 
   // position of "switch" keyword
-  optional Foo2 Init = 2 ;
+  required Stmt Init = 2 ;
 
   // initialization statement; or nil
-  optional Foo2 Assign = 3 ;
+  required Stmt Assign = 3 ;
 
   // x := y.(type) or y.(type)
-  optional Foo2 Body = 4 ;
+  optional BlockStmt Body = 4 ;
 }
 
 // A UnaryExpr node represents a unary expression.
@@ -888,13 +770,13 @@ message UnaryExpr {
   optional Foo3 Op = 2 ;
 
   // operator
-  optional Foo2 X = 3 ;
+  required Expr X = 3 ;
 }
 
 message ValueSpec {
   repeated Ident Names = 1;
 
-  optional Foo2 Type = 2 ;
+  required Expr Type = 2 ;
 
   repeated Expr Values = 3 ;
 }

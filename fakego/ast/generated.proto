@@ -98,7 +98,8 @@ enum NodeType {
     OBJECT = 59; // ENUM BASE
 
     DEFERRED = 60; // extras
-    DEFERRED2 = 61; // extras	
+    DEFERRED2 = 61; // extras
+    FIELDDEFERRED = 62; // extras	
 }
 
 message ExprStmt {
@@ -259,6 +260,10 @@ message  Foo3{
 	 optional int64 tokenpos = 1; 
 }
 
+message  FieldDeferred{
+	 optional string id = 1; 
+}
+
 
 message  Foo2{
 	required NodeType type = 1;
@@ -325,6 +330,7 @@ optional Object object = 60; // Interface:BASE
 optional ArrayType arraytype = 61; // Interface:BASE
 
 optional Deferred deferred = 62; // Interface:BASE
+optional FieldDeferred fielddeferred = 63; 
 
 }
 

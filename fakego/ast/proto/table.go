@@ -1047,10 +1047,10 @@ func (t* AddressTable) ConvertArrayExpr(f []ast.Expr) ([]*Expr){
 	v2 := make([]*Expr, len(f))
 	for i,j := range(f) {
 		x:=t.ConvertExpr(j)
-		fmt.Printf("created %d %#v\n", i,*x)
+		//fmt.Printf("created %d %#v\n", i,*x)
 		v2[i]=x
 	}
-	fmt.Printf("created %#v\n", f)
+	//fmt.Printf("created %#v\n", f)
 	return v2
 
 	//panic("todo"); return nil;
@@ -1311,10 +1311,10 @@ func (t* AddressTable) ConvertArrayStmt(f []ast.Stmt) ([]*Stmt){
 	v2 := make([]*Stmt, len(f))
 	for i,j := range(f) {
 		x:=t.ConvertStmt(&j)
-		fmt.Printf("created %d %#v\n", i,*x)
+		//fmt.Printf("created %d %#v\n", i,*x)
 		v2[i]=x
 	}
-	fmt.Printf("created %#v\n", f)
+	//fmt.Printf("created %#v\n", f)
 	return v2
 
 }
@@ -1539,7 +1539,15 @@ func (t* AddressTable) ConvertReturnStmt(f *ast.ReturnStmt) (*ReturnStmt){
 }
 
 func (t* AddressTable) ConvertMapstringToPointerObject(f map[string]*ast.Object) (map[string]*Object){
-	panic("todo"); return nil;
+
+	r := make(map[string]*Object)
+	
+	for i,j := range(f) {
+		o:=t.ConvertObject(j)
+		r[i]=o
+	}
+	return r
+	//panic("todo"); return nil;
 }
 
 func (t* AddressTable) ConvertMapstringToPointerFile(f map[string]*ast.File) (map[string]*File){
@@ -1551,10 +1559,10 @@ func (t* AddressTable) ConvertArrayStarField(f []*ast.Field) ([]*Field){
 	v2 := make([]*Field, len(f))
 	for i,j := range(f) {
 		x:=t.ConvertField(j)
-		fmt.Printf("created %d %#v\n", i,*x)
+		//fmt.Printf("created %d %#v\n", i,*x)
 		v2[i]=x
 	}
-	fmt.Printf("created %#v\n", f)
+	//fmt.Printf("created %#v\n", f)
 	return v2
 }
 
@@ -1685,10 +1693,44 @@ func (t* AddressTable) ConvertIndexExpr(f *ast.IndexExpr) (*IndexExpr){
 		//Incomplete: &f2,
 	}
 }
-func (t* AddressTable) ConvertArrayDecl(f []ast.Decl)([]*Decl){ panic("todo"); return nil;}
 
-func (t* AddressTable) ConvertArrayStarImportSpec (f []*ast.ImportSpec)([]*ImportSpec){ panic("todo"); return nil;}
-func (t* AddressTable) ConvertArrayStarCommentGroup(f []*ast.CommentGroup)([]*CommentGroup){ panic("todo"); return nil;}
+func (t* AddressTable) ConvertArrayDecl(f []ast.Decl)([]*Decl){
+	
+	v2 := make([]*Decl, len(f))
+	for i,j := range(f) {
+		x:=t.ConvertDecl(&j)
+		//fmt.Printf("created %d %#v\n", i,*x)
+		v2[i]=x
+	}
+	//fmt.Printf("created %#v\n", f)
+	return v2
+
+}
+
+func (t* AddressTable) ConvertArrayStarImportSpec (f []*ast.ImportSpec)([]*ImportSpec){
+	//panic("todo"); return nil;
+	v2 := make([]*ImportSpec, len(f))
+	for i,j := range(f) {
+		x:=t.ConvertImportSpec(j)
+		//fmt.Printf("created %d %#v\n", i,*x)
+		v2[i]=x
+	}
+	//fmt.Printf("created %#v\n", f)
+	return v2
+
+}
+func (t* AddressTable) ConvertArrayStarCommentGroup(f []*ast.CommentGroup)([]*CommentGroup){
+	//panic("todo"); return nil;
+	v2 := make([]*CommentGroup, len(f))
+	for i,j := range(f) {
+		x:=t.ConvertCommentGroup(j)
+		//fmt.Printf("created %d %#v\n", i,*x)
+		v2[i]=x
+	}
+	//fmt.Printf("created %#v\n", f)
+	return v2
+	
+}
 
 func (t* AddressTable) ConvertFile(f *ast.File) (*File){
 
@@ -1727,10 +1769,10 @@ func (t* AddressTable) ConvertArraySpec(f []ast.Spec) ([]*Spec){
 	v2 := make([]*Spec, len(f))
 	for i,j := range(f) {
 		x:=t.ConvertSpec(&j)
-		fmt.Printf("created %d %#v\n", i,*x)
+		//fmt.Printf("created %d %#v\n", i,*x)
 		v2[i]=x
 	}
-	fmt.Printf("created %#v\n", f)
+	//fmt.Printf("created %#v\n", f)
 	return v2
 }
 
@@ -1850,7 +1892,10 @@ func (t* AddressTable) ConvertBadDecl(f * ast.BadDecl) (*BadDecl){
 }
 
 func (t* AddressTable) ConvertScope(f * ast.Scope) (*Scope){
-	panic("todo"); return nil;
+	//panic("todo"); return nil;
+	return &Scope{
+		Objects : t.ConvertMapstringToPointerObject( f.Objects ),
+	}
 }
 
 func (t* AddressTable) StrmapScope(id string, f * ast.Scope) (*ast.Scope){
@@ -1936,11 +1981,21 @@ func (t* AddressTable) StrmapObject(id string, f * ast.Object) (*ast.Object){ f2
 func (t* AddressTable) ConvertDeferred(f * ast.Deferred) (*Deferred){
 
 	if f == nil { return nil }
-	fmt.Printf("debug %#v",f)
+	//fmt.Printf("convert deferred %#v",f)
 
-	nt := NodeType_OBJECT
+
 	switch v:= f.Set.(type) {
+
+		
+	case *map[string]*ast.TypeSpec:
+		nt := NodeType_TYPESPEC
+		return &Deferred {
+			Id: &f.Id,
+			Type: &nt,
+		}
+		
 	case *map[string]*ast.Object:
+		nt := NodeType_OBJECT
 		return &Deferred {
 			Id: &f.Id,
 			Type: &nt,
@@ -1949,6 +2004,20 @@ func (t* AddressTable) ConvertDeferred(f * ast.Deferred) (*Deferred){
 	default:
 		fmt.Printf("type debug %T",v)
 	}
+	panic("todo"); return nil;
+}
+
+func (t* AddressTable) ConvertFieldDeferred(f * ast.FieldDeferred) (*FieldDeferred){
+
+	if f == nil { return nil }
+	//fmt.Printf("debug field %#v",f)
+
+	//nt := NodeType_FIELDDEFERRED
+	return &FieldDeferred {
+		Id: &f.Id,
+	}
+
+
 	panic("todo"); return nil;
 }
 
@@ -1995,10 +2064,10 @@ func (t* AddressTable) ConvertArrayStarIdent(f ast.Foo3) ([]*Ident){
 		v2 := make([]*Ident, len(v))
 		for i,j := range(v) {
 			x:=t.ConvertIdent(j)
-			fmt.Printf("created %d %#v\n", i,*x.Name)
+			//fmt.Printf("created %d %#v\n", i,*x.Name)
 			v2[i]=x
 		}
-		fmt.Printf("created %#v\n", f)
+		//fmt.Printf("created %#v\n", f)
 		return v2
 	}
 	panic("todo"); return nil;

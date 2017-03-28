@@ -10,7 +10,7 @@ import (
 )
 
 func ProcessBuf(x string){
-	fmt.Printf("\t\tCheck %s\n", x)
+	//fmt.Printf("\t\tCheck %s\n", x)
 }
 
 func (t *AddressTable) Check(id string , f2 interface{},f interface{}) {

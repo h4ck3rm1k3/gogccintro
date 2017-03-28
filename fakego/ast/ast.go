@@ -13,10 +13,11 @@ type Foo3 interface {
 }
 
 type File struct {
+	Doc * CommentGroup
 	Package Foo3
-	Name Foo3
+	Name *Ident
 	Decls []Decl
-	Scope Foo2
+	Scope *Scope
 	Imports []*ImportSpec
 	Unresolved []*Ident
 	Comments   []*CommentGroup
@@ -490,7 +491,7 @@ type Deferred struct {
 	Id    string 
 	//Data  Foo2
 	//Data  int64
-	Set   interface{} 
+	Set   interface{}
 }
 
 // type Deferred2 struct {

@@ -11,7 +11,7 @@ type AddressTable struct {
 	Idsnew          map[string] interface{}
 	OldNew          map[interface{}] interface{}
 
-	
+
 	Scopes          map[string]*ast.Scope          `protobuf:"bytes,1,rep,name=Scopes,json=scopes" json:"Scopes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	Objects         map[string]*ast.Object         `protobuf:"bytes,2,rep,name=Objects,json=objects" json:"Objects,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	ArrayTypes      map[string]*ast.ArrayType      `protobuf:"bytes,3,rep,name=ArrayTypes,json=arrayTypes" json:"ArrayTypes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
@@ -146,7 +146,7 @@ func CreateTable() (*AddressTable) {
 		Idsold:          make(map[string] interface{}),
 		Idsnew :         make(map[string] interface{}),
 		OldNew  :        make(map[interface{}] interface{}),
-		
+
 		Scopes:make( map[string] *ast.Scope),
 		Objects:make( map[string] *ast.Object),
 		ArrayTypes : make(map[string]*ast.ArrayType),
@@ -222,9 +222,9 @@ CallExprs : make(map[string]*ast.CallExpr),
 }
 
 // func (t* AddressTable) StrmapTypeSpec(id string, f * TypeSpec) (*TypeSpec){
-// 	t.TypeSpecs[id] =f;
-// 	f.Report();
-// 	return f
+//	t.TypeSpecs[id] =f;
+//	f.Report();
+//	return f
 // }
 
 
@@ -236,60 +236,60 @@ func (t* Deferred) Report() (string){
 	//} else {
 	// i := t.Set
 	// switch v:= i.(type) {
-	// 	case *map[string]*Field :
-	// 		if val, ok := (*v)[t.Id]; ok {
-	// 			if val == nil {
-	// 				fmt.Printf("did not find %s %s",v,t)
-	// 			} else {
-	// 				d := (*v)[t.Id]
-	// 				return d.Report()					
-	// 			}
-	// 		}
-	// 	case *map[string]*FieldList :
-	// 		if val, ok := (*v)[t.Id]; ok {
-	// 			if val == nil {
-	// 				fmt.Printf("did not find %s %s",v,t)
-	// 			} else {
-	// 				d := (*v)[t.Id]
-	// 				return d.Report()					
-	// 			}
-	// 		}
-	// 	case *map[string]*TypeSpec :
+	//	case *map[string]*Field :
+	//		if val, ok := (*v)[t.Id]; ok {
+	//			if val == nil {
+	//				fmt.Printf("did not find %s %s",v,t)
+	//			} else {
+	//				d := (*v)[t.Id]
+	//				return d.Report()
+	//			}
+	//		}
+	//	case *map[string]*FieldList :
+	//		if val, ok := (*v)[t.Id]; ok {
+	//			if val == nil {
+	//				fmt.Printf("did not find %s %s",v,t)
+	//			} else {
+	//				d := (*v)[t.Id]
+	//				return d.Report()
+	//			}
+	//		}
+	//	case *map[string]*TypeSpec :
 
-	// 		if val, ok := (*v)[t.Id]; ok {
-	// 			if val == nil {
-	// 				fmt.Printf("did not find %s %s",v,t)
-	// 			} else {
-	// 				d := (*v)[t.Id]
-	// 				return d.Report()					
-	// 			}
-	// 		}
-				
-						
-	// 	default:
-	// 		//t.Data = v[t.Id]
-	// 		fmt.Printf("unknown type %s %s",v,t)
-	// 		panic("unknown type")
-	// 		return "unkown"
-	// 	}
+	//		if val, ok := (*v)[t.Id]; ok {
+	//			if val == nil {
+	//				fmt.Printf("did not find %s %s",v,t)
+	//			} else {
+	//				d := (*v)[t.Id]
+	//				return d.Report()
+	//			}
+	//		}
+
+
+	//	default:
+	//		//t.Data = v[t.Id]
+	//		fmt.Printf("unknown type %s %s",v,t)
+	//		panic("unknown type")
+	//		return "unkown"
+	//	}
 	// //}
 	// return "huh?"
 }
 
 
 func (t* AddressTable) PtrmapTypeSpec(id string) (ast.Foo2){
-	
+
 	if x, ok := t.Idsold[id]; ok {
 		switch v:=x.(type) {
 		default:
 			fmt.Printf("default %t\n",v)
 		}
-		
+
 	}
 	if val, ok := t.TypeSpecs[id]; ok {
 		//t := NodeType_TYPESPEC
 		//return &Foo2{
- 		//	Type: &t,
+		//	Type: &t,
 		//	Typespec : val,
 		//}
 		return val
@@ -299,11 +299,11 @@ func (t* AddressTable) PtrmapTypeSpec(id string) (ast.Foo2){
 	// t := NodeType_TYPESPEC
 	// t2 := NodeType_DEFERRED
 	// return &Foo2{
-	// 	Type: &t2,
-	// 	Deferred:&Deferred{
-	// 		Id:&id,
-	// 		Type: &t,
-	// 	},
+	//	Type: &t2,
+	//	Deferred:&Deferred{
+	//		Id:&id,
+	//		Type: &t,
+	//	},
 	// }
 	return &ast.Deferred{
 		Id: id,
@@ -311,25 +311,25 @@ func (t* AddressTable) PtrmapTypeSpec(id string) (ast.Foo2){
 	}
 	//panic("todo"); return nil;
 }
-	
+
 func (t* AddressTable) PtrmapTypeSpec2(id string) (ast.Foo2){
 	panic("todo"); return nil;
 	// if val, ok := t.TypeSpecs[id]; ok {
-	// 	if val == nil {
-	// 	} else {
+	//	if val == nil {
+	//	} else {
 
-	// 	}		
+	//	}
 	// } else {
-	// 	//return &Deferred{ Id:id, Set: &t.TypeSpecs  }
-	// 	t := NodeType_TYPESPEC
-	// 	t2 := NodeType_DEFERRED
-	// 	return &Foo2{
-	// 		Type: &t2,
-	// 		Deferred:&Deferred{
-	// 			Id:&id,
-	// 			Type: &t,
-	// 		},
-	// 	}
+	//	//return &Deferred{ Id:id, Set: &t.TypeSpecs  }
+	//	t := NodeType_TYPESPEC
+	//	t2 := NodeType_DEFERRED
+	//	return &Foo2{
+	//		Type: &t2,
+	//		Deferred:&Deferred{
+	//			Id:&id,
+	//			Type: &t,
+	//		},
+	//	}
 	// }
 }
 
@@ -344,37 +344,37 @@ func (t* AddressTable) PtrmapField(id string) (ast.Foo2){
 	return &ast.FieldDeferred {
 		Id : id,
 	}
-	// 	if val == nil {
-	// 		//return &Deferred{ Id:id, Set: &t.Fields  }
+	//	if val == nil {
+	//		//return &Deferred{ Id:id, Set: &t.Fields  }
 
-	// 		t2 := NodeType_DEFERRED
-	// 		return &Foo2{
-	// 			Type: &t2,
-	// 			Deferred:&Deferred{
-	// 			Id:&id,
-	// 			Type: &t3,
-	// 			},
-	// 		}
-			
-	// 	} else {
-	// 		//return val
-	// 		return &Foo2{
-	// 			Type: &t3,
-	// 			Field : val,
-	// 		}
-	// 	}
-		
+	//		t2 := NodeType_DEFERRED
+	//		return &Foo2{
+	//			Type: &t2,
+	//			Deferred:&Deferred{
+	//			Id:&id,
+	//			Type: &t3,
+	//			},
+	//		}
+
+	//	} else {
+	//		//return val
+	//		return &Foo2{
+	//			Type: &t3,
+	//			Field : val,
+	//		}
+	//	}
+
 	// } else {
-	// 	//return &Deferred{ Id:id, Set: &t.Fields  }
-	// 	t := NodeType_FIELD
-	// 	t2 := NodeType_DEFERRED
-	// 	return &Foo2{
-	// 		Type: &t2,
-	// 		Deferred:&Deferred{
-	// 			Id:&id,
-	// 			Type: &t,
-	// 		},
-	// 	}
+	//	//return &Deferred{ Id:id, Set: &t.Fields  }
+	//	t := NodeType_FIELD
+	//	t2 := NodeType_DEFERRED
+	//	return &Foo2{
+	//		Type: &t2,
+	//		Deferred:&Deferred{
+	//			Id:&id,
+	//			Type: &t,
+	//		},
+	//	}
 
 	// }
 }
@@ -383,22 +383,22 @@ func (t* AddressTable) PtrmapFieldList(id string) (ast.Foo2){
 	// return t.FieldLists[id]
 	// t3 := NodeType_FIELDLIST
 	// if val, ok := t.FieldLists[id]; ok {
-	// 	if val != nil {
-	// 		return Foo2{
-	// 			Type: &t3,
-	// 			Fieldlist : val,
-	// 		}			
-	// 	}		
+	//	if val != nil {
+	//		return Foo2{
+	//			Type: &t3,
+	//			Fieldlist : val,
+	//		}
+	//	}
 	// }
 	// t2 := NodeType_DEFERRED
 	// return Foo2{
-	// 	Type: &t2,
-	// 	Deferred:&Deferred{
-	// 		Id:&id,
-	// 		Type: &t3,
-	// 	},
+	//	Type: &t2,
+	//	Deferred:&Deferred{
+	//		Id:&id,
+	//		Type: &t3,
+	//	},
 	// }
-	
+
 }
 
 func (t* AddressTable) PtrmapObject(id string) (* ast.Object){
@@ -416,67 +416,67 @@ func (t* AddressTable) PtrmapObject(id string) (* ast.Object){
 }
 
 // func (t* AddressTable) PtrmapObject(id string) (*ast.Object){
-// 	t2 := NodeType_OBJECT
-// 	if val, ok := t.Objects[id]; ok {
-// 		if val != nil {
-// 			return val			
-// 		}		
-// 	} 
-// 	return &Object{
-// 		Deferred:&Deferred{
-// 			Id:&id,
-// 			Type: &t2,
-// 		},
-// 	}
+//	t2 := NodeType_OBJECT
+//	if val, ok := t.Objects[id]; ok {
+//		if val != nil {
+//			return val
+//		}
+//	}
+//	return &Object{
+//		Deferred:&Deferred{
+//			Id:&id,
+//			Type: &t2,
+//		},
+//	}
 // }
 
 // func (t* AddressTable) StrmapObject(id string, f * Object) (*Object){ t.Objects[id] =f; f.Report(); return f}
 // func (t* AddressTable) StrmapValueSpec(id string, f * ValueSpec) (Foo2){
-// 	//t.ValueSpecs[id] =f; f.Report(); return f
-// 	s := t.ValueSpecs
-// 	t2 := NodeType_VALUESPEC
-// 	if val, ok := s[id]; ok {
-// 		if val != nil {
-// 			return Foo2{
-// 				Type: &t2,
-// 				Valuespec : val,
-// 			}				
-// 		}		
-// 	}
+//	//t.ValueSpecs[id] =f; f.Report(); return f
+//	s := t.ValueSpecs
+//	t2 := NodeType_VALUESPEC
+//	if val, ok := s[id]; ok {
+//		if val != nil {
+//			return Foo2{
+//				Type: &t2,
+//				Valuespec : val,
+//			}
+//		}
+//	}
 
 
-// 	t3 := NodeType_DEFERRED
-// 	return Foo2{
-// 		Type: &t2,
-// 		Deferred:&Deferred{
-// 			Id:&id,
-// 			Type: &t3,
-// 		},
-// 	}
+//	t3 := NodeType_DEFERRED
+//	return Foo2{
+//		Type: &t2,
+//		Deferred:&Deferred{
+//			Id:&id,
+//			Type: &t3,
+//		},
+//	}
 
 // }
 
 // func (t* AddressTable) StrmapFuncDecl(id string, f * FuncDecl) (Foo2){
-// 	fmt.Printf("test")
-// 	t2 := NodeType_FUNCDECL
-// 	//t.FuncDecls[id] =f; f.Report(); return f
-// 	s := t.FuncDecls
-// 	if val, ok := s[id]; ok {
-// 		if val != nil {
-// 			return Foo2{
-// 				Type: &t2,
-// 				Funcdecl : val,
-// 			}				
-// 		}		
-// 	}
-// 	t3 := NodeType_DEFERRED
-// 	return Foo2{
-// 		Type: &t2,
-// 		Deferred:&Deferred{
-// 			Id:&id,
-// 			Type: &t3,
-// 		},
-// 	}
+//	fmt.Printf("test")
+//	t2 := NodeType_FUNCDECL
+//	//t.FuncDecls[id] =f; f.Report(); return f
+//	s := t.FuncDecls
+//	if val, ok := s[id]; ok {
+//		if val != nil {
+//			return Foo2{
+//				Type: &t2,
+//				Funcdecl : val,
+//			}
+//		}
+//	}
+//	t3 := NodeType_DEFERRED
+//	return Foo2{
+//		Type: &t2,
+//		Deferred:&Deferred{
+//			Id:&id,
+//			Type: &t3,
+//		},
+//	}
 
 // }
 
@@ -510,7 +510,7 @@ func (t* AddressTable) ConvertFoo3(f ast.Foo3) (*Foo3){
 		var  v2 int64 = (int64(v))
 		return &Foo3{
 			Tokenpos : &v2,
-		}		
+		}
 	default:
 		fmt.Printf("other ConvertFoo3: %T\n", v)
 	}
@@ -519,16 +519,16 @@ func (t* AddressTable) ConvertFoo3(f ast.Foo3) (*Foo3){
 }
 
 // func (t* AddressTable) ConvertFieldList(f *ast.FieldList) (*FieldList){
-// 	panic("todo"); return nil;
+//	panic("todo"); return nil;
 // }
 
 // func (t* AddressTable) ConvertStructType(f *ast.StructType) (*StructType){
-// 	
-// 	return &StructType{
-// 		Struct : t.ConvertFoo3(f.Struct),
-// 		Fields : t.ConvertFieldList(f.Fields),
-// 		Incomplete : &f2,
-// 	}
+//
+//	return &StructType{
+//		Struct : t.ConvertFoo3(f.Struct),
+//		Fields : t.ConvertFieldList(f.Fields),
+//		Incomplete : &f2,
+//	}
 // }
 
 // func (t* AddressTable) StrmapStructType(id string, f * ast.StructType) (*ast.StructType){ t.StructTypes[id] = t.ConvertStructType(f); f.Report(); return f}
@@ -550,7 +550,7 @@ func (t* AddressTable) Converttoken_Pos(f ast.Foo3) (*Foo3){
 		fmt.Printf("pos %T\n",v)
 	}
 	panic("todo")
-	
+
 }
 
 func (t* AddressTable) Converttoken_Pos2(f ast.Foo3) (*Foo2){
@@ -562,7 +562,7 @@ func (t* AddressTable) Converttoken_Token(f ast.Foo3) (*Foo3){
 	switch v:=f.(type) {
 	default:
 		fmt.Printf("type debug %T",v)
-		
+
 	}
 	panic("todo"); return nil;
 }
@@ -573,68 +573,459 @@ func (t* AddressTable) ConvertTypeExpr3(f ast.Foo3) (*Expr){
 }
 
 func (t* AddressTable) ConvertTypeExpr(f ast.Expr) (*Expr){
+
 	switch v:= f.(type) {
+	case nil:
+		fmt.Printf("found nil type expr %T",v)
+		return nil;
+	case *ast.IndexExpr:
+		t2 := NodeType_INDEXEXPR
+		return &Expr{
+			Type: &t2,
+			Indexexpr: t.ConvertIndexExpr(v),
+		}
+
+	case *ast.BinaryExpr:
+		t2 := NodeType_BINARYEXPR
+		return &Expr{
+			Type: &t2,
+			Binaryexpr: t.ConvertBinaryExpr(v),
+		}
+
 
 	case *ast.BasicLit:
 		t2 := NodeType_BASICLIT
 		return &Expr{
-	 		Type: &t2,
-	 		Basiclit: t.ConvertBasicLit(v),
-	 	}
+			Type: &t2,
+			Basiclit: t.ConvertBasicLit(v),
+		}
 
 	case *ast.ArrayType:
 		t2 := NodeType_ARRAYTYPE
 		return &Expr{
-	 		Type: &t2,
-	 		Arraytype: t.ConvertArrayType(v),
-	 	}
-		
+			Type: &t2,
+			Arraytype: t.ConvertArrayType(v),
+		}
+
 	case *ast.CallExpr:
 		t2 := NodeType_CALLEXPR
 		return &Expr{
-	 		Type: &t2,
-	 		Callexpr: t.ConvertCallExpr(v),
-	 	}
+			Type: &t2,
+			Callexpr: t.ConvertCallExpr(v),
+		}
 
 	case *ast.StarExpr:
 		t2 := NodeType_STAREXPR
 		return &Expr{
-	 		Type: &t2,
-	 		Starexpr: t.ConvertStarExpr(v),
-	 	}
-		
+			Type: &t2,
+			Starexpr: t.ConvertStarExpr(v),
+		}
+
 	case *ast.StructType:
 		t2 := NodeType_STRUCTTYPE
 		return &Expr{
-	 		Type: &t2,
-	 		Structtype: t.ConvertStructType(v),
-	 	}		
+			Type: &t2,
+			Structtype: t.ConvertStructType(v),
+		}
 	case *ast.InterfaceType:
 		t2 := NodeType_INTERFACETYPE
 		return &Expr{
-	 		Type: &t2,
-	 		Interfacetype: t.ConvertInterfaceType(v),
-	 	}		
+			Type: &t2,
+			Interfacetype: t.ConvertInterfaceType(v),
+		}
 	case *ast.FuncType:
 		t2 := NodeType_FUNCTYPE
 		return &Expr{
-	 		Type: &t2,
-	 		Functype: t.ConvertFuncType(v),
-	 	}
+			Type: &t2,
+			Functype: t.ConvertFuncType(v),
+		}
 	case *ast.SelectorExpr:
 		t2 := NodeType_SELECTOREXPR
-	 	return &Expr{
-	 		Type: &t2,
-	 		Selectorexpr: t.ConvertSelectorExpr(v),
-	 	}
+		return &Expr{
+			Type: &t2,
+			Selectorexpr: t.ConvertSelectorExpr(v),
+		}
 	case *ast.Ident:
-	 	t2 := NodeType_IDENT
-	 	return &Expr{
-	 		Type: &t2,
-	 		Ident: t.ConvertIdent(v),
-	 	}
+		t2 := NodeType_IDENT
+		return &Expr{
+			Type: &t2,
+			Ident: t.ConvertIdent(v),
+		}
+
+	case	*ast.CompositeLit:
+		t2 := NodeType_COMPOSITELIT
+		return &Expr{
+			Type: &t2,
+			Compositelit: t.ConvertCompositeLit(v),
+		}
+
+
+	/*
+case *ast.AssignStmt:
+	t2 := NodeType_ASSIGNSTMT
+	return &Expr{
+	Type: &t2,
+	Assignstmt: t.ConvertAssignStmt(v),
+	}
+case *ast.BadDecl:
+	t2 := NodeType_BADDECL
+	return &Expr{
+	Type: &t2,
+	Baddecl: t.ConvertBadDecl(v),
+	}
+case *ast.BadExpr:
+	t2 := NodeType_BADEXPR
+	return &Expr{
+	Type: &t2,
+	Badexpr: t.ConvertBadExpr(v),
+	}
+case *ast.BadStmt:
+	t2 := NodeType_BADSTMT
+	return &Expr{
+	Type: &t2,
+	Badstmt: t.ConvertBadStmt(v),
+	}
+case *ast.BasicLit:
+	t2 := NodeType_BASICLIT
+	return &Expr{
+	Type: &t2,
+	Basiclit: t.ConvertBasicLit(v),
+	}
+case *ast.BinaryExpr:
+	t2 := NodeType_BINARYEXPR
+	return &Expr{
+	Type: &t2,
+	Binaryexpr: t.ConvertBinaryExpr(v),
+	}
+case *ast.BlockStmt:
+	t2 := NodeType_BLOCKSTMT
+	return &Expr{
+	Type: &t2,
+	Blockstmt: t.ConvertBlockStmt(v),
+	}
+case *ast.BranchStmt:
+	t2 := NodeType_BRANCHSTMT
+	return &Expr{
+	Type: &t2,
+	Branchstmt: t.ConvertBranchStmt(v),
+	}
+case *ast.CallExpr:
+	t2 := NodeType_CALLEXPR
+	return &Expr{
+	Type: &t2,
+	Callexpr: t.ConvertCallExpr(v),
+	}
+case *ast.CaseClause:
+	t2 := NodeType_CASECLAUSE
+	return &Expr{
+	Type: &t2,
+	Caseclause: t.ConvertCaseClause(v),
+	}
+case *ast.ChanDir:
+	t2 := NodeType_CHANDIR
+	return &Expr{
+	Type: &t2,
+	Chandir: t.ConvertChanDir(v),
+	}
+case *ast.ChanType:
+	t2 := NodeType_CHANTYPE
+	return &Expr{
+	Type: &t2,
+	Chantype: t.ConvertChanType(v),
+	}
+case *ast.CommClause:
+	t2 := NodeType_COMMCLAUSE
+	return &Expr{
+	Type: &t2,
+	Commclause: t.ConvertCommClause(v),
+	}
+case *ast.Comment:
+	t2 := NodeType_COMMENT
+	return &Expr{
+	Type: &t2,
+	Comment: t.ConvertComment(v),
+	}
+case *ast.CompositeLit:
+	t2 := NodeType_COMPOSITELIT
+	return &Expr{
+	Type: &t2,
+	Compositelit: t.ConvertCompositeLit(v),
+	}
+case *ast.DeclStmt:
+	t2 := NodeType_DECLSTMT
+	return &Expr{
+	Type: &t2,
+	Declstmt: t.ConvertDeclStmt(v),
+	}
+case *ast.DeferStmt:
+	t2 := NodeType_DEFERSTMT
+	return &Expr{
+	Type: &t2,
+	Deferstmt: t.ConvertDeferStmt(v),
+	}
+case *ast.Ellipsis:
+	t2 := NodeType_ELLIPSIS
+	return &Expr{
+	Type: &t2,
+	Ellipsis: t.ConvertEllipsis(v),
+	}
+case *ast.EmptyStmt:
+	t2 := NodeType_EMPTYSTMT
+	return &Expr{
+	Type: &t2,
+	Emptystmt: t.ConvertEmptyStmt(v),
+	}
+case *ast.ExprStmt:
+	t2 := NodeType_EXPRSTMT
+	return &Expr{
+	Type: &t2,
+	Exprstmt: t.ConvertExprStmt(v),
+	}
+case *ast.Field:
+	t2 := NodeType_FIELD
+	return &Expr{
+	Type: &t2,
+	Field: t.ConvertField(v),
+	}
+case *ast.FieldList:
+	t2 := NodeType_FIELDLIST
+	return &Expr{
+	Type: &t2,
+	Fieldlist: t.ConvertFieldList(v),
+	}
+case *ast.File:
+	t2 := NodeType_FILE
+	return &Expr{
+	Type: &t2,
+	File: t.ConvertFile(v),
+	}
+case *ast.ForStmt:
+	t2 := NodeType_FORSTMT
+	return &Expr{
+	Type: &t2,
+	Forstmt: t.ConvertForStmt(v),
+	}
+case *ast.FuncDecl:
+	t2 := NodeType_FUNCDECL
+	return &Expr{
+	Type: &t2,
+	Funcdecl: t.ConvertFuncDecl(v),
+	}
+case *ast.FuncLit:
+	t2 := NodeType_FUNCLIT
+	return &Expr{
+	Type: &t2,
+	Funclit: t.ConvertFuncLit(v),
+	}
+case *ast.FuncType:
+	t2 := NodeType_FUNCTYPE
+	return &Expr{
+	Type: &t2,
+	Functype: t.ConvertFuncType(v),
+	}
+case *ast.GenDecl:
+	t2 := NodeType_GENDECL
+	return &Expr{
+	Type: &t2,
+	Gendecl: t.ConvertGenDecl(v),
+	}
+case *ast.GoStmt:
+	t2 := NodeType_GOSTMT
+	return &Expr{
+	Type: &t2,
+	Gostmt: t.ConvertGoStmt(v),
+	}
+case *ast.Ident:
+	t2 := NodeType_IDENT
+	return &Expr{
+	Type: &t2,
+	Ident: t.ConvertIdent(v),
+	}
+case *ast.IfStmt:
+	t2 := NodeType_IFSTMT
+	return &Expr{
+	Type: &t2,
+	Ifstmt: t.ConvertIfStmt(v),
+	}
+case *ast.ImportSpec:
+	t2 := NodeType_IMPORTSPEC
+	return &Expr{
+	Type: &t2,
+	Importspec: t.ConvertImportSpec(v),
+	}
+case *ast.IncDecStmt:
+	t2 := NodeType_INCDECSTMT
+	return &Expr{
+	Type: &t2,
+	Incdecstmt: t.ConvertIncDecStmt(v),
+	}
+case *ast.IndexExpr:
+	t2 := NodeType_INDEXEXPR
+	return &Expr{
+	Type: &t2,
+	Indexexpr: t.ConvertIndexExpr(v),
+	}
+case *ast.InterfaceType:
+	t2 := NodeType_INTERFACETYPE
+	return &Expr{
+	Type: &t2,
+	Interfacetype: t.ConvertInterfaceType(v),
+	}
+case *ast.IsExported:
+	t2 := NodeType_ISEXPORTED
+	return &Expr{
+	Type: &t2,
+	Isexported: t.ConvertIsExported(v),
+	}
+case *ast.KeyValueExpr:
+	t2 := NodeType_KEYVALUEEXPR
+	return &Expr{
+	Type: &t2,
+	Keyvalueexpr: t.ConvertKeyValueExpr(v),
+	}
+case *ast.LabeledStmt:
+	t2 := NodeType_LABELEDSTMT
+	return &Expr{
+	Type: &t2,
+	Labeledstmt: t.ConvertLabeledStmt(v),
+	}
+*/
+case *ast.MapType:
+	t2 := NodeType_MAPTYPE
+	return &Expr{
+	Type: &t2,
+	Maptype: t.ConvertMapType(v),
+	}
+/*
+case *ast.NewIdent:
+	t2 := NodeType_NEWIDENT
+	return &Expr{
+	Type: &t2,
+	Newident: t.ConvertNewIdent(v),
+	}
+case *ast.Package:
+	t2 := NodeType_PACKAGE
+	return &Expr{
+	Type: &t2,
+	Package: t.ConvertPackage(v),
+	}
+case *ast.ParenExpr:
+	t2 := NodeType_PARENEXPR
+	return &Expr{
+	Type: &t2,
+	Parenexpr: t.ConvertParenExpr(v),
+	}
+case *ast.RangeStmt:
+	t2 := NodeType_RANGESTMT
+	return &Expr{
+	Type: &t2,
+	Rangestmt: t.ConvertRangeStmt(v),
+	}
+case *ast.ReturnStmt:
+	t2 := NodeType_RETURNSTMT
+	return &Expr{
+	Type: &t2,
+	Returnstmt: t.ConvertReturnStmt(v),
+	}
+case *ast.SelectStmt:
+	t2 := NodeType_SELECTSTMT
+	return &Expr{
+	Type: &t2,
+	Selectstmt: t.ConvertSelectStmt(v),
+	}
+case *ast.SelectorExpr:
+	t2 := NodeType_SELECTOREXPR
+	return &Expr{
+	Type: &t2,
+	Selectorexpr: t.ConvertSelectorExpr(v),
+	}
+case *ast.SendStmt:
+	t2 := NodeType_SENDSTMT
+	return &Expr{
+	Type: &t2,
+	Sendstmt: t.ConvertSendStmt(v),
+	}
+case *ast.SliceExpr:
+	t2 := NodeType_SLICEEXPR
+	return &Expr{
+	Type: &t2,
+	Sliceexpr: t.ConvertSliceExpr(v),
+	}
+case *ast.Spec:
+	t2 := NodeType_SPEC
+	return &Expr{
+	Type: &t2,
+	Spec: t.ConvertSpec(v),
+	}
+case *ast.StarExpr:
+	t2 := NodeType_STAREXPR
+	return &Expr{
+	Type: &t2,
+	Starexpr: t.ConvertStarExpr(v),
+	}
+case *ast.StructType:
+	t2 := NodeType_STRUCTTYPE
+	return &Expr{
+	Type: &t2,
+	Structtype: t.ConvertStructType(v),
+	}
+case *ast.SwitchStmt:
+	t2 := NodeType_SWITCHSTMT
+	return &Expr{
+	Type: &t2,
+	Switchstmt: t.ConvertSwitchStmt(v),
+	}
+case *ast.TypeAssertExpr:
+	t2 := NodeType_TYPEASSERTEXPR
+	return &Expr{
+	Type: &t2,
+	Typeassertexpr: t.ConvertTypeAssertExpr(v),
+	}
+case *ast.TypeSpec:
+	t2 := NodeType_TYPESPEC
+	return &Expr{
+	Type: &t2,
+	Typespec: t.ConvertTypeSpec(v),
+	}
+case *ast.TypeSwitchStmt:
+	t2 := NodeType_TYPESWITCHSTMT
+	return &Expr{
+	Type: &t2,
+	Typeswitchstmt: t.ConvertTypeSwitchStmt(v),
+	}
+case *ast.UnaryExpr:
+	t2 := NodeType_UNARYEXPR
+	return &Expr{
+	Type: &t2,
+	Unaryexpr: t.ConvertUnaryExpr(v),
+	}
+case *ast.ValueSpec:
+	t2 := NodeType_VALUESPEC
+	return &Expr{
+	Type: &t2,
+	Valuespec: t.ConvertValueSpec(v),
+	}
+case *ast.CommentGroup:
+	t2 := NodeType_COMMENTGROUP
+	return &Expr{
+	Type: &t2,
+	Commentgroup: t.ConvertCommentGroup(v),
+	}
+case *ast.Spec:
+	t2 := NodeType_SPEC
+	return &Expr{
+	Type: &t2,
+	Spec: t.ConvertSpec(v),
+	}
+case *ast.Object:
+	t2 := NodeType_OBJECT
+	return &Expr{
+	Type: &t2,
+	Object: t.ConvertObject(v),
+	}
+*/
 	default:
-		fmt.Printf("type debug %T",v)	
+		fmt.Printf("type debug %T",v)
 
 	}
 	panic("todo")
@@ -661,7 +1052,7 @@ func (t* AddressTable) ConvertArrayExpr(f []ast.Expr) ([]*Expr){
 	}
 	fmt.Printf("created %#v\n", f)
 	return v2
-	
+
 	//panic("todo"); return nil;
 }
 
@@ -670,16 +1061,31 @@ func (t* AddressTable) ConvertPointerBasicLit(f * ast.BasicLit) (*BasicLit){
 }
 
 func (t* AddressTable) ConvertTypeStmt(f ast.Stmt) (*Stmt){
-	panic("todo"); return nil;
+	//panic("todo"); return nil;
+	switch v:= f.(type) {
+	case *ast.AssignStmt:
+		t2 := NodeType_ASSIGNSTMT
+		return &Stmt{
+			Type: &t2,
+			Assignstmt: t.ConvertAssignStmt(v),
+		}
+	case nil:
+		return nil
+	default:
+		fmt.Printf("stmt unknown %T",v)
+
+	}
+	panic("todo")
+
 }
 
 func (t* AddressTable) ConvertPointerBlockStmt(f * ast.BlockStmt) (*BlockStmt){
 	panic("todo"); return nil;
 }
 
-	
+
 func (t* AddressTable) ConvertMapType(f *ast.MapType) (*MapType){
-//o	
+//o
 	return &MapType{
 		Map : t.Converttoken_Pos( f.Map),
 		Key : t.ConvertExpr( f.Key),
@@ -689,19 +1095,19 @@ func (t* AddressTable) ConvertMapType(f *ast.MapType) (*MapType){
 }
 
 func (t* AddressTable) ConvertField(f *ast.Field) (*Field){
-	
+
 	return &Field{
 		//Doc : t.ConvertPointerCommentGroup( f.Doc),
 		Names : t.ConvertArrayStarIdent( f.Names),
 		Type : t.ConvertTypeExpr( f.Type),
-		Tag : t.ConvertPointerBasicLit( f.Tag),
+		Tag : t.ConvertBasicLit( f.Tag),
 		//Comment : t.ConvertPointerCommentGroup( f.Comment),
 		//Incomplete: &f2,
 	}
 }
 
 func (t* AddressTable) ConvertSliceExpr(f *ast.SliceExpr) (*SliceExpr){
-	
+
 	return &SliceExpr{
 		X : t.ConvertTypeExpr( f.X),
 		Lbrack : t.Converttoken_Pos( f.Lbrack),
@@ -715,7 +1121,7 @@ func (t* AddressTable) ConvertSliceExpr(f *ast.SliceExpr) (*SliceExpr){
 }
 
 func (t* AddressTable) ConvertExprStmt(f *ast.ExprStmt) (*ExprStmt){
-	
+
 	return &ExprStmt{
 		X : t.ConvertTypeExpr( f.X),
 		//Incomplete: &f2,
@@ -723,7 +1129,7 @@ func (t* AddressTable) ConvertExprStmt(f *ast.ExprStmt) (*ExprStmt){
 }
 
 func (t* AddressTable) ConvertAssignStmt(f *ast.AssignStmt) (*AssignStmt){
-	
+
 	return &AssignStmt{
 		Lhs : t.ConvertArrayExpr( f.Lhs),
 		TokPos : t.Converttoken_Pos( f.TokPos),
@@ -734,29 +1140,29 @@ func (t* AddressTable) ConvertAssignStmt(f *ast.AssignStmt) (*AssignStmt){
 }
 
 func (t* AddressTable) ConvertInterfaceType(f *ast.InterfaceType) (*InterfaceType){
-	
+
 	return &InterfaceType{
 		Interface : t.Converttoken_Pos( f.Interface),
-		Methods : t.ConvertPointerFieldList( f.Methods),
+		Methods : t.ConvertFieldList( f.Methods),
 		Incomplete : & f.Incomplete,
 		//Incomplete: &f2,
 	}
 }
 
 func (t* AddressTable) ConvertIfStmt(f *ast.IfStmt) (*IfStmt){
-	
+
 	return &IfStmt{
 		If : t.Converttoken_Pos( f.If),
 		Init : t.ConvertTypeStmt( f.Init),
 		Cond : t.ConvertTypeExpr( f.Cond),
-		Body : t.ConvertPointerBlockStmt( f.Body),
+		Body : t.ConvertBlockStmt( f.Body),
 		Else : t.ConvertTypeStmt( f.Else),
 		//Incomplete: &f2,
 	}
 }
 
 func (t* AddressTable) ConvertBadExpr(f *ast.BadExpr) (*BadExpr){
-	
+
 	return &BadExpr{
 		From : t.Converttoken_Pos2( f.From),
 		To : t.Converttoken_Pos2( f.To),
@@ -765,15 +1171,15 @@ func (t* AddressTable) ConvertBadExpr(f *ast.BadExpr) (*BadExpr){
 }
 
 func (t* AddressTable) ConvertChanDir(f *ast.ChanDir) (*ChanDir){
-	
+
 	return &ChanDir{
-		//identifier &{NamePos:10175 Name:ChanDir Obj:0xc420148720} 
+		//identifier &{NamePos:10175 Name:ChanDir Obj:0xc420148720}
 		//Incomplete: &f2,
 	}
 }
 
 func (t* AddressTable) ConvertBinaryExpr(f *ast.BinaryExpr) (*BinaryExpr){
-	
+
 	return &BinaryExpr{
 		X : t.ConvertTypeExpr( f.X),
 		OpPos : t.Converttoken_Pos( f.OpPos),
@@ -784,16 +1190,16 @@ func (t* AddressTable) ConvertBinaryExpr(f *ast.BinaryExpr) (*BinaryExpr){
 }
 
 // func (t* AddressTable) ConvertBadDecl(f *ast.BadDecl) (*BadDecl){
-// 	
-// 	return &BadDecl{
-// 		From : t.Converttoken_Pos( f.From),
-// 		To : t.Converttoken_Pos( f.To),
-// 		Incomplete: &f2,
-// 	}
+//
+//	return &BadDecl{
+//		From : t.Converttoken_Pos( f.From),
+//		To : t.Converttoken_Pos( f.To),
+//		Incomplete: &f2,
+//	}
 // }
 
 func (t* AddressTable) ConvertIncDecStmt(f *ast.IncDecStmt) (*IncDecStmt){
-	
+
 	return &IncDecStmt{
 		X : t.ConvertTypeExpr( f.X),
 		TokPos : t.Converttoken_Pos( f.TokPos),
@@ -807,16 +1213,16 @@ func (t* AddressTable) ConvertPointerCallExpr(f *ast.CallExpr) (*CallExpr){
 }
 
 func (t* AddressTable) ConvertDeferStmt(f *ast.DeferStmt) (*DeferStmt){
-	
+
 	return &DeferStmt{
 		Defer : t.Converttoken_Pos( f.Defer),
-		Call : t.ConvertPointerCallExpr( f.Call),
+		Call : t.ConvertCallExpr( f.Call),
 		//Incomplete: &f2,
 	}
 }
 
 func (t* AddressTable) ConvertKeyValueExpr(f *ast.KeyValueExpr) (*KeyValueExpr){
-	
+
 	return &KeyValueExpr{
 		Key : t.ConvertTypeExpr( f.Key),
 		Colon : t.Converttoken_Pos( f.Colon),
@@ -826,32 +1232,32 @@ func (t* AddressTable) ConvertKeyValueExpr(f *ast.KeyValueExpr) (*KeyValueExpr){
 }
 
 // func (t* AddressTable) ConvertSEND(f *ast.SEND) (*SEND){
-// 	
-// 	return &SEND{
+//
+//	return &SEND{
 // // other type &{}
-// 		Incomplete: &f2,
-// 	}
+//		Incomplete: &f2,
+//	}
 // }
 
 // func (t* AddressTable) ConvertisWhitespace(f *ast.isWhitespace) (*isWhitespace){
-// 	
-// 	return &isWhitespace{
+//
+//	return &isWhitespace{
 // // other type &{}
-// 		Incomplete: &f2,
-// 	}
+//		Incomplete: &f2,
+//	}
 // }
 
 func (t* AddressTable) ConvertSelectorExpr(f *ast.SelectorExpr) (*SelectorExpr){
-	
+
 	return &SelectorExpr{
 		X : t.ConvertTypeExpr( f.X),
-		Sel : t.ConvertPointerIdent( f.Sel),
+		Sel : t.ConvertIdent( f.Sel),
 		//Incomplete: &f2,
 	}
 }
 
 func (t* AddressTable) ConvertCompositeLit(f *ast.CompositeLit) (*CompositeLit){
-	
+
 	return &CompositeLit{
 		Type : t.ConvertTypeExpr( f.Type),
 		Lbrace : t.Converttoken_Pos( f.Lbrace),
@@ -862,7 +1268,7 @@ func (t* AddressTable) ConvertCompositeLit(f *ast.CompositeLit) (*CompositeLit){
 }
 
 func (t* AddressTable) ConvertNewIdent(f *ast.NewIdent) (*NewIdent){
-	
+
 	return &NewIdent{
 // other type &{}
 		//Incomplete: &f2,
@@ -870,28 +1276,28 @@ func (t* AddressTable) ConvertNewIdent(f *ast.NewIdent) (*NewIdent){
 }
 
 func (t* AddressTable) ConvertSwitchStmt(f *ast.SwitchStmt) (*SwitchStmt){
-	
+
 	return &SwitchStmt{
 		Switch : t.Converttoken_Pos( f.Switch),
 		Init : t.ConvertTypeStmt( f.Init),
 		Tag : t.ConvertTypeExpr( f.Tag),
-		Body : t.ConvertPointerBlockStmt( f.Body),
+		Body : t.ConvertBlockStmt( f.Body),
 		//Incomplete: &f2,
 	}
 }
 
 func (t* AddressTable) ConvertStructType(f *ast.StructType) (*StructType){
-	
+
 	return &StructType{
 		Struct : t.Converttoken_Pos( f.Struct),
-		Fields : t.ConvertPointerFieldList( f.Fields),
+		Fields : t.ConvertFieldList( f.Fields),
 		Incomplete : &f.Incomplete,
 		//Incomplete: &f2,
 	}
 }
 
 func (t* AddressTable) ConvertArrayType(f *ast.ArrayType) (*ArrayType){
-	
+
 	return &ArrayType{
 		Lbrack : t.Converttoken_Pos( f.Lbrack),
 		//Len : t.ConvertTypeExpr( f.Len),
@@ -900,12 +1306,21 @@ func (t* AddressTable) ConvertArrayType(f *ast.ArrayType) (*ArrayType){
 	}
 }
 
-func (t* AddressTable) ConvertArrayStmt(args []ast.Stmt) ([]*Stmt){
-	panic("todo"); return nil;
+func (t* AddressTable) ConvertArrayStmt(f []ast.Stmt) ([]*Stmt){
+	//panic("todo"); return nil;
+	v2 := make([]*Stmt, len(f))
+	for i,j := range(f) {
+		x:=t.ConvertStmt(&j)
+		fmt.Printf("created %d %#v\n", i,*x)
+		v2[i]=x
+	}
+	fmt.Printf("created %#v\n", f)
+	return v2
+
 }
 
 func (t* AddressTable) ConvertCaseClause(f *ast.CaseClause) (*CaseClause){
-	
+
 	return &CaseClause{
 		Case : t.Converttoken_Pos( f.Case),
 		List : t.ConvertArrayExpr( f.List),
@@ -916,14 +1331,14 @@ func (t* AddressTable) ConvertCaseClause(f *ast.CaseClause) (*CaseClause){
 }
 
 func (t* AddressTable) ConvertExpr(f ast.Expr) (*Expr){
-	
+
 	return &Expr{
 		//Incomplete: &f2,
 	}
 }
 
 func (t* AddressTable) ConvertCallExpr(f *ast.CallExpr) (*CallExpr){
-	
+
 	return &CallExpr{
 		Fun : t.ConvertTypeExpr( f.Fun),
 		Lparen : t.Converttoken_Pos( f.Lparen),
@@ -935,7 +1350,7 @@ func (t* AddressTable) ConvertCallExpr(f *ast.CallExpr) (*CallExpr){
 }
 
 func (t* AddressTable) ConvertValueSpec(f *ast.ValueSpec) (*ValueSpec){
-	
+
 	return &ValueSpec{
 		//Doc : t.ConvertPointerCommentGroup( f.Doc),
 		Names : t.ConvertArrayStarIdent( f.Names),
@@ -947,22 +1362,22 @@ func (t* AddressTable) ConvertValueSpec(f *ast.ValueSpec) (*ValueSpec){
 }
 
 func (t* AddressTable) ConvertStmt(f *ast.Stmt) (*Stmt){
-	
+
 	return &Stmt{
 		//Incomplete: &f2,
 	}
 }
 
 // func (t* AddressTable) ConvertRECV(f *ast.RECV) (*RECV){
-// 	
-// 	return &RECV{
+//
+//	return &RECV{
 // // other type &{}
-// 		//Incomplete: &f2,
-// 	}
+//		//Incomplete: &f2,
+//	}
 // }
 
 func (t* AddressTable) ConvertComment(f *ast.Comment) (*Comment){
-	
+
 	return &Comment{
 		//Slash : t.Converttoken_Pos( f.Slash),
 		//Text : t.ConvertTypestring( f.Text),
@@ -971,7 +1386,7 @@ func (t* AddressTable) ConvertComment(f *ast.Comment) (*Comment){
 }
 
 func (t* AddressTable) ConvertBadStmt(f *ast.BadStmt) (*BadStmt){
-	
+
 	return &BadStmt{
 		From : t.Converttoken_Pos2( f.From),
 		To : t.Converttoken_Pos2( f.To),
@@ -980,9 +1395,9 @@ func (t* AddressTable) ConvertBadStmt(f *ast.BadStmt) (*BadStmt){
 }
 
 func (t* AddressTable) ConvertLabeledStmt(f *ast.LabeledStmt) (*LabeledStmt){
-	
+
 	return &LabeledStmt{
-		Label : t.ConvertPointerIdent( f.Label),
+		Label : t.ConvertIdent( f.Label),
 		Colon : t.Converttoken_Pos( f.Colon),
 		Stmt : t.ConvertTypeStmt( f.Stmt),
 		//Incomplete: &f2,
@@ -990,7 +1405,7 @@ func (t* AddressTable) ConvertLabeledStmt(f *ast.LabeledStmt) (*LabeledStmt){
 }
 
 func (t* AddressTable) ConvertBasicLit(f *ast.BasicLit) (*BasicLit){
-	
+
 	return &BasicLit{
 // other type &{}
 		//Incomplete: &f2,
@@ -998,10 +1413,10 @@ func (t* AddressTable) ConvertBasicLit(f *ast.BasicLit) (*BasicLit){
 }
 
 func (t* AddressTable) ConvertTypeSpec(f *ast.TypeSpec) (*TypeSpec){
-	
+
 	return &TypeSpec{
 		//Doc : t.ConvertPointerCommentGroup( f.Doc),
-		Name : t.ConvertPointerIdent( f.Name),
+		Name : t.ConvertIdent( f.Name),
 		Type : t.ConvertTypeExpr( f.Type),
 		//Comment : t.ConvertPointerCommentGroup( f.Comment),
 		//Incomplete: &f2,
@@ -1009,7 +1424,7 @@ func (t* AddressTable) ConvertTypeSpec(f *ast.TypeSpec) (*TypeSpec){
 }
 
 func (t* AddressTable) ConvertDecl(f *ast.Decl) (*Decl){
-	
+
 	return &Decl{
 		//Incomplete: &f2,
 	}
@@ -1024,7 +1439,7 @@ func (t* AddressTable) ConvertPointerFuncType2(f ast.Foo2) (*Foo2){
 }
 
 func (t* AddressTable) ConvertFuncDecl(f *ast.FuncDecl) (*FuncDecl){
-	
+
 	return &FuncDecl{
 		//Doc : t.ConvertPointerCommentGroup( f.Doc),
 		Recv : t.ConvertFieldList( f.Recv),
@@ -1036,22 +1451,22 @@ func (t* AddressTable) ConvertFuncDecl(f *ast.FuncDecl) (*FuncDecl){
 }
 
 func (t* AddressTable) ConvertFuncLit(f *ast.FuncLit) (*FuncLit){
-	
+
 	return &FuncLit{
-		Type : t.ConvertPointerFuncType( f.Type),
-		Body : t.ConvertPointerBlockStmt2( f.Body),
+		Type : t.ConvertFuncType( f.Type),
+		Body : t.ConvertBlockStmt( f.Body),
 		//Incomplete: &f2,
 	}
 }
 
 func (t* AddressTable) ConvertForStmt(f *ast.ForStmt) (*ForStmt){
-	
+
 	return &ForStmt{
 		For : t.Converttoken_Pos( f.For),
 		Init : t.ConvertTypeStmt( f.Init),
 		Cond : t.ConvertTypeExpr( f.Cond),
 		Post : t.ConvertTypeStmt( f.Post),
-		Body : t.ConvertPointerBlockStmt( f.Body),
+		Body : t.ConvertBlockStmt( f.Body),
 		//Incomplete: &f2,
 	}
 }
@@ -1059,16 +1474,16 @@ func (t* AddressTable) ConvertForStmt(f *ast.ForStmt) (*ForStmt){
 
 
 func (t* AddressTable) ConvertSelectStmt(f *ast.SelectStmt) (*SelectStmt){
-	
+
 	return &SelectStmt{
 		Select : t.Converttoken_Pos2( f.Select),
-		Body : t.ConvertPointerBlockStmt( f.Body),
+		Body : t.ConvertBlockStmt( f.Body),
 		//Incomplete: &f2,
 	}
 }
 
 func (t* AddressTable) ConvertSendStmt(f *ast.SendStmt) (*SendStmt){
-	
+
 	return &SendStmt{
 		Chan : t.ConvertTypeExpr( f.Chan),
 		Arrow : t.Converttoken_Pos2( f.Arrow),
@@ -1078,7 +1493,7 @@ func (t* AddressTable) ConvertSendStmt(f *ast.SendStmt) (*SendStmt){
 }
 
 func (t* AddressTable) ConvertPackage(f *ast.Package) (*Package){
-	
+
 	return &Package{
 		Name : t.ConvertTypestring( f.Name),
 		Scope : t.ConvertPointerScope2( f.Scope),
@@ -1091,9 +1506,9 @@ func (t* AddressTable) ConvertPackage(f *ast.Package) (*Package){
 func (t* AddressTable) ConvertPointerFieldList2(f ast.Foo2) (*Foo2){
 	panic("todo"); return nil;
 }
-	
+
 func (t* AddressTable) ConvertFieldList(f *ast.FieldList) (*FieldList){
-	
+	if f == nil {return nil}
 	return &FieldList{
 		Opening : t.Converttoken_Pos( f.Opening),
 		List : t.ConvertArrayStarField( f.List),
@@ -1103,11 +1518,11 @@ func (t* AddressTable) ConvertFieldList(f *ast.FieldList) (*FieldList){
 }
 
 func (t* AddressTable) ConvertImportSpec(f *ast.ImportSpec) (*ImportSpec){
-	
+
 	return &ImportSpec{
 		//Doc : t.ConvertPointerCommentGroup( f.Doc),
-		Name : t.ConvertPointerIdent( f.Name),
-		Path : t.ConvertPointerBasicLit( f.Path),
+		Name : t.ConvertIdent( f.Name),
+		Path : t.ConvertBasicLit( f.Path),
 		//Comment : t.ConvertPointerCommentGroup( f.Comment),
 		//EndPos : t.Converttoken_Pos( f.EndPos),
 		//Incomplete: &f2,
@@ -1115,7 +1530,7 @@ func (t* AddressTable) ConvertImportSpec(f *ast.ImportSpec) (*ImportSpec){
 }
 
 func (t* AddressTable) ConvertReturnStmt(f *ast.ReturnStmt) (*ReturnStmt){
-	
+
 	return &ReturnStmt{
 		//Return : t.Converttoken_Pos( f.Return),
 		//Results : t.ConvertArrayExpr( f.Results),
@@ -1161,7 +1576,7 @@ func (t* AddressTable) ConvertTypestring(f string) (*string){
 }
 
 func (t* AddressTable) ConvertBlockStmt(f *ast.BlockStmt) (*BlockStmt){
-	
+
 	return &BlockStmt{
 // other type &{}
 		//Incomplete: &f2,
@@ -1169,25 +1584,25 @@ func (t* AddressTable) ConvertBlockStmt(f *ast.BlockStmt) (*BlockStmt){
 }
 
 func (t* AddressTable) ConvertTypeSwitchStmt(f *ast.TypeSwitchStmt) (*TypeSwitchStmt){
-	
+
 	return &TypeSwitchStmt{
 		Switch : t.Converttoken_Pos2( f.Switch),
 		Init : t.ConvertTypeStmt( f.Init),
 		Assign : t.ConvertTypeStmt( f.Assign),
-		Body : t.ConvertPointerBlockStmt( f.Body),
+		Body : t.ConvertBlockStmt( f.Body),
 		//Incomplete: &f2,
 	}
 }
 
 func (t* AddressTable) ConvertSpec(f *ast.Spec) (*Spec){
-	
+
 	return &Spec{
 		//Incomplete: &f2,
 	}
 }
 
 func (t* AddressTable) ConvertStarExpr(f *ast.StarExpr) (*StarExpr){
-	
+
 	return &StarExpr{
 		//Star : t.Converttoken_Pos( f.Star),
 		//X : t.ConvertTypeExpr( f.X),
@@ -1196,7 +1611,7 @@ func (t* AddressTable) ConvertStarExpr(f *ast.StarExpr) (*StarExpr){
 }
 
 func (t* AddressTable) ConvertGenDecl(f *ast.GenDecl) (*GenDecl){
-	
+
 	return &GenDecl{
 		//Doc : t.ConvertPointerCommentGroup( f.Doc),
 		TokPos : t.Converttoken_Pos( f.TokPos),
@@ -1209,7 +1624,7 @@ func (t* AddressTable) ConvertGenDecl(f *ast.GenDecl) (*GenDecl){
 }
 
 func (t* AddressTable) ConvertRangeStmt(f *ast.RangeStmt) (*RangeStmt){
-	
+
 	return &RangeStmt{
 		For : t.Converttoken_Pos( f.For),
 		Key : t.ConvertTypeExpr( f.Key),
@@ -1217,13 +1632,13 @@ func (t* AddressTable) ConvertRangeStmt(f *ast.RangeStmt) (*RangeStmt){
 		TokPos : t.Converttoken_Pos( f.TokPos),
 		Tok : t.Converttoken_Token( f.Tok),
 		X : t.ConvertTypeExpr( f.X),
-		Body : t.ConvertPointerBlockStmt( f.Body),
+		Body : t.ConvertBlockStmt( f.Body),
 		//Incomplete: &f2,
 	}
 }
 
 func (t* AddressTable) ConvertParenExpr(f *ast.ParenExpr) (*ParenExpr){
-	
+
 	return &ParenExpr{
 		Lparen : t.Converttoken_Pos( f.Lparen),
 		X : t.ConvertTypeExpr( f.X),
@@ -1233,7 +1648,7 @@ func (t* AddressTable) ConvertParenExpr(f *ast.ParenExpr) (*ParenExpr){
 }
 
 func (t* AddressTable) ConvertDeclStmt(f *ast.DeclStmt) (*DeclStmt){
-	
+
 	return &DeclStmt{
 		//Decl : t.ConvertTypeDecl( f.Decl),
 		//Incomplete: &f2,
@@ -1241,7 +1656,7 @@ func (t* AddressTable) ConvertDeclStmt(f *ast.DeclStmt) (*DeclStmt){
 }
 
 func (t* AddressTable) ConvertTypeAssertExpr(f *ast.TypeAssertExpr) (*TypeAssertExpr){
-	
+
 	return &TypeAssertExpr{
 		X : t.ConvertTypeExpr( f.X),
 		Lparen : t.Converttoken_Pos( f.Lparen),
@@ -1252,7 +1667,7 @@ func (t* AddressTable) ConvertTypeAssertExpr(f *ast.TypeAssertExpr) (*TypeAssert
 }
 
 func (t* AddressTable) ConvertEmptyStmt(f *ast.EmptyStmt) (*EmptyStmt){
-	
+
 	return &EmptyStmt{
 		Semicolon : t.Converttoken_Pos2( f.Semicolon),
 		Implicit : &f.Implicit,
@@ -1261,7 +1676,7 @@ func (t* AddressTable) ConvertEmptyStmt(f *ast.EmptyStmt) (*EmptyStmt){
 }
 
 func (t* AddressTable) ConvertIndexExpr(f *ast.IndexExpr) (*IndexExpr){
-	
+
 	return &IndexExpr{
 		X : t.ConvertTypeExpr( f.X),
 		Lbrack : t.Converttoken_Pos( f.Lbrack),
@@ -1274,15 +1689,15 @@ func (t* AddressTable) ConvertArrayDecl(f []ast.Decl)([]*Decl){ panic("todo"); r
 
 func (t* AddressTable) ConvertArrayStarImportSpec (f []*ast.ImportSpec)([]*ImportSpec){ panic("todo"); return nil;}
 func (t* AddressTable) ConvertArrayStarCommentGroup(f []*ast.CommentGroup)([]*CommentGroup){ panic("todo"); return nil;}
-	
+
 func (t* AddressTable) ConvertFile(f *ast.File) (*File){
-	
+
 	return &File{
 		//Doc : t.ConvertPointerCommentGroup( f.Doc),
 		Package : t.Converttoken_Pos( f.Package),
-		Name : t.ConvertPointerIdent3( f.Name),
+		Name : t.ConvertIdent( f.Name),
 		Decls : t.ConvertArrayDecl( f.Decls),
-		Scope : t.ConvertPointerScope2( f.Scope),
+		Scope : t.ConvertScope( f.Scope),
 		Imports : t.ConvertArrayStarImportSpec( f.Imports),
 		Unresolved : t.ConvertArrayStarIdent( f.Unresolved),
 		Comments : t.ConvertArrayStarCommentGroup( f.Comments),
@@ -1291,17 +1706,17 @@ func (t* AddressTable) ConvertFile(f *ast.File) (*File){
 }
 
 func (t* AddressTable) ConvertBranchStmt(f *ast.BranchStmt) (*BranchStmt){
-	
+
 	return &BranchStmt{
 		TokPos : t.Converttoken_Pos( f.TokPos),
 		Tok : t.Converttoken_Token( f.Tok),
-		Label : t.ConvertPointerIdent( f.Label),
+		Label : t.ConvertIdent( f.Label),
 		//Incomplete: &f2,
 	}
 }
 
 func (t* AddressTable) ConvertCommentGroup(f *ast.CommentGroup) (*CommentGroup){
-	
+
 	return &CommentGroup{
 		//List : t.ConvertArrayStarComment( f.List),
 		//Incomplete: &f2,
@@ -1320,7 +1735,7 @@ func (t* AddressTable) ConvertArraySpec(f []ast.Spec) ([]*Spec){
 }
 
 func (t* AddressTable) ConvertCommClause(f *ast.CommClause) (*CommClause){
-	
+
 	return &CommClause{
 		Case : t.Converttoken_Pos2( f.Case),
 		Comm : t.ConvertTypeStmt( f.Comm),
@@ -1331,7 +1746,7 @@ func (t* AddressTable) ConvertCommClause(f *ast.CommClause) (*CommClause){
 }
 
 func (t* AddressTable) ConvertIsExported(f *ast.IsExported) (*IsExported){
-	
+
 	return &IsExported{
 // other type &{}
 		//Incomplete: &f2,
@@ -1339,7 +1754,7 @@ func (t* AddressTable) ConvertIsExported(f *ast.IsExported) (*IsExported){
 }
 
 func (t* AddressTable) ConvertChanType(f *ast.ChanType) (*ChanType){
-	
+
 	return &ChanType{
 		//Begin : t.Converttoken_Pos( f.Begin),
 //		Arrow : t.Converttoken_Pos( f.Arrow),
@@ -1350,24 +1765,24 @@ func (t* AddressTable) ConvertChanType(f *ast.ChanType) (*ChanType){
 }
 
 func (t* AddressTable) ConvertGoStmt(f *ast.GoStmt) (*GoStmt){
-	
+
 	return &GoStmt{
 		Go : t.Converttoken_Pos2( f.Go),
-		Call : t.ConvertPointerCallExpr( f.Call),
+		Call : t.ConvertCallExpr( f.Call),
 		//Incomplete: &f2,
 	}
 }
 
 // func (t* AddressTable) ConvertstripTrailingWhitespace(f *ast.stripTrailingWhitespace) (*stripTrailingWhitespace){
-// 	
-// 	return &stripTrailingWhitespace{
+//
+//	return &stripTrailingWhitespace{
 // // other type &{}
-// 		//Incomplete: &f2,
-// 	}
+//		//Incomplete: &f2,
+//	}
 // }
 
 func (t* AddressTable) ConvertEllipsis(f *ast.Ellipsis) (*Ellipsis){
-	
+
 	return &Ellipsis{
 		Ellipsis : t.Converttoken_Pos( f.Ellipsis),
 		Elt : t.ConvertTypeExpr( f.Elt),
@@ -1376,7 +1791,7 @@ func (t* AddressTable) ConvertEllipsis(f *ast.Ellipsis) (*Ellipsis){
 }
 
 func (t* AddressTable) ConvertFuncType(f *ast.FuncType) (*FuncType){
-	
+
 	return &FuncType{
 // other type &{}
 		//Incomplete: &f2,
@@ -1384,7 +1799,7 @@ func (t* AddressTable) ConvertFuncType(f *ast.FuncType) (*FuncType){
 }
 
 func (t* AddressTable) ConvertUnaryExpr(f *ast.UnaryExpr) (*UnaryExpr){
-	
+
 	return &UnaryExpr{
 		OpPos : t.Converttoken_Pos( f.OpPos),
 		Op : t.Converttoken_Token( f.Op),
@@ -1394,7 +1809,7 @@ func (t* AddressTable) ConvertUnaryExpr(f *ast.UnaryExpr) (*UnaryExpr){
 }
 
 func (t* AddressTable) ConvertNode(f *ast.Node) (*Node){
-	
+
 	return &Node{
 		//Incomplete: &f2,
 	}
@@ -1402,32 +1817,32 @@ func (t* AddressTable) ConvertNode(f *ast.Node) (*Node){
 
 
 // func (t* AddressTable) StrmapIdent(id string, f * ast.Ident) (*Ident){
-// 	f2 := t.ConvertPointerIdent(f)
-// 	t.Idents[id] = f2;
-// 	f.Report();
-// 	return f2
+//	f2 := t.ConvertPointerIdent(f)
+//	t.Idents[id] = f2;
+//	f.Report();
+//	return f2
 // }
 
 // //func (t* AddressTable) StrmapBasicLit(id string, f * BasicLit) (*BasicLit){ t.BasicLits[id] =f; f.Report(); return f}
 // func (t* AddressTable) StrmapBasicLit(id string, f * ast.BasicLit) (*BasicLit){
-// 	f2 := t.ConvertBasicLit(f)
-// 	t.BasicLits[id] = f2;
-// 	f.Report();
-// 	return f2
+//	f2 := t.ConvertBasicLit(f)
+//	t.BasicLits[id] = f2;
+//	f.Report();
+//	return f2
 // }
 
 // func (t* AddressTable) StrmapImportSpec(id string, f * ast.ImportSpec) (*ImportSpec){
-// 	f2 := t.ConvertImportSpec(f)
-// 	t.ImportSpecs[id] =f2;
-// 	f.Report();
-// 	return f2
+//	f2 := t.ConvertImportSpec(f)
+//	t.ImportSpecs[id] =f2;
+//	f.Report();
+//	return f2
 
 // }
 // func (t* AddressTable) StrmapGenDecl(id string, f * ast.GenDecl) (*GenDecl){
-// 	f2 := t.ConvertGenDecl(f)
-// 	t.GenDecls[id] =f2;
-// 	f.Report();
-// 	return f2
+//	f2 := t.ConvertGenDecl(f)
+//	t.GenDecls[id] =f2;
+//	f.Report();
+//	return f2
 // }
 
 func (t* AddressTable) ConvertBadDecl(f * ast.BadDecl) (*BadDecl){
@@ -1520,25 +1935,31 @@ func (t* AddressTable) StrmapObject(id string, f * ast.Object) (*ast.Object){ f2
 
 func (t* AddressTable) ConvertDeferred(f * ast.Deferred) (*Deferred){
 
-	if f == nil { return nil } 
-	fmt.Printf("debug %$v",f)
-	
+	if f == nil { return nil }
+	fmt.Printf("debug %#v",f)
+
+	nt := NodeType_OBJECT
 	switch v:= f.Set.(type) {
-		
+	case *map[string]*ast.Object:
+		return &Deferred {
+			Id: &f.Id,
+			Type: &nt,
+		}
+
 	default:
-		fmt.Printf("type debug %T",v)	
+		fmt.Printf("type debug %T",v)
 	}
 	panic("todo"); return nil;
 }
 
 // func (t* AddressTable) ConvertDeferred2(f  ast.Deferred2) (*Deferred){
-// 	panic("todo"); return nil;
+//	panic("todo"); return nil;
 // }
 
 func (t* AddressTable) ConvertString(f  ast.Foo3) (*string){
 	//return &f
 	if f == nil {
-		panic("todo"); return nil;
+		return nil;
 	}
 	switch v:= f.(type) {
 	case string:
@@ -1553,7 +1974,7 @@ func (t* AddressTable) ConvertObject(f * ast.Object) (*Object){
 	if f == nil {
 		panic("todo"); return nil;
 	}
-	
+
 	return & Object{
 		Deferred : t.ConvertDeferred(f.Deferred),
 		//*Deferred `protobuf:"bytes,1,opt,name=Deferred,json=deferred" json:"Deferred,omitempty"`

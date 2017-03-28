@@ -5,5 +5,5 @@ protobuf:
 test: protobuf
 	GOPATH=/home/mdupont/gocode/ go test -v ./proto/test/
 
-gentest:
+generate:
 	GOPATH=/home/mdupont/gocode/ go test -v . -test.run TestGen

@@ -1129,7 +1129,7 @@ func (t* AddressTable) ConvertExprStmt(f *ast.ExprStmt) (*ExprStmt){
 }
 
 func (t* AddressTable) ConvertAssignStmt(f *ast.AssignStmt) (*AssignStmt){
-
+	if f == nil {return nil }
 	return &AssignStmt{
 		Lhs : t.ConvertArrayExpr( f.Lhs),
 		TokPos : t.Converttoken_Pos( f.TokPos),
@@ -1350,7 +1350,7 @@ func (t* AddressTable) ConvertCallExpr(f *ast.CallExpr) (*CallExpr){
 }
 
 func (t* AddressTable) ConvertValueSpec(f *ast.ValueSpec) (*ValueSpec){
-
+	if f == nil { return nil }
 	return &ValueSpec{
 		//Doc : t.ConvertPointerCommentGroup( f.Doc),
 		Names : t.ConvertArrayStarIdent( f.Names),
@@ -1439,7 +1439,7 @@ func (t* AddressTable) ConvertPointerFuncType2(f ast.Foo2) (*Foo2){
 }
 
 func (t* AddressTable) ConvertFuncDecl(f *ast.FuncDecl) (*FuncDecl){
-
+	if f == nil {return nil}
 	return &FuncDecl{
 		//Doc : t.ConvertPointerCommentGroup( f.Doc),
 		Recv : t.ConvertFieldList( f.Recv),

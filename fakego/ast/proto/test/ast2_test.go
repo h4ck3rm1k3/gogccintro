@@ -4,6 +4,7 @@ import (
 	"testing"
 	//"reflect"
 	"fmt"
+	"io/ioutil"
 	"github.com/golang/protobuf/proto"
 	///
 	"github.com/h4ck3rm1k3/gogccintro/fakego/ast"
@@ -19292,5 +19293,7 @@ func TestVistAst(b* testing.T)  {
 		fmt.Printf("marshaling error: ", err)
 		panic(err)
 	}
-	fmt.Printf("data %s",data)	
+	fmt.Printf("data %s",data)
+	err = ioutil.WriteFile("example.protobuf", data, 0644)
+	fmt.Printf("err %s",err)
 }

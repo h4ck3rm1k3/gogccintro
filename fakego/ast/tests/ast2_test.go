@@ -2,7 +2,7 @@ package tests
 
 import (
 	"testing"
-	//"reflect"
+	"ioutil"
 	//"fmt"
 
 	"github.com/h4ck3rm1k3/gogccintro/fakego/ast"
@@ -19285,4 +19285,6 @@ func TestVistAst(b* testing.T)  {
 
 	fmt.Printf("one file %s",f.String())
 	fmt.Printf("one file1: %#v",f.ProtoMessage())
+	err := ioutil.WriteFile("example.protobuf", d1, 0644)
+	fmt.Printf("err:%s",err)
 }

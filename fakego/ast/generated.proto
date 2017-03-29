@@ -246,6 +246,89 @@ optional DeclStmt declstmt = 16; // Interface:Decl
 optional FuncDecl funcdecl = 25; // Interface:Decl
 optional GenDecl gendecl = 28; // Interface:Decl
 
+optional BadExpr badexpr = 3; // Interface:Expr
+optional BinaryExpr binaryexpr = 6; // Interface:Expr
+optional CallExpr callexpr = 9; // Interface:Expr
+optional ExprStmt exprstmt = 20; // Interface:Expr
+optional IndexExpr indexexpr = 34; // Interface:Expr
+optional KeyValueExpr keyvalueexpr = 37; // Interface:Expr
+optional ParenExpr parenexpr = 42; // Interface:Expr
+optional SelectorExpr selectorexpr = 46; // Interface:Expr
+optional SliceExpr sliceexpr = 48; // Interface:Expr
+optional StarExpr starexpr = 50; // Interface:Expr
+optional TypeAssertExpr typeassertexpr = 53; // Interface:Expr
+optional UnaryExpr unaryexpr = 56; // Interface:Expr
+
+// look like we need to add these extra fields for expr
+optional FuncType functype = 27; // Interface:BASE
+optional Ident ident = 30; // Interface:BASE
+optional InterfaceType interfacetype = 35; // Interface:BASE
+optional StructType structtype = 51; // Interface:BASE
+optional ArrayType arraytype = 61; // Interface:BASE
+optional BasicLit basiclit = 5; // Interface:BASE
+optional CompositeLit compositelit = 15; // Interface:BASE
+
+
+
+optional BadStmt badstmt = 4; // Interface:BASE
+
+
+optional BlockStmt blockstmt = 7; // Interface:BASE
+optional BranchStmt branchstmt = 8; // Interface:BASE
+
+optional CaseClause caseclause = 10; // Interface:BASE
+optional ChanDir chandir = 11; // Interface:BASE
+optional ChanType chantype = 12; // Interface:BASE
+optional CommClause commclause = 13; // Interface:BASE
+optional Comment comment = 14; // Interface:BASE
+
+optional DeferStmt deferstmt = 17; // Interface:BASE
+optional Ellipsis ellipsis = 18; // Interface:BASE
+optional EmptyStmt emptystmt = 19; // Interface:BASE
+
+optional Field field = 21; // Interface:BASE
+optional FieldList fieldlist = 22; // Interface:BASE
+optional File file = 23; // Interface:BASE
+optional ForStmt forstmt = 24; // Interface:BASE
+optional FuncLit funclit = 26; // Interface:BASE
+
+optional GoStmt gostmt = 29; // Interface:BASE
+
+optional IfStmt ifstmt = 31; // Interface:BASE
+optional ImportSpec importspec = 32; // Interface:BASE
+optional IncDecStmt incdecstmt = 33; // Interface:BASE
+
+
+optional IsExported isexported = 36; // Interface:BASE
+
+optional LabeledStmt labeledstmt = 38; // Interface:BASE
+optional MapType maptype = 39; // Interface:BASE
+optional NewIdent newident = 40; // Interface:BASE
+optional Package package = 41; // Interface:BASE
+
+optional RangeStmt rangestmt = 43; // Interface:BASE
+optional ReturnStmt returnstmt = 44; // Interface:BASE
+optional SelectStmt selectstmt = 45; // Interface:BASE
+
+optional SendStmt sendstmt = 47; // Interface:BASE
+
+optional Spec spec = 49; // Interface:BASE
+
+
+optional SwitchStmt switchstmt = 52; // Interface:BASE
+
+optional TypeSpec typespec = 54; // Interface:BASE
+optional TypeSwitchStmt typeswitchstmt = 55; // Interface:BASE
+
+optional ValueSpec valuespec = 57; // Interface:BASE
+optional CommentGroup commentgroup = 58; // Interface:BASE
+optional AssignStmt assignstmt = 59; // Interface:BASE
+optional Object object = 60; // Interface:BASE
+
+
+optional Deferred deferred = 62; // Interface:BASE
+
+
 }
 message Spec {}
 message ImportSpec {

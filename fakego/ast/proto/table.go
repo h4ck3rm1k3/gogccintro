@@ -1423,11 +1423,380 @@ func (t* AddressTable) ConvertTypeSpec(f *ast.TypeSpec) (*TypeSpec){
 	}
 }
 
-func (t* AddressTable) ConvertDecl(f *ast.Decl) (*Decl){
+func (t* AddressTable) ConvertDecl(f ast.Decl) (*Decl){
 
+	switch v:= f.(type) {
+	case *ast.ArrayType:
+	t2 := NodeType_ARRAYTYPE
 	return &Decl{
-		//Incomplete: &f2,
+	Type: &t2,
+	Arraytype: t.ConvertArrayType(v),
 	}
+case *ast.AssignStmt:
+	t2 := NodeType_ASSIGNSTMT
+	return &Decl{
+	Type: &t2,
+	Assignstmt: t.ConvertAssignStmt(v),
+	}
+case *ast.BadDecl:
+	t2 := NodeType_BADDECL
+	return &Decl{
+	Type: &t2,
+	Baddecl: t.ConvertBadDecl(v),
+	}
+case *ast.BadExpr:
+	t2 := NodeType_BADEXPR
+	return &Decl{
+	Type: &t2,
+	Badexpr: t.ConvertBadExpr(v),
+	}
+case *ast.BadStmt:
+	t2 := NodeType_BADSTMT
+	return &Decl{
+	Type: &t2,
+	Badstmt: t.ConvertBadStmt(v),
+	}
+case *ast.BasicLit:
+	t2 := NodeType_BASICLIT
+	return &Decl{
+	Type: &t2,
+	Basiclit: t.ConvertBasicLit(v),
+	}
+case *ast.BinaryExpr:
+	t2 := NodeType_BINARYEXPR
+	return &Decl{
+	Type: &t2,
+	Binaryexpr: t.ConvertBinaryExpr(v),
+	}
+case *ast.BlockStmt:
+	t2 := NodeType_BLOCKSTMT
+	return &Decl{
+	Type: &t2,
+	Blockstmt: t.ConvertBlockStmt(v),
+	}
+case *ast.BranchStmt:
+	t2 := NodeType_BRANCHSTMT
+	return &Decl{
+	Type: &t2,
+	Branchstmt: t.ConvertBranchStmt(v),
+	}
+case *ast.CallExpr:
+	t2 := NodeType_CALLEXPR
+	return &Decl{
+	Type: &t2,
+	Callexpr: t.ConvertCallExpr(v),
+	}
+case *ast.CaseClause:
+	t2 := NodeType_CASECLAUSE
+	return &Decl{
+	Type: &t2,
+	Caseclause: t.ConvertCaseClause(v),
+	}
+case *ast.ChanDir:
+	t2 := NodeType_CHANDIR
+	return &Decl{
+	Type: &t2,
+	Chandir: t.ConvertChanDir(v),
+	}
+case *ast.ChanType:
+	t2 := NodeType_CHANTYPE
+	return &Decl{
+	Type: &t2,
+	Chantype: t.ConvertChanType(v),
+	}
+case *ast.CommClause:
+	t2 := NodeType_COMMCLAUSE
+	return &Decl{
+	Type: &t2,
+	Commclause: t.ConvertCommClause(v),
+	}
+case *ast.Comment:
+	t2 := NodeType_COMMENT
+	return &Decl{
+	Type: &t2,
+	Comment: t.ConvertComment(v),
+	}
+case *ast.CompositeLit:
+	t2 := NodeType_COMPOSITELIT
+	return &Decl{
+	Type: &t2,
+	Compositelit: t.ConvertCompositeLit(v),
+	}
+case *ast.DeclStmt:
+	t2 := NodeType_DECLSTMT
+	return &Decl{
+	Type: &t2,
+	Declstmt: t.ConvertDeclStmt(v),
+	}
+case *ast.DeferStmt:
+	t2 := NodeType_DEFERSTMT
+	return &Decl{
+	Type: &t2,
+	Deferstmt: t.ConvertDeferStmt(v),
+	}
+case *ast.Ellipsis:
+	t2 := NodeType_ELLIPSIS
+	return &Decl{
+	Type: &t2,
+	Ellipsis: t.ConvertEllipsis(v),
+	}
+case *ast.EmptyStmt:
+	t2 := NodeType_EMPTYSTMT
+	return &Decl{
+	Type: &t2,
+	Emptystmt: t.ConvertEmptyStmt(v),
+	}
+case *ast.ExprStmt:
+	t2 := NodeType_EXPRSTMT
+	return &Decl{
+	Type: &t2,
+	Exprstmt: t.ConvertExprStmt(v),
+	}
+case *ast.Field:
+	t2 := NodeType_FIELD
+	return &Decl{
+	Type: &t2,
+	Field: t.ConvertField(v),
+	}
+case *ast.FieldList:
+	t2 := NodeType_FIELDLIST
+	return &Decl{
+	Type: &t2,
+	Fieldlist: t.ConvertFieldList(v),
+	}
+case *ast.File:
+	t2 := NodeType_FILE
+	return &Decl{
+	Type: &t2,
+	File: t.ConvertFile(v),
+	}
+case *ast.ForStmt:
+	t2 := NodeType_FORSTMT
+	return &Decl{
+	Type: &t2,
+	Forstmt: t.ConvertForStmt(v),
+	}
+case *ast.FuncDecl:
+	t2 := NodeType_FUNCDECL
+	return &Decl{
+	Type: &t2,
+	Funcdecl: t.ConvertFuncDecl(v),
+	}
+case *ast.FuncLit:
+	t2 := NodeType_FUNCLIT
+	return &Decl{
+	Type: &t2,
+	Funclit: t.ConvertFuncLit(v),
+	}
+case *ast.FuncType:
+	t2 := NodeType_FUNCTYPE
+	return &Decl{
+	Type: &t2,
+	Functype: t.ConvertFuncType(v),
+	}
+case *ast.GenDecl:
+	t2 := NodeType_GENDECL
+	return &Decl{
+	Type: &t2,
+	Gendecl: t.ConvertGenDecl(v),
+	}
+case *ast.GoStmt:
+	t2 := NodeType_GOSTMT
+	return &Decl{
+	Type: &t2,
+	Gostmt: t.ConvertGoStmt(v),
+	}
+case *ast.Ident:
+	t2 := NodeType_IDENT
+	return &Decl{
+	Type: &t2,
+	Ident: t.ConvertIdent(v),
+	}
+case *ast.IfStmt:
+	t2 := NodeType_IFSTMT
+	return &Decl{
+	Type: &t2,
+	Ifstmt: t.ConvertIfStmt(v),
+	}
+case *ast.ImportSpec:
+	t2 := NodeType_IMPORTSPEC
+	return &Decl{
+	Type: &t2,
+	Importspec: t.ConvertImportSpec(v),
+	}
+case *ast.IncDecStmt:
+	t2 := NodeType_INCDECSTMT
+	return &Decl{
+	Type: &t2,
+	Incdecstmt: t.ConvertIncDecStmt(v),
+	}
+case *ast.IndexExpr:
+	t2 := NodeType_INDEXEXPR
+	return &Decl{
+	Type: &t2,
+	Indexexpr: t.ConvertIndexExpr(v),
+	}
+case *ast.InterfaceType:
+	t2 := NodeType_INTERFACETYPE
+	return &Decl{
+	Type: &t2,
+	Interfacetype: t.ConvertInterfaceType(v),
+	}
+case *ast.IsExported:
+	t2 := NodeType_ISEXPORTED
+	return &Decl{
+	Type: &t2,
+	Isexported: t.ConvertIsExported(v),
+	}
+case *ast.KeyValueExpr:
+	t2 := NodeType_KEYVALUEEXPR
+	return &Decl{
+	Type: &t2,
+	Keyvalueexpr: t.ConvertKeyValueExpr(v),
+	}
+case *ast.LabeledStmt:
+	t2 := NodeType_LABELEDSTMT
+	return &Decl{
+	Type: &t2,
+	Labeledstmt: t.ConvertLabeledStmt(v),
+	}
+case *ast.MapType:
+	t2 := NodeType_MAPTYPE
+	return &Decl{
+	Type: &t2,
+	Maptype: t.ConvertMapType(v),
+	}
+case *ast.NewIdent:
+	t2 := NodeType_NEWIDENT
+	return &Decl{
+	Type: &t2,
+	Newident: t.ConvertNewIdent(v),
+	}
+case *ast.Package:
+	t2 := NodeType_PACKAGE
+	return &Decl{
+	Type: &t2,
+	Package: t.ConvertPackage(v),
+	}
+case *ast.ParenExpr:
+	t2 := NodeType_PARENEXPR
+	return &Decl{
+	Type: &t2,
+	Parenexpr: t.ConvertParenExpr(v),
+	}
+case *ast.RangeStmt:
+	t2 := NodeType_RANGESTMT
+	return &Decl{
+	Type: &t2,
+	Rangestmt: t.ConvertRangeStmt(v),
+	}
+case *ast.ReturnStmt:
+	t2 := NodeType_RETURNSTMT
+	return &Decl{
+	Type: &t2,
+	Returnstmt: t.ConvertReturnStmt(v),
+	}
+case *ast.SelectStmt:
+	t2 := NodeType_SELECTSTMT
+	return &Decl{
+	Type: &t2,
+	Selectstmt: t.ConvertSelectStmt(v),
+	}
+case *ast.SelectorExpr:
+	t2 := NodeType_SELECTOREXPR
+	return &Decl{
+	Type: &t2,
+	Selectorexpr: t.ConvertSelectorExpr(v),
+	}
+case *ast.SendStmt:
+	t2 := NodeType_SENDSTMT
+	return &Decl{
+	Type: &t2,
+	Sendstmt: t.ConvertSendStmt(v),
+	}
+case *ast.SliceExpr:
+	t2 := NodeType_SLICEEXPR
+	return &Decl{
+	Type: &t2,
+	Sliceexpr: t.ConvertSliceExpr(v),
+	}
+/*
+case *ast.Spec:
+	t2 := NodeType_SPEC
+	return &Decl{
+	Type: &t2,
+	Spec: t.ConvertSpec(v),
+	}*/
+case *ast.StarExpr:
+	t2 := NodeType_STAREXPR
+	return &Decl{
+	Type: &t2,
+	Starexpr: t.ConvertStarExpr(v),
+	}
+case *ast.StructType:
+	t2 := NodeType_STRUCTTYPE
+	return &Decl{
+	Type: &t2,
+	Structtype: t.ConvertStructType(v),
+	}
+case *ast.SwitchStmt:
+	t2 := NodeType_SWITCHSTMT
+	return &Decl{
+	Type: &t2,
+	Switchstmt: t.ConvertSwitchStmt(v),
+	}
+case *ast.TypeAssertExpr:
+	t2 := NodeType_TYPEASSERTEXPR
+	return &Decl{
+	Type: &t2,
+	Typeassertexpr: t.ConvertTypeAssertExpr(v),
+	}
+case *ast.TypeSpec:
+	t2 := NodeType_TYPESPEC
+	return &Decl{
+	Type: &t2,
+	Typespec: t.ConvertTypeSpec(v),
+	}
+case *ast.TypeSwitchStmt:
+	t2 := NodeType_TYPESWITCHSTMT
+	return &Decl{
+	Type: &t2,
+	Typeswitchstmt: t.ConvertTypeSwitchStmt(v),
+	}
+case *ast.UnaryExpr:
+	t2 := NodeType_UNARYEXPR
+	return &Decl{
+	Type: &t2,
+	Unaryexpr: t.ConvertUnaryExpr(v),
+	}
+case *ast.ValueSpec:
+	t2 := NodeType_VALUESPEC
+	return &Decl{
+	Type: &t2,
+	Valuespec: t.ConvertValueSpec(v),
+	}
+case *ast.CommentGroup:
+	t2 := NodeType_COMMENTGROUP
+	return &Decl{
+	Type: &t2,
+	Commentgroup: t.ConvertCommentGroup(v),
+	}
+case *ast.Object:
+	t2 := NodeType_OBJECT
+	return &Decl{
+	Type: &t2,
+	Object: t.ConvertObject(v),
+	}
+
+	default:
+		fmt.Printf("stmt unknown %T",v)
+		
+	}
+	// return &Decl{
+	// 	//Incomplete: &f2,
+	// }
+
+	panic("todo")
 }
 
 func (t* AddressTable) ConvertPointerFuncType(f *ast.FuncType) (*FuncType){
@@ -1698,7 +2067,7 @@ func (t* AddressTable) ConvertArrayDecl(f []ast.Decl)([]*Decl){
 	
 	v2 := make([]*Decl, len(f))
 	for i,j := range(f) {
-		x:=t.ConvertDecl(&j)
+		x:=t.ConvertDecl(j)
 		//fmt.Printf("created %d %#v\n", i,*x)
 		v2[i]=x
 	}
@@ -2057,7 +2426,7 @@ func (t* AddressTable) ConvertObject(f * ast.Object) (*Object){
 
 
 func (t* AddressTable) ConvertArrayStarIdent(f ast.Foo3) ([]*Ident){
-	fmt.Printf("ConvertArrayStarIdent %#v\n", f)
+	//fmt.Printf("ConvertArrayStarIdent %#v\n", f)
 
 	switch v:= f.(type) {
 	case []*ast.Ident:
@@ -2101,7 +2470,7 @@ func (t* AddressTable) ConvertPointerIdent3(f ast.Foo3) (*Foo3){
 }
 
 func (t* AddressTable) ConvertPointerIdent(f ast.Foo2) (*Ident){
-	fmt.Printf("ConvertPointerIdent %#v\n", f)
+	//fmt.Printf("ConvertPointerIdent %#v\n", f)
 	switch v:= f.(type) {
 	case *ast.Ident:
 		return t.ConvertIdent(v)

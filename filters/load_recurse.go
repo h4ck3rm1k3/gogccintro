@@ -1,4 +1,4 @@
-package filter
+package filters
 // load recurse command
 import (
 	"fmt"

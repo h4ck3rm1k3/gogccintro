@@ -19,7 +19,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	//"github.com/BurntSushi/toml"
 	//	"gopkg.in/yaml.v2"
-	"github.com/h4ck3rm1k3/gogccintro/filters"
+	///"github.com/h4ck3rm1k3/gogccintro/filters"
 	"github.com/jinzhu/configor"
 	//"filter/load_recurse"
 )

@@ -21,4 +21,6 @@ example2 : test2.peg.go main.go
 	go build 
 
 test2 : example2
-	./parser
+	./parser ~/experiments/gcc_py_introspector/tests
+	./parser ~/experiments/gcc_py_introspector/tests2/
+	./parser ~/experiments/lsof/

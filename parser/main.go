@@ -43,8 +43,14 @@ func main() {
 
 
 	//func TestOne(t *testing.T) {
+	if len(os.Args) < 2 {
+		name := os.Args[0]
+		fmt.Printf("Usage: %v \"Test Directory\"\n", name)
+		os.Exit(1)
+	}
+	dir := os.Args[1]
 	
-	files := testTUFiles()
+	files := testTUFiles(dir)
 	for _, file := range files {
 		
 		
@@ -64,7 +70,7 @@ func main() {
 			//fmt.Printf("err %s\n",err)
 			continue
 		} else {
-			//fmt.Printf("End %s\n",file)
+			fmt.Printf("OK %s\n",file)
 			//fmt.Printf("got %#v\n",pgot)
 		}
 		
@@ -72,8 +78,8 @@ func main() {
 	}
 }
 
-func testTUFiles() []string {
-	const rootDir = "/home/mdupont/experiments/gcc_py_introspector/tests"
+func testTUFiles(rootDir string) []string {
+//	const rootDir = "/home/mdupont/experiments/gcc_py_introspector/tests"
 
 	fis, err := ioutil.ReadDir(rootDir)
 	if err != nil {

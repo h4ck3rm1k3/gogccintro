@@ -4,7 +4,7 @@ type GccNode Peg {
 }
 TUFILE <- ws Statement+ EOF
 OpAttr <- "op " [0-9]
-FileRef <- ('_'? [\-A-Za-z0-9_]+ '.' [A-Za-z_]+ / "<built-in>") ':' Integer ws
+FileRef <- ('_'? [\-A-Za-z0-9_]+ ('.' [A-Za-z_]+)* / "<built-in>") ':' Integer ws
 SourceAttr <-  'srcp' ':' ws FileRef 
 
 IntAttr    <-  ("bases"/"low" /"used"/"prec") ws ':' ws Integer ws
@@ -19,24 +19,100 @@ AddrAttr   <-  ("addr" ws ':' ws Addr)
 TagAttr   <-  ("tag" ws ':' ws ("struct"/"union"))
 BodyAttr   <-  ("body" ws ':' ws ("undefined"/ Node ))
 LinkAttr <- ("link" ws ':' ws ("extern"/"static"))
-NoteAttr <- "note" ws ':' ws ("artificial"/"member"/"ptrmem"/"operator " ("ge"/"le"/"gt"/"lt")/"pseudo tmpl")
-AccsAttr <- ("accs" ws ':' ws ("priv"/"pub"))
+NoteAttr <- "note" ws ':' ws ("artificial"
+/"member"/"ptrmem"/
+
+"operator" ws (
+"andassign"/
+"and" /
+"assign"/
+"call"/
+"delete" / 
+"deref"/
+
+
+"divassign" /
+"div" /
+
+"eq"/
+"ge" /
+"ge"/
+"gt"/
+"land"/
+"le"/
+"lnot"/
+"lor"/
+
+"lshiftassign" / 
+"lshift"/
+
+"lt"/
+
+"minusassign" / 
+"minus" / 
+
+"multassign" / 
+"mult" / 
+
+
+"neg" / 
+"new" /
+"ne"/
+"not" / 
+
+"orassign" / 
+"or"/
+
+"plusassign"/
+"plus" / 
+
+"postdec" / 
+"postinc" /
+
+"pos" /
+
+"predec" / 
+"preinc"/
+"ref" / 
+
+
+"rshiftassign" /
+"rshift"/
+
+"subs" / 
+"vecdelete" / 
+"vecnew" / 
+
+"xorassign" /
+"xor"/
+)?
+
+/"pseudo tmpl"
+/"destructor"
+)
+AccsAttr <- ("accs" ws ':' ws ("priv"/"pub"/"prot"))
 QualAttr <- ("qual" ws ':' ws ("c"/"v"/"r")+ ws )
 SignAttr   <-  ("sign" ws ':' ws ("signed"/"unsigned"))
 
 NodeName   <- (
 	   "retn" / "prms" /
 	   "args" /
+	   "base" /
+	   "orig" /
+	   	   "OP0" /	
 	   "argt" /
 	   "decl" /
+	   	   "dcls" /	
 	   "expr"/
+	   "fncs" /
 	   "fn"/
 	   Integer /
 	   "cnst" /
 	   "vars" /
+	   "vfld" /
 	   "valu"/ "chan" / "purp" /
 	   "refd" /
-	   "flds" / "fncs" /
+	   "flds" / 
 	   "ptd" /
 	   "cls" /
 	   "csts" /
@@ -56,10 +132,10 @@ SpecValue  <- ws ("spec:")? ws (("mutable"/"bitfield"/"pure"/"virt"/"register" )
 
 LngtAttr   <- "lngt" ws ':' ws Integer ws
 StringAttr <-  "strg:" (.+)
-	  
+RandomSpec <-  ws "spec" ws	  
 	  
 OneAttr <- (AddrAttr/SpecValue/NodeAttr/SourceAttr/IntAttr/StringAttr/SignAttr/SignedIntAttr/IntAttr3/
-	LngtAttr/TagAttr/
+	LngtAttr/TagAttr/RandomSpec/
 	BodyAttr/AccsAttr/
 	NoteAttr/
 	LinkAttr/

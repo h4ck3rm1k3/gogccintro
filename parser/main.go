@@ -46,7 +46,7 @@ func main() {
 	
 	files := testTUFiles()
 	for _, file := range files {
-		fmt.Printf("Reading %s\n",file)
+		
 		
 		//pgot, err := ParseFile(file,Debug(true))
 		os.Remove("file.tu")
@@ -56,6 +56,7 @@ func main() {
 
 		
 		if err != nil {
+			fmt.Printf("In %s\n",file)
 			fmt.Printf("err %s\n",err)
 			//t.Errorf("%s: pigeon.ParseFile: %v", file, err)
 			//_, err := ParseFile2(file)
@@ -63,7 +64,7 @@ func main() {
 			//fmt.Printf("err %s\n",err)
 			continue
 		} else {
-			fmt.Printf("End %s\n",file)
+			//fmt.Printf("End %s\n",file)
 			//fmt.Printf("got %#v\n",pgot)
 		}
 		
@@ -98,7 +99,7 @@ func (e *parseError) Error() string {
 		positions[p], p = int(token.end), p+1
 	}
 	translations := translatePositions(e.p.buffer, positions)
-	format := "Error:\nfile.tu:%v:\nparse error near %v (line %v symbol %v - line %v symbol %v):\n%v\n"
+	format := "Error\nfile.tu:%d:  parse error near %v\n (line %v symbol %v - line %v symbol %v):\n%v\n"
 	if e.p.Pretty {
 		format = "parse error near \x1B[34m%v\x1B[m (line %v symbol %v - line %v symbol %v):\n%v\n"
 	}
@@ -106,6 +107,8 @@ func (e *parseError) Error() string {
 		begin, end := int(token.begin), int(token.end)
 		error += fmt.Sprintf(format,
 			translations[begin].line,
+
+			
 			rul3s[token.pegRule],
 			translations[begin].line, translations[begin].symbol,
 			translations[end].line, translations[end].symbol,

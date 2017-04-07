@@ -3,25 +3,41 @@ type GccNode Peg {
 
 }
 TUFILE <- ws Statement+ EOF
-OpAttr <- "op " [0-9]
-FileRef <- ('_'? [\-A-Za-z0-9_]+ ('.' [A-Za-z_]+)* / "<built-in>") ':' Integer ws
-SourceAttr <-  'srcp' ':' ws FileRef 
+OpAttr <- <"op " [0-9]>
 
-IntAttr    <-  ("bases"/"low" /"used"/"prec") ws ':' ws Integer ws
-IntAttr3    <-  ("low"/"high") ws ':' ws '-'? Integer ws
+LineNumber <- <Integer> {
+//fmt.Printf("Line Number :'%s'\n",buffer[begin:end])
+l,e:=strconv.Atoi(buffer[begin:end])
+if e != nil { LineNum =l } else {
+LineNum = -1
+}
+}
 
-IntAttr2    <-  "algn" ':' ws [0-9]+ ws
+FileName <- < ( [\-A-Za-z0-9_]+ ('.' [A-Za-z_]+)* / "<built-in>") >{
+//	fmt.Printf("FileName :'%s'\n",buffer[begin:end])
+	FileName=string(buffer[begin:end])
+}
+
+FileRef <- ('_'? < FileName> ) ':' <LineNumber> ws {
+	fmt.Printf("FileName and Number: '%s:%d'\n",FileName, LineNum)	         
+}
+
+SourceAttr <-  <'srcp'> ':' ws <FileRef >
+IntAttr    <-  <("bases"/"low" /"used"/"prec")> ws ':' ws <Integer> ws
+IntAttr3    <-  <("low"/"high")> ws ':' ws <'-'? Integer> ws
+
+IntAttr2    <-  <"algn"> ':' ws <[0-9]+> ws
 
 SignedIntAttr    <-  ("int") ws ':' ws ('-'/"0x")? (Integer / Hex) + ws
 Addr <- (DecimalDigit/Hex)+
 Hex <- [a-h]
-AddrAttr   <-  ("addr" ws ':' ws Addr)
-TagAttr   <-  ("tag" ws ':' ws ("struct"/"union"))
-BodyAttr   <-  ("body" ws ':' ws ("undefined"/ Node ))
-LinkAttr <- ("link" ws ':' ws ("extern"/"static"))
-NoteAttr <- "note" ws ':' ws ("artificial"
-/"member"/"ptrmem"/
+AddrAttr   <-  (<"addr"> ws ':' ws <Addr>)
+TagAttr   <-  ( <"tag"> ws ':' ws <("struct"/"union")>)
+BodyAttr   <-  (<"body"> ws ':' ws <("undefined"/ Node )>)
+LinkAttr <- ( <"link"> ws ':' ws <("extern"/"static")>)
 
+NoteAttr <- <"note"> ws ':' ws <("artificial"
+/"member"/"ptrmem"/
 "operator" ws (
 "andassign"/
 "and" /
@@ -29,11 +45,8 @@ NoteAttr <- "note" ws ':' ws ("artificial"
 "call"/
 "delete" / 
 "deref"/
-
-
 "divassign" /
 "div" /
-
 "eq"/
 "ge" /
 "ge"/
@@ -42,59 +55,45 @@ NoteAttr <- "note" ws ':' ws ("artificial"
 "le"/
 "lnot"/
 "lor"/
-
 "lshiftassign" / 
 "lshift"/
-
 "lt"/
-
 "minusassign" / 
 "minus" / 
-
 "multassign" / 
 "mult" / 
-
-
 "neg" / 
 "new" /
 "ne"/
 "not" / 
-
 "orassign" / 
 "or"/
-
 "plusassign"/
 "plus" / 
-
 "postdec" / 
 "postinc" /
-
 "pos" /
-
 "predec" / 
 "preinc"/
 "ref" / 
-
-
 "rshiftassign" /
 "rshift"/
-
 "subs" / 
 "vecdelete" / 
 "vecnew" / 
-
 "xorassign" /
 "xor"/
 )?
 
 /"pseudo tmpl"
 /"destructor"
-)
-AccsAttr <- ("accs" ws ':' ws ("priv"/"pub"/"prot"))
-QualAttr <- ("qual" ws ':' ws ("c"/"v"/"r")+ ws )
-SignAttr   <-  ("sign" ws ':' ws ("signed"/"unsigned"))
+)>
+	
+AccsAttr <- (<"accs"> ws ':' ws <("priv"/"pub"/"prot")>)
+QualAttr <- (<"qual"> ws ':' ws (<("c"/"v"/"r")>)+ ws )
+SignAttr   <-  (<"sign"> ws ':' ws <("signed"/"unsigned")>)
 
-NodeName   <- (
+NodeName   <- < (
 	   "retn" / "prms" /
 	   "args" /
 	   "base" /
@@ -124,14 +123,23 @@ NodeName   <- (
 		"type"/ "scpe"/
 	   "domn"/ "elts" /
 	   "init" /
-	   "chain" / "bpos" / "size"/"idx"/"val"/OpAttr)
+	   "chain" / "bpos" / "size"/"idx"/"val"/OpAttr) > {
 
-NodeAttr   <- ws NodeName ws ':' ws Node ws
+	FieldName=buffer[begin:end]
+   }
 
-SpecValue  <- ws ("spec:")? ws (("mutable"/"bitfield"/"pure"/"virt"/"register" ) ws )+
+NodeAttr   <- ws NodeName ws ':' ws < Node >  ws {
+	//fmt.Printf("node ref :'%s'\n",buffer[begin:end])
+	if NodeRefs == nil {
+		NodeRefs = make(map [string] int)
+	}
+	NodeRefs[FieldName]=NodeNumber
+}
 
-LngtAttr   <- "lngt" ws ':' ws Integer ws
-StringAttr <-  "strg:" (.+)
+SpecValue  <- ws ("spec:")? ws (< ("mutable"/"bitfield"/"pure"/"virt"/"register" )> ws )+
+
+LngtAttr   <- "lngt" ws ':' ws < Integer > ws
+StringAttr <-  "strg:" < (.+) >
 RandomSpec <-  ws "spec" ws	  
 	  
 OneAttr <- (AddrAttr/SpecValue/NodeAttr/SourceAttr/IntAttr/StringAttr/SignAttr/SignedIntAttr/IntAttr3/
@@ -143,12 +151,69 @@ OneAttr <- (AddrAttr/SpecValue/NodeAttr/SourceAttr/IntAttr/StringAttr/SignAttr/S
 	)
 Attrs <- ( ws OneAttr )*
 Attr <- ( OneAttr ws Attrs ws )?
-Statement <- ( Node ws NodeType ws Attr) ws 
+Statement <- ( <Node> ws <NodeType> ws <Attr>) ws  {
+	fmt.Printf("stmt %#v\n",NodeRefs)
 
+	// clear it
+	NodeRefs = make(map [string] int)
+}
 
-Node <- ( '@' NonZeroDecimalDigit DecimalDigit* )
+Node <- '@' <NonZeroDecimalDigit DecimalDigit*>  {
+	s:=buffer[begin:end]
+	fmt.Printf("noderef %s\n",s)
+	l,e:=strconv.Atoi(buffer[begin:end])
+	if e != nil {
+		NodeNumber =l } else {
+		NodeNumber = -1
+		} else {
+			fmt.Printf("noderef %s %s\n",s,e)
+			panic("error converting")
+		}
+}
+
 Integer <- '0' / NonZeroDecimalDigit DecimalDigit* 
-NodeType <- [a-z_]+
+
+NodeType <- <
+	"addr_expr" /
+	"array_type" /
+	"asm_expr" /
+	"binfo" /
+	"boolean_type" /
+	"component_ref" /
+	"constructor" /
+	"enumeral_type" /
+	"error_mark" /
+	"field_decl" /
+	"function_decl" /
+	"function_type" /
+	"identifier_node" /
+	"indirect_ref" /
+	"integer_cst" /
+	"integer_type" /
+	"lshift_expr" /
+	"mem_ref" /
+	"namespace_decl" /
+	"offset_type" /
+	"parm_decl" /
+	"pointer_type" /
+	"real_type" /
+	"record_type" /
+	"reference_type" /
+	"result_decl" /
+	"save_expr" /
+	"string_cst" /
+	"template_type_parm" /
+	"translation_unit_decl" /
+	"tree_list" /
+	"truth_andif_expr" /
+	"type_decl" /
+	"typename_type" /
+	"var_decl" /
+	"void_type" 
+> {
+	NodeType=buffer[begin:end]
+}
+
 DecimalDigit <- [0-9]
 NonZeroDecimalDigit <- [1-9]
 ws <- [ \t\r\n]*

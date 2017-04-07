@@ -12,16 +12,16 @@ import (
 	"io/ioutil"
 )
 
-func Parse2(filename string, b string) (interface{}, error){
+func Parse2(filename string, b string) (*GccNode, error){
 	calc := &GccNode{Buffer: b}
 	calc.Init()
 	if err := calc.Parse(); err != nil {
 		log.Fatal(err)
 	}
-	return nil,nil
+	return calc,nil
 }
 
-func ParseReader2(filename string, r io.Reader) (interface{}, error) {
+func ParseReader2(filename string, r io.Reader) (*GccNode, error) {
 	b, err := ioutil.ReadAll(r)
 	if err != nil {
 		return nil, err
@@ -30,7 +30,7 @@ func ParseReader2(filename string, r io.Reader) (interface{}, error) {
 	return Parse2(filename, string(b))
 }
 
-func ParseFile2(filename string) (interface{}, error) {
+func ParseFile2(filename string) (*GccNode, error) {
 	f, err := os.Open(filename)
 	if err != nil {
 		return nil, err
@@ -57,7 +57,7 @@ func main() {
 		//pgot, err := ParseFile(file,Debug(true))
 		os.Remove("file.tu")
 		os.Symlink(file, "file.tu")
-		_, err := ParseFile2(file)
+		tree, err := ParseFile2(file)
 		// pgot
 
 		
@@ -71,6 +71,14 @@ func main() {
 			continue
 		} else {
 			fmt.Printf("OK %s\n",file)
+
+			//fmt.Printf("syntax tree\n")
+			//tree.PrintSyntaxTree();
+
+			//fmt.Printf("exec\n")
+			tree.Execute();
+			
+			//fmt.Printf("tokens: %#v\n",tree.Tokens())
 			//fmt.Printf("got %#v\n",pgot)
 		}
 		

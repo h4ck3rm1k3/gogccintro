@@ -1,0 +1,79 @@
+package main
+type GccNode Peg {
+
+}
+TUFILE <- ws Statement+ EOF
+OpAttr <- "op " [0-9]
+FileRef <- ('_'? [\-A-Za-z0-9_]+ '.' [A-Za-z_]+ / "<built-in>") ':' Integer ws
+SourceAttr <-  'srcp' ':' ws FileRef 
+
+IntAttr    <-  ("bases"/"low" /"used"/"prec") ws ':' ws Integer ws
+IntAttr3    <-  ("low"/"high") ws ':' ws '-'? Integer ws
+
+IntAttr2    <-  "algn" ':' ws [0-9]+ ws
+
+SignedIntAttr    <-  ("int") ws ':' ws ('-'/"0x")? (Integer / Hex) + ws
+Addr <- (DecimalDigit/Hex)+
+Hex <- [a-h]
+AddrAttr   <-  ("addr" ws ':' ws Addr)
+TagAttr   <-  ("tag" ws ':' ws ("struct"/"union"))
+BodyAttr   <-  ("body" ws ':' ws ("undefined"/ Node ))
+LinkAttr <- ("link" ws ':' ws ("extern"/"static"))
+NoteAttr <- "note" ws ':' ws ("artificial"/"member"/"ptrmem"/"operator " ("ge"/"le"/"gt"/"lt")/"pseudo tmpl")
+AccsAttr <- ("accs" ws ':' ws ("priv"/"pub"))
+QualAttr <- ("qual" ws ':' ws ("c"/"v"/"r")+ ws )
+SignAttr   <-  ("sign" ws ':' ws ("signed"/"unsigned"))
+
+NodeName   <- (
+	   "retn" / "prms" /
+	   "args" /
+	   "argt" /
+	   "decl" /
+	   "expr"/
+	   "fn"/
+	   Integer /
+	   "cnst" /
+	   "vars" /
+	   "valu"/ "chan" / "purp" /
+	   "refd" /
+	   "flds" / "fncs" /
+	   "ptd" /
+	   "cls" /
+	   "csts" /
+	   "labl" /
+	   "type"/ "unql" /
+	   "min"/"max"/
+	   "binf"/
+		"name"/"mngl"/
+		"type"/ "scpe"/
+	   "domn"/ "elts" /
+	   "init" /
+	   "chain" / "bpos" / "size"/"idx"/"val"/OpAttr)
+
+NodeAttr   <- ws NodeName ws ':' ws Node ws
+
+SpecValue  <- ws ("spec:")? ws (("mutable"/"bitfield"/"pure"/"virt"/"register" ) ws )+
+
+LngtAttr   <- "lngt" ws ':' ws Integer ws
+StringAttr <-  "strg:" (.+)
+	  
+	  
+OneAttr <- (AddrAttr/SpecValue/NodeAttr/SourceAttr/IntAttr/StringAttr/SignAttr/SignedIntAttr/IntAttr3/
+	LngtAttr/TagAttr/
+	BodyAttr/AccsAttr/
+	NoteAttr/
+	LinkAttr/
+	QualAttr/IntAttr2
+	)
+Attrs <- ( ws OneAttr )*
+Attr <- ( OneAttr ws Attrs ws )?
+Statement <- ( Node ws NodeType ws Attr) ws 
+
+
+Node <- ( '@' NonZeroDecimalDigit DecimalDigit* )
+Integer <- '0' / NonZeroDecimalDigit DecimalDigit* 
+NodeType <- [a-z_]+
+DecimalDigit <- [0-9]
+NonZeroDecimalDigit <- [1-9]
+ws <- [ \t\r\n]*
+EOF <- !.

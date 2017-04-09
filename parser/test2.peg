@@ -332,6 +332,17 @@ Node <- '@' <NonZeroDecimalDigit DecimalDigit*>  {
 
 Integer <- '0' / NonZeroDecimalDigit DecimalDigit* 
 
+# String value 
+# match a string like this :
+#
+#     strg : blah lngt: 4
+#
+# will not match the string containing "lngt:" in it, so might be a problem with the compliler
+# this won't work
+#
+#    strg : lngt: lngt: 5
+#
+
 StringAttr <-  "strg: " 
  <
  	(

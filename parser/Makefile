@@ -1,3 +1,8 @@
+test : example2
+	./parser ~/experiments/gcc_py_introspector/tests
+	./parser ~/experiments/gcc_py_introspector/tests2/
+	./parser ~/experiments/lsof/
+
 debug: test.peg
 	~/gocode/bin/pigeon -debug test.peg 
 
@@ -10,7 +15,7 @@ example.go : example.go1
 example : example.go
 	go build example.go
 
-test : example
+rtest : example
 	go test
 #-debug
 
@@ -18,9 +23,8 @@ test2.peg.go: test2.peg
 	~/gocode/bin/peg  -inline -switch  test2.peg
 
 example2 : test2.peg.go main.go
-	go build 
+	GOPATH=/home/mdupont/gocode/ go build 
 
-test2 : example2
-	./parser ~/experiments/gcc_py_introspector/tests
-	./parser ~/experiments/gcc_py_introspector/tests2/
-	./parser ~/experiments/lsof/
+peg: 
+	for x in test_*.peg; do echo $(x); ~/gocode/bin/peg  -inline -switch  $(x); done
+

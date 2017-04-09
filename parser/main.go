@@ -10,7 +10,11 @@ import (
 	"os"
 	"io"
 	"io/ioutil"
+	//"encoding/json"	
 )
+
+
+
 
 func Parse2(filename string, b string) (*GccNode, error){
 	calc := &GccNode{Buffer: b}
@@ -51,18 +55,18 @@ func main() {
 	dir := os.Args[1]
 	
 	files := testTUFiles(dir)
-	for _, file := range files {
+	for _, cfile := range files {
 		
 		
 		//pgot, err := ParseFile(file,Debug(true))
 		os.Remove("file.tu")
-		os.Symlink(file, "file.tu")
-		tree, err := ParseFile2(file)
+		os.Symlink(cfile, "file.tu")
+		tree, err := ParseFile2(cfile)
 		// pgot
 
 		
 		if err != nil {
-			fmt.Printf("In %s\n",file)
+			fmt.Printf("In %s\n",cfile)
 			fmt.Printf("err %s\n",err)
 			//t.Errorf("%s: pigeon.ParseFile: %v", file, err)
 			//_, err := ParseFile2(file)
@@ -70,19 +74,22 @@ func main() {
 			//fmt.Printf("err %s\n",err)
 			continue
 		} else {
-			fmt.Printf("OK %s\n",file)
+			fmt.Printf("OK %s\n",cfile)
 
 			//fmt.Printf("syntax tree\n")
 			//tree.PrintSyntaxTree();
-
+			file.Filename = &cfile
 			//fmt.Printf("exec\n")
 			tree.Execute();
 			
 			//fmt.Printf("tokens: %#v\n",tree.Tokens())
 			//fmt.Printf("got %#v\n",pgot)
 		}
-		
-		
+		//fmt.Printf("File %s\n",file.String())
+		//body, _ := json.Marshal(file)
+		//fmt.Printf("File : %s\n",body)
+
+		resetFile()
 	}
 }
 
@@ -130,4 +137,18 @@ func (e *parseError) Error() string {
 	}
 
 	return error
+}
+
+func Atoi(s string) int32 {
+	var r int32
+	r = -1
+	l,e:=strconv.Atoi(s)
+	if e == nil {
+		r =int32(l)
+	} else {
+		r = -1
+		fmt.Printf("error err:%s input:%s got:%d\n",s,e, l)
+		panic("error converting")
+	}
+	return r
 }

@@ -1,0 +1,246 @@
+syntax = 'proto2';
+package github.com.h4ck3rm1k3.gogccintro.parser.ast.proto;
+option go_package = "astproto";
+enum TuNodeType {
+     TUFILE = 0;
+     OpAttr=1;
+//     NTLineNumber=3;
+//     NTFileName=4;
+//     NTFileRef=5;
+     NTSourceAttr=6;
+     NTIntAttr=7;
+     NTIntAttr3=8;
+     NTIntAttr2=9;
+     NTSignedIntAttr=10;
+     NTAddr=11;
+     NTHex=12;
+     NTAddrAttr=13;
+     NTTagAttr=14;
+     NTBodyAttr=15;
+     NTLinkAttr=16;
+     NTNoteAttr=17;
+     NTAccsAttr=18;
+     NTQualAttr=19;
+     NTSignAttr=20;
+     NTNodeName=21;
+     NTNodeAttr=22;
+     NTSpecValue=23;
+     NTLngtAttr=24;
+     NTStringAttr=25;
+     NTRandomSpec=27;
+     NTOneAttr=28;
+     NTAttrs=29;
+     NTAttr=30;
+     NTStatement=31;
+     NTNode=32;
+     NTInteger=33;
+     NTNodeType=34;
+}
+
+
+message FileRef {
+  required string FileName = 1 ;
+  required int32 LineNumber = 2 ;
+
+
+}
+
+message IntAttr {
+	required int32 Value = 1;
+}
+
+enum AccessType {
+	ACC_priv =0;
+	ACC_pub=2;
+	ACC_prot=3;
+}
+
+enum LinkType {
+	extern =0;
+	static=1;
+}
+
+enum SignType {
+	signed =0;
+	unsigned=1;
+}
+
+enum QualType {
+	c =0; // const
+	v=1; // volitile
+	r=2; // register
+}
+
+enum TagType {
+	struct =0;
+	union  =1;
+}
+
+//message AccsAttr {}
+message NodeRef {
+	required int32 NodeId = 1;
+}
+
+message OpNodeRef {
+	required int32 OpNo = 1;
+	required int32 NodeId = 2;
+}
+
+//message NodeAttr {
+//	required string FieldName = 1;
+//	required int32 NodeId = 2;
+//}
+
+message NoteAttr {
+	required string NoteName = 1;
+}
+
+enum NodeType {
+	addr_expr =1;
+	array_type =2;
+	asm_expr =3;
+	binfo =4;
+	boolean_type =5;
+	component_ref =6;
+	constructor =7;
+	enumeral_type =8;
+	error_mark =9;
+	field_decl =10;
+	function_decl =11;
+	function_type =12;
+	identifier_node =13;
+	indirect_ref =14;
+	integer_cst =15;
+	integer_type =16;
+	lshift_expr =17;
+	mem_ref =18;
+	namespace_decl =19;
+	offset_type =20;
+	parm_decl =21;
+	pointer_type =22;
+	real_type =23;
+	record_type =24;
+	reference_type =25;
+	result_decl =26;
+	save_expr =27;
+	string_cst =28;
+	template_type_parm =29;
+	translation_unit_decl =30;
+	tree_list =31;
+	truth_andif_expr =32;
+	type_decl =33;
+	typename_type =34;
+	var_decl =35;
+	void_type = 36;
+}
+
+enum Field {
+	accs=14;
+	addr=9;
+	algn=8;
+	args=20;
+	argt =24;
+	base =21;
+	bases=2;
+	binf=46;
+	body=11;
+	bpos=55;
+	chain=54;
+	chan=34;
+	cls =39;
+	cnst =30;
+	csts =40;
+	dcls =26;
+	decl=25;
+	domn=51;
+	elts =52;
+	expr=27;
+	flds =37;
+	fn=29;
+	fncs =28;
+	high=7;
+	idx=57;
+	init =53;
+	labl =41;
+	link=12;
+	lngt =61;
+	low=3;
+	max=45;
+	min=44;
+	mngl=48;
+	name_field=47;
+	note=13;
+	orig =22;
+	prec=5;
+	prms=18;
+	ptd =38;
+	purp =35;
+	qual=15;
+	refd =36;
+	retn=17;
+	scpe=50;
+	sign=16;
+	size=56;
+	spec=60;
+	srcp =1;
+	strg=62;
+	tag=10;
+	type=42;
+	unql =43;
+	used=4;
+	val=58;
+	valu=33;
+	vars =31;
+	vfld =32;
+	OP0 =23;
+	cond = 63;
+	// all indexed after this
+	OPN=101;
+//	low=6;
+//	type=49;
+}
+
+enum Spec {
+	mutable=1;
+	bitfield=2;
+	pure=3;
+	virt=4;
+	register=5;
+}
+	
+message Attr {
+	required TuNodeType NodeType =1 ;
+	//required string 
+	required Field AttrName = 2;
+
+	// and one of these values
+
+	optional FileRef SourceAttr=6;
+	optional IntAttr IntAttr=7;
+	optional AccessType Access=18; // no attribute name needed
+	optional string AddrAttr=13;
+	optional NodeRef NodeAttr=22; // any reference to a node
+	optional OpNodeRef NodeOpAttr=26;
+//	optional NodeRef BodyAttr=15; body is a standard node ref
+	optional LinkType LinkAttr=16;
+	//optional NodeAttr NodeAttr=22;
+	repeated NoteAttr NoteAttr=17;
+	optional QualType QualAttr=19;
+	optional bool RandomSpec=27;
+	optional SignType SignAttr=20;
+	optional int32 SignedIntAttr=10;
+	optional string StringAttr=25;
+	optional TagType TagAttr=14;
+	optional Spec SpecAttr=28;
+}
+
+message Node {
+	optional NodeRef NodeID=1;
+	optional NodeType NodeType=2;
+	repeated Attr attrs=3;
+}
+
+message File {
+	required string Filename=1;
+	repeated Node nodes =2;
+}

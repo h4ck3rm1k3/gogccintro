@@ -246,7 +246,7 @@ message Attr {
 }
 
 message Node {
-	optional NodeRef NodeID=1;
+	required int32 NodeID=1;
 	optional NodeType NodeType=2;
 	repeated Attr attrs=3;
 }

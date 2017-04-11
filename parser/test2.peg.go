@@ -490,7 +490,8 @@ func (p *GccNode) Execute() {
 			// clear it
 			//NodeRefs = make(map [string] int)
 			n := getNode()
-			n.NodeType = &NodeType
+			nt := NodeType // copy it or it will get changed
+			n.NodeType = &nt
 			file.AddNode(n)
 			clearNode()
 
@@ -41734,7 +41735,8 @@ func (p *GccNode) Init() {
 			// clear it
 			//NodeRefs = make(map [string] int)
 			n := getNode()
-			n.NodeType=&NodeType
+			nt := NodeType // copy it or it will get changed
+			n.NodeType=&nt
 			file.AddNode(n)
 			clearNode()
 		}> */

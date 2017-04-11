@@ -35,8 +35,11 @@ var last_node *astproto.Node
 var file astproto.File
 
 func getNode() (*astproto.Node) {
+	id :=NodeNumber
 	if last_node == nil {
-		last_node = &astproto.Node{}
+		last_node = &astproto.Node{
+			NodeID: &id,
+		}
 	}
 	return last_node
 }

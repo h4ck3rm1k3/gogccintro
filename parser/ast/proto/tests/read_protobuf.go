@@ -36,8 +36,13 @@ func (v *GraphVistor)RecFile(In * astproto.File){
 			nt := j2.GetNodeType()
 			an := j2.GetAttrName()
 			
-			fmt.Printf("%d %#v %s %s %#v %#v\n",i,j,id,t,
-				nt,an)
+			fmt.Printf("off:%d / id:%d type:%s / foff:%d ft:%#v fn:%s\n",
+				i,
+				id,
+				t,
+				i2,
+				nt,
+				an)
 		}
 		
 	}

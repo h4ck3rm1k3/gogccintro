@@ -46,7 +46,8 @@ message FileRef {
 }
 
 message IntAttr {
-	required int32 Value = 1;
+	required int64 LValue = 1;
+	required string Value = 2; // string representation
 }
 
 enum AccessType {
@@ -86,14 +87,19 @@ message OpNodeRef {
 	required int32 NodeId = 2;
 }
 
+message NumberedNodeRef {
+	required int32 Number = 1;
+	required int32 NodeId = 2;
+}
+
 //message NodeAttr {
 //	required string FieldName = 1;
 //	required int32 NodeId = 2;
 //}
 
-message NoteAttr {
-	required string NoteName = 1;
-}
+//message NoteAttr {
+//	required string NoteName = 1;
+//}
 
 enum NodeType {
 	addr_expr =1;
@@ -224,7 +230,7 @@ message Attr {
 //	optional NodeRef BodyAttr=15; body is a standard node ref
 	optional LinkType LinkAttr=16;
 	//optional NodeAttr NodeAttr=22;
-	repeated NoteAttr NoteAttr=17;
+	optional string NoteAttr=17;
 	optional QualType QualAttr=19;
 	optional bool RandomSpec=27;
 	optional SignType SignAttr=20;
@@ -232,6 +238,9 @@ message Attr {
 	optional string StringAttr=25;
 	optional TagType TagAttr=14;
 	optional Spec SpecAttr=28;
+
+	optional NumberedNodeRef NumberedNodeRef =29;
+	
 }
 
 message Node {

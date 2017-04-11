@@ -152,3 +152,17 @@ func Atoi(s string) int32 {
 	}
 	return r
 }
+
+func Atoi64(s string) int64 {
+	var r int64
+	r = -1
+	l,e:=strconv.Atoi(s)
+	if e == nil {
+		r =int64(l)
+	} else {
+		r = -1
+		fmt.Printf("error err:%s input:%s got:%d\n",s,e, l)
+		panic("error converting")
+	}
+	return r
+}

@@ -10,6 +10,20 @@ var OpNumber int32
 
 var NodeType astproto.NodeType
 var NodeNumber int32 // last node number seen
+
+var IntVal  string // large int
+var HexVal string  //  hex values
+
+const (
+	TUnknown = iota 
+	TNodeRef = iota 
+	TInteger = iota
+	THex = iota 
+	TString  = iota 
+)
+var FieldType int32
+
+
 //var Spec speco
 
 type LNodeType int32

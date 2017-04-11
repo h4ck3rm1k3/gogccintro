@@ -104,16 +104,12 @@ NodeType <- < "addr_expr" /
 	NodeType=s
 }
 
-DecimalDigit <- [0-9]
-NonZeroDecimalDigit <- [1-9]
-
-OpNo <- <[0-9]> {
+OpAttr <- "op " <[0-9]> {
     OpNumber = Atoi(buffer[begin:end])
+    FieldName="opn"
+    //fmt.Printf("op check1 %s %d\n", string(buffer[begin:end]), OpNumber)    
 }
 
-OpAttr <- "op " OpNo {
-	FieldName="opn"	
-}
 
 LineNumber <- <Integer> {
    LineNum = Atoi(buffer[begin:end])
@@ -132,29 +128,40 @@ SourceAttr <-  <'srcp'> ':' ws <FileRef > # handled in fileref
 
 IntAttr    <-  <("bases"/"used"/"prec")> ws ':' ws <Integer> ws {
 	// base
-	getNode().AddIntField(FieldName,Atoi(buffer[begin:end]))	
+	getNode().AddIntField(FieldName,buffer[begin:end])
 }
 
-IntAttrLow  <-  <("low" )> ws ':' ws ([\-0-9@xa-h]+) ws {
-	// base
-	    // getNode().AddIntField(FieldName,Atoi(buffer[begin:end]))	
+
+#/0x0|[\-@]?1/
+    
+#IntAttrLow  <-  <("low" )> ws ':' ws ([\-0-9@xa-h]+) ws {
+IntAttrLow  <-  <("low" )> ws ':' ws (HexValue/Node/NegInt/Integer) ws {
+    // getNode().AddLowIntField("low",buffer[begin:end])
+	//fmt.Printf("low %s\n",buffer[begin:end])
+	if FieldType == TNodeRef {
+		getNode().AddNodeRef("low",NodeNumber)
+	} else if FieldType == TInteger {
+		getNode().AddIntField("low",IntVal)	
+	} else if FieldType == THex {
+		getNode().AddHexField("low",HexVal)	
+	} else {
+		fmt.Printf("unkown field type : %s\n",buffer[begin:end])
+		fmt.Printf("unkown field type : %s\n",buffer[begin-30:end+30])
+		//panic("unkown field")
+		getNode().AddHexField("low",buffer[begin:end])	
+	}
+    
 }
 
 IntAttr3    <-  <("high")> ws ':' ws <'-'? Integer> ws {
-
-	getNode().AddIntField(FieldName,Atoi(buffer[begin:end]))	
+    getNode().AddIntField(FieldName,buffer[begin:end])	
 }
-
-IntAttr2    <-  <"algn"> ':' ws <[0-9]+> ws {
-	// algn
-	getNode().AddIntField(FieldName,Atoi(buffer[begin:end]))	
-}
-
 
 Addr <- (DecimalDigit/Hex)+
-Hex <- [a-h]
-AddrAttr   <-  (<"addr"> ws ':' ws <Addr>) {
-	getNode().AddHexField(FieldName,buffer[begin:end])
+
+	AddrAttr   <-  (<"addr:"> ws <Addr>) {
+	// addr :
+	getNode().AddHexField("addr",buffer[begin:end])
 }
 
 TagAttr   <-  ( <"tag"> ws ':' ws <("struct"/"union")>) {
@@ -270,11 +277,11 @@ NodeFieldName   <- < (
 	   "chain" / "bpos" / "size"/"idx"/"val") > {
 
 	       FieldName=buffer[begin:end]
-//    fmt.Printf("set fieldname %s\n",FieldName) 
+    //fmt.Printf("set fieldname %s\n",FieldName) 
    }
 
 NodeAttr   <- ws (NodeFieldName/OpAttr) ws ':' ws < Node >  ws {
-	//fmt.Printf("node ref :'%s'\n",buffer[begin:end])
+    //fmt.Printf("node ref :'%s'\n",buffer[begin:end])
 	//if NodeRefs == nil {
 	//	NodeRefs = make(map [string] int)
 	//}
@@ -294,23 +301,17 @@ SpecValue  <- ws ("spec:")? ws (< ("mutable"/"bitfield"/"pure"/"virt"/"register"
 
 LngtAttr   <- "lngt" ws ':' ws < Integer > ws # skip this for now
 
-
 RandomSpec <-  ws "spec" ws	   {}
 
-SignedIntAttr    <-  "int:"ws < [x0-9\-a-f]+ >   {
-	// int
-	//fmt.Printf("signed check %s\n", string(buffer[0:end]))
-//fmt.Printf("signed check %s\n", string(buffer[begin:end]))
-	getNode().AddIntStringField(FieldName,buffer[begin:end])
-}
-
-OneAttr <- (StringAttr/AddrAttr/SpecValue/NodeAttr/SourceAttr/IntAttr/SignAttr/IntAttr3/IntAttrLow/
+OneAttr <- (StringAttr/SpecValue/NodeAttr/SourceAttr/IntAttr/SignAttr/IntAttr3/IntAttrLow/
 	TagAttr/RandomSpec/
 	BodyAttr/AccsAttr/
 	NoteAttr/
 	LinkAttr/
-	QualAttr/IntAttr2/SignedIntAttr/LngtAttr
-	)
+	QualAttr/IntAttr2/SignedIntAttr/LngtAttr/AddrAttr
+	) {
+FieldType=TUnknown
+}
 Attrs <- ( ws OneAttr )*
 Attr <- ( OneAttr ws Attrs ws )?
 Statement <- ( <Node> ws <NodeType> ws <Attr>) ws  {
@@ -324,21 +325,15 @@ Statement <- ( <Node> ws <NodeType> ws <Attr>) ws  {
 	clearNode()
 }
 
-Node <- '@' <NonZeroDecimalDigit DecimalDigit*>  {
-	//s:=buffer[begin:end]
-	//fmt.Printf("noderef %s\n",s)
-	NodeNumber=Atoi(buffer[begin:end])
-}
-
-Integer <- '0' / NonZeroDecimalDigit DecimalDigit* 
 
 # String value 
 # match a string like this :
 #
 #     strg : blah lngt: 4
 #
-# will not match the string containing "lngt:" in it, so might be a problem with the compliler
-# this won't work
+# will not match the string containing "lngt:" in it, so might be a problem with the compiler files.
+
+# this example won't work:
 #
 #    strg : lngt: lngt: 5
 #
@@ -357,9 +352,54 @@ StringAttr <-  "strg: "
  	{
 // fmt.Printf("found string : bytes %d\n", end - begin)
 //	fmt.Printf("found string : %s\n", buffer[begin:end])
-	getNode().AddStringField(FieldName,buffer[begin:end])
+    getNode().AddStringField(FieldName,buffer[begin:end])
+    FieldType=TString
 }
 
 
 EOF <- !.
 
+#Number
+
+DecimalDigit <- [0-9] {}
+NonZeroDecimalDigit <- [1-9] {}
+Node <- '@' <NonZeroDecimalDigit DecimalDigit*>  {
+	//s:=buffer[begin:end]
+	//fmt.Printf("noderef %s\n",s)
+    NodeNumber=Atoi(buffer[begin:end])
+    FieldType=TNodeRef
+}
+
+PosInt   <- NonZeroDecimalDigit DecimalDigit* {}
+
+Integer <- <'0' / PosInt > {
+    IntVal=buffer[begin:end]
+    FieldType = TInteger
+}
+
+Hex <- [a-h]
+    
+HexValue <- '0x' <(DecimalDigit/Hex)+ > {
+    HexVal = string(buffer[begin:end])		
+    FieldType = THex
+}
+
+NegInt   <- <'-' PosInt> {
+// NegInt 
+    IntVal=buffer[begin:end]
+    FieldType = TInteger
+}
+
+
+SignedIntAttr    <-  "int:" ws (HexValue/NegInt/Integer)    {
+	// int
+	//fmt.Printf("signed check %s\n", string(buffer[0:end]))
+//fmt.Printf("signed check %s\n", string(buffer[begin:end]))
+	getNode().AddIntStringField(FieldName,buffer[begin:end])
+}
+
+IntAttr2    <-  <"algn"> ':' ws <[0-9]+> ws {
+    // algn
+    //fmt.Printf("algn %s\n", string(buffer[begin:end]))
+    getNode().AddIntField("algn",buffer[begin:end])	
+}

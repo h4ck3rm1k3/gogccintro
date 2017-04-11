@@ -4,9 +4,11 @@ import "strconv"
 
 func (t *Node) AddFileRef(file string, line int32 ) {
 	s:=Field_srcp
+	nt:=TuNodeType_NTSourceAttr
 	t.Attrs=append(t.Attrs,
 		&Attr {
 			AttrName: &s,
+			NodeType: &nt,
 			SourceAttr : &FileRef{
 				FileName: &file,
 				LineNumber: &line,
@@ -31,9 +33,11 @@ func (t *Node) AddNodeRef(field string, node int32) {
 				// TODO add field with number
 				var l2 int32
 				l2 = int32(l)
+				nt := TuNodeType_NTNodeAttr
 				t.Attrs=append(t.Attrs,
 					&Attr {
 						AttrName: &s,
+						NodeType: &nt,
 						NumberedNodeRef : &NumberedNodeRef {
 							Number: &l2,
 							NodeId: &node,
@@ -55,9 +59,11 @@ func (t *Node) AddNodeRef(field string, node int32) {
 		}
 	}
 	//int32()
+	nt:=TuNodeType_NTNodeAttr
 	t.Attrs=append(t.Attrs,
 		&Attr {
 			AttrName: &s,
+			NodeType: &nt, //nt:=TuNodeType_NTNodeAttr
 			NodeAttr : &NodeRef{
 				NodeId: &node,
 			},
@@ -69,10 +75,12 @@ func (t *Node) AddIntField(field string, val string) {
 
 	if s, ok := Field_value[field]; ok {
 		s := Field(s)
+		nt:=TuNodeType_NTIntAttr
 		t.Attrs=append(t.Attrs,
 			&Attr {
 				AttrName: &s,
-				IntAttr : &IntAttr{ Value: &val},
+				NodeType: &nt,
+				IntAttr : &IntAttr{ Value: &val },
 			})
 	} else {
 		fmt.Printf("AddIntField(%s,%d)\n",field,val)
@@ -97,33 +105,42 @@ func (t *Node) AddStringField(field string, val string) {
 	s = -1
 	if val, ok := Field_value[field]; ok {
 		s = Field(val)
-	} 
-	t.Attrs=append(t.Attrs, &Attr {	AttrName: &s,	StringAttr: &val })
+	}
+	nt := TuNodeType_NTStringAttr
+	t.Attrs=append(t.Attrs, &Attr {	AttrName: &s,
+		NodeType: &nt,
+		StringAttr: &val })
 }
 
 func (t *Node) AddTag(val TagType) {
-	t.AddGeneric(		"tag",		&Attr {	TagAttr : &val }	)
+	nt := TuNodeType_NTTagAttr
+	t.AddGeneric(		"tag",	&Attr {	NodeType: &nt, TagAttr : &val }	)
 }
 
 func (t *Node) AddAccess(val AccessType) {
-	t.AddGeneric("accs",	&Attr {	Access : &val	}	)
+	nt := TuNodeType_NTSpecValue
+	t.AddGeneric("accs",	&Attr {	NodeType: &nt, Access : &val	}	)
 
 }
 
 func (t *Node) AddQual(val QualType) {
-	t.AddGeneric("qual",&Attr { QualAttr : &val 	}	)
+	nt := TuNodeType_NTQualAttr
+	t.AddGeneric("qual",&Attr { NodeType: &nt, QualAttr : &val 	}	)
 }
 
 func (t *Node) AddSign(val SignType) {
-	t.AddGeneric("sign",		&Attr { SignAttr : &val	})
+	nt := TuNodeType_NTSignAttr
+	t.AddGeneric("sign",		&Attr { NodeType: &nt, SignAttr : &val	})
 }
 
 func (t *Node) AddNote(val string) {
-	t.AddGeneric("note",	&Attr { NoteAttr : &val })
+	nt := TuNodeType_NTNoteAttr
+	t.AddGeneric("note",	&Attr { NodeType: &nt, NoteAttr : &val })
 }
 
 func (t *Node) AddLink(val LinkType) {
-	t.AddGeneric(	"link",		&Attr {	LinkAttr : &val	})
+	nt := TuNodeType_NTLinkAttr
+	t.AddGeneric(	"link",		&Attr {	NodeType: &nt, LinkAttr : &val	})
 }
 
 func (t *Node) AddGeneric(field string, val * Attr) {
@@ -132,6 +149,7 @@ func (t *Node) AddGeneric(field string, val * Attr) {
 		s = Field(val)
 	}
 	val.AttrName=&s
+
 	t.Attrs=append(t.Attrs,val)
 }
 
@@ -151,21 +169,26 @@ func (t *Node) AddOpNodeRef(field string, opn int32, node int32) {
 
 		}
 	}
-	//int32()
+
+	nt := TuNodeType_NTNumberedNodeRef
 	t.Attrs=append(t.Attrs,
 		&Attr {
 			AttrName: &s,
-			NodeAttr : &NodeRef{
+			NodeType: &nt,
+			NumberedNodeRef : &NumberedNodeRef{
 				NodeId: &node,
+				Number : &opn,
 			},
 		})
 }
 
 func (t *Node) AddSpec(spec Spec) {
 	s:=Field_spec
+	nt := TuNodeType_NTSpecValue
 	t.Attrs=append(t.Attrs,
 		&Attr {
 			AttrName: &s,
+			NodeType: &nt,
 			SpecAttr : &spec,
 			})
 }

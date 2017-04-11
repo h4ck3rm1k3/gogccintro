@@ -2,39 +2,38 @@ syntax = 'proto2';
 package github.com.h4ck3rm1k3.gogccintro.parser.ast.proto;
 option go_package = "astproto";
 enum TuNodeType {
-     TUFILE = 0;
-     OpAttr=1;
-//     NTLineNumber=3;
-//     NTFileName=4;
-//     NTFileRef=5;
-     NTSourceAttr=6;
-     NTIntAttr=7;
-     NTIntAttr3=8;
-     NTIntAttr2=9;
-     NTSignedIntAttr=10;
-     NTAddr=11;
-     NTHex=12;
-     NTAddrAttr=13;
-     NTTagAttr=14;
-     NTBodyAttr=15;
-     NTLinkAttr=16;
-     NTNoteAttr=17;
-     NTAccsAttr=18;
-     NTQualAttr=19;
-     NTSignAttr=20;
-     NTNodeName=21;
-     NTNodeAttr=22;
-     NTSpecValue=23;
-     NTLngtAttr=24;
-     NTStringAttr=25;
-     NTRandomSpec=27;
-     NTOneAttr=28;
-     NTAttrs=29;
-     NTAttr=30;
-     NTStatement=31;
-     NTNode=32;
-     NTInteger=33;
-     NTNodeType=34;
+	TUFILE = 0;
+	OpAttr=1;
+	
+	NTSourceAttr=6; // FileRef 
+	NTIntAttr=7;
+	NTIntAttr3=8;
+	NTIntAttr2=9;
+	NTSignedIntAttr=10;
+	NTAddr=11;
+	NTHex=12;
+	NTAddrAttr=13;
+	NTTagAttr=14;
+	NTBodyAttr=15;
+	NTLinkAttr=16;
+	NTNoteAttr=17;
+	NTAccsAttr=18;
+	NTQualAttr=19;
+	NTSignAttr=20;
+	NTNodeName=21;
+	NTNodeAttr=22;
+	NTSpecValue=23;
+	NTLngtAttr=24;
+	NTStringAttr=25;
+	NTRandomSpec=27;
+	NTOneAttr=28;
+	NTAttrs=29;
+	NTAttr=30;
+	NTStatement=31;
+	NTNode=32;
+	NTInteger=33;
+	NTNodeType=34;
+	NTNumberedNodeRef =35;
 }
 
 
@@ -46,7 +45,7 @@ message FileRef {
 }
 
 message IntAttr {
-	required int64 LValue = 1;
+	//required int64 LValue = 1;
 	required string Value = 2; // string representation
 }
 
@@ -215,17 +214,20 @@ enum Spec {
 }
 	
 message Attr {
-	required TuNodeType NodeType =1 ;
-	//required string 
+	required TuNodeType NodeType =1 ; // the type of the node
+	
+
 	required Field AttrName = 2;
 
-	// and one of these values
-
+	// and one of these values, dependant on the type of node
 	optional FileRef SourceAttr=6;
-	optional IntAttr IntAttr=7;
+	optional IntAttr IntAttr=7; // NTIntAttr
 	optional AccessType Access=18; // no attribute name needed
 	optional string AddrAttr=13;
-	optional NodeRef NodeAttr=22; // any reference to a node
+
+	optional NodeRef NodeAttr=22; //NTNodeAttr any reference to a node
+	optional NumberedNodeRef NumberedNodeRef =35;
+	
 	optional OpNodeRef NodeOpAttr=26;
 //	optional NodeRef BodyAttr=15; body is a standard node ref
 	optional LinkType LinkAttr=16;
@@ -239,7 +241,7 @@ message Attr {
 	optional TagType TagAttr=14;
 	optional Spec SpecAttr=28;
 
-	optional NumberedNodeRef NumberedNodeRef =29;
+
 	
 }
 

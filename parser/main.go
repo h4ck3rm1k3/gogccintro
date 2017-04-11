@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-		"strconv"
+	"github.com/golang/protobuf/proto"
+	"strconv"
 	//"filepath"
 	"strings"
 	filepath "path"
@@ -10,7 +11,7 @@ import (
 	"os"
 	"io"
 	"io/ioutil"
-	//"encoding/json"	
+	"encoding/json"	
 )
 
 
@@ -86,7 +87,16 @@ func main() {
 			//fmt.Printf("got %#v\n",pgot)
 		}
 		//fmt.Printf("File %s\n",file.String())
-		//body, _ := json.Marshal(file)
+		body, _ := json.Marshal(file)
+		err = ioutil.WriteFile(fmt.Sprintf("%s.json",cfile), body, 0644)
+		if err != nil { panic (err); }
+
+		data, err := proto.Marshal(&file)
+		if err != nil {
+			log.Fatal("marshaling error: ", err)
+		}
+		err = ioutil.WriteFile(fmt.Sprintf("%s.proto",cfile), data, 0644)
+		if err != nil { panic (err); }
 		//fmt.Printf("File : %s\n",body)
 
 		resetFile()

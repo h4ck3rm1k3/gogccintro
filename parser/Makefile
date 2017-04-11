@@ -26,5 +26,5 @@ example2 : test2.peg.go main.go
 	GOPATH=/home/mdupont/gocode/ go build 
 
 peg: 
-	for x in test_*.peg; do echo $(x); ~/gocode/bin/peg  -inline -switch  $(x); done
+	
 

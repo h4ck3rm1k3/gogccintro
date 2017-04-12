@@ -31,7 +31,6 @@ func (t *Node) AddNodeRef(field string, node int32) {
 			l, e := strconv.Atoi(field)
 			if e == nil {
 				//fmt.Printf("numeric field :%d\n",l)
-				// TODO add field with number
 				var l2 int32
 				l2 = int32(l)
 				nt := TuNodeType_NTNumberedNodeRef

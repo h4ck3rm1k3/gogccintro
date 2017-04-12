@@ -16,7 +16,7 @@ type TuFileInterface interface {
 
 func (t* TUFile) LookupGccNode(id int64) * models.GccTuParserNode {
 	//fmt.Printf("lookup %s\n", id)
-	if v,ok := t.Tree.Nodes[int(id)]; ok { ///TODO
+	if v,ok := t.Tree.Nodes[int(id)]; ok {
 		return v
 	} else {
 		fmt.Printf("did not find id %s\n", id)
@@ -453,7 +453,6 @@ func (t * TUFile) CreateRefTypeInterface(id sql.NullInt64 ) TypeInterface {
 				return nil
 			}
 			//switch on the type
-			//fmt.Printf("TODO switch on type %s",v)
 			nt := v.NodeType
 			switch (nt) {
 			case "pointer_type":
@@ -516,7 +515,6 @@ func (t * TUFile) CreateRefNameInterface(id sql.NullInt64) NameInterface {
 			}
 			var r NameInterface
 			//switch on the type
-			//fmt.Printf("TODO switch on type %s",v)
 				switch (v.NodeType) {
 				case "identifier_node":
 					r= t.CreateNodeTypeIdentifierNode(v)

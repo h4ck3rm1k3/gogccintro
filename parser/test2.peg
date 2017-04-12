@@ -136,8 +136,6 @@ IntAttr    <-  <("bases"/"used"/"prec")> ws ':' ws <Integer> ws {
     
 #IntAttrLow  <-  <("low" )> ws ':' ws ([\-0-9@xa-h]+) ws {
 IntAttrLow  <-  <("low" )> ws ':' ws (HexValue/Node/NegInt/Integer) ws {
-    // getNode().AddLowIntField("low",buffer[begin:end])
-	//fmt.Printf("low %s\n",buffer[begin:end])
 	if FieldType == TNodeRef {
 		getNode().AddNodeRef("low",NodeNumber)
 	} else if FieldType == TInteger {
@@ -243,49 +241,12 @@ SignAttr   <-  (<"sign"> ws ':' ws <("signed"/"unsigned")>) {
 }
 
 # field that references a node
-NodeFieldName   <- < (
-	   "retn" / "prms" /
-	   "args" /
-	   "base" /
-	   "orig" /
-	   "OP0" /	
-	   "argt" /
-	   "decl" /
-	   	   "dcls" /	
-	   "expr"/
-	   "fncs" /
-	   "fn"/
-	   Integer /
-    "cnst" /
-    "cond" /
-	   "vars" /
-	   "vfld" /
-	   "valu"/ "chan" / "purp" /
-	   "refd" /
-	   "flds" / 
-	   "ptd" /
-	   "cls" /
-	   "csts" /
-	   "labl" /
-	   "type"/ "unql" /
-	   "min"/"max"/
-	   "binf"/
-		"name"/"mngl"/
-		"type"/ "scpe"/
-	   "domn"/ "elts" /
-	   "init" /
-	   "chain" / "bpos" / "size"/"idx"/"val") > {
-
+NodeFieldName   <- < ( "retn" / "prms" / "args" /  "base" / "orig" / "OP0" / "argt" / "decl" / "dcls" / "expr" / "fncs" / "fn"/ "cnst" / "cond" / "vars" / "vfld" / "valu"/ "chan" / "purp" / "refd" /	"flds" / "ptd" / "cls" / "csts" /  "labl" / "type"/ "unql" / "min"/"max"/ "binf"/ "name"/"mngl"/"type"/ "scpe"/ "domn"/ "elts" / "init" /  "chain" / "bpos" / "size"/"idx"/"val" /  Integer ) > {
 	       FieldName=buffer[begin:end]
-    //fmt.Printf("set fieldname %s\n",FieldName) 
+	//fmt.Printf("set fieldname %s\n",FieldName) 
    }
 
 NodeAttr   <- ws (NodeFieldName/OpAttr) ws ':' ws < Node >  ws {
-    //fmt.Printf("node ref :'%s'\n",buffer[begin:end])
-	//if NodeRefs == nil {
-	//	NodeRefs = make(map [string] int)
-	//}
-	//NodeRefs[FieldName]=NodeNumber
 	if FieldName == "opn" {
 		getNode().AddOpNodeRef(FieldName,OpNumber,NodeNumber)
 	}else {
@@ -314,12 +275,10 @@ FieldType=TUnknown
 }
 Attrs <- ( ws OneAttr )*
 Attr <- ( OneAttr ws Attrs ws )?
-Statement <- ( <Node> ws <NodeType> ws <Attr>) ws  {
-	//fmt.Printf("stmt %#v\n",NodeRefs)
-
+Statement <- ( <PNode> ws <NodeType> ws <Attr>) ws  {
 	// clear it
-	//NodeRefs = make(map [string] int)
 	n := getNode()
+	//fmt.Printf("stmt %#v\n",n)
 	nt := NodeType // copy it or it will get changed
 	n.NodeType=&nt
 	file.AddNode(n)
@@ -364,11 +323,16 @@ EOF <- !.
 
 DecimalDigit <- [0-9] {}
 NonZeroDecimalDigit <- [1-9] {}
+
 Node <- '@' <NonZeroDecimalDigit DecimalDigit*>  {
 	//s:=buffer[begin:end]
 	//fmt.Printf("noderef %s\n",s)
     NodeNumber=Atoi(buffer[begin:end])
     FieldType=TNodeRef
+}
+
+PNode <- Node {
+    MainNodeNumber=NodeNumber
 }
 
 PosInt   <- NonZeroDecimalDigit DecimalDigit* {}

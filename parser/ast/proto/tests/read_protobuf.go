@@ -2,59 +2,16 @@ package main
 
 import (
 	"fmt"
-	"os"
-	
+	"os"	
 	"io/ioutil"
 	"github.com/golang/protobuf/proto"
-
 	"github.com/gonum/graph/simple"
-	
-	//"github.com/h4ck3rm1k3/gogccintro/parser/ast/proto"
 	"../"
 )
 
-type GraphVistor struct {
-	//
-	Out * simple.DirectedGraph
-}
 
-func (v *GraphVistor) RecAttr(In * astproto.Attr){
+func ReadProto(filename string ) (* astproto.File) {
 
-}
-
-func (v *GraphVistor) RecNode(In * astproto.Node){
-}
-
-func (v *GraphVistor)RecFile(In * astproto.File){
-	for i,j := range In.GetNodes() {
-		//v.RecNode(j)
-		id := j.GetNodeID()
-		t  := j.GetNodeType()
-		
-		for i2,j2 := range j.GetAttrs() {
-			//	v.RecAttr(j)
-			nt := j2.GetNodeType()
-			an := j2.GetAttrName()
-			
-			fmt.Printf("off:%d / id:%d type:%s / foff:%d ft:%#v fn:%s\n",
-				i,
-				id,
-				t,
-				i2,
-				nt,
-				an)
-		}
-		
-	}
-}
-
-func main() {
-	if len(os.Args) < 2 {
-		name := os.Args[0]
-		fmt.Printf("Usage: %v \"Test File\"\n", name)
-		os.Exit(1)
-	}
-	filename := os.Args[1]
 	data, err := ioutil.ReadFile(filename)
 
 	if err != nil {panic(err)}
@@ -62,12 +19,38 @@ func main() {
 	err = proto.Unmarshal(data, newTest)
 
 	if err != nil {	panic(fmt.Sprintf("unmarshaling error: %s", err))}
-	
-	// create a graph
-	g  := &simple.DirectedGraph{}
+	return newTest
+}
+type Graph interface {
+	RecFile(* astproto.File)
+}
+func main() {
+	if len(os.Args) < 2 {
+		name := os.Args[0]
+		fmt.Printf("Usage: %v \"Test File\"\n", name)
+		os.Exit(1)
+	}
 
-	v:=GraphVistor{	Out:g }
-	v.RecFile(newTest)
+	filename := os.Args[1]
+	otype := os.Args[2]
+
+	fmt.Printf("type: %s\n", otype)
+	
+	newTest := ReadProto(filename)
+	//g  := &simple.DirectedGraph{}
+	g := simple.NewDirectedGraph(0, 3000)
+
+	var v Graph
+	if otype == "print" {
+		// create a graph
+		v=&GraphVistor{	Out:g }
+	} else if otype == "create" {
+		v=&GraphCreator{	Out:g }
+	}else {
+		panic("unknown")
+	}
+	
+	v.RecFile(newTest)	
 	//n0 := Node(g.NewNodeID())
 	//g.AddNode(n0)
 	

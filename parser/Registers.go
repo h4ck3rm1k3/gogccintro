@@ -10,6 +10,7 @@ var OpNumber int32
 
 var NodeType astproto.NodeType
 var NodeNumber int32 // last node number seen
+var MainNodeNumber int32 // node number of the statement
 
 var IntVal  string // large int
 var HexVal string  //  hex values
@@ -35,7 +36,7 @@ var last_node *astproto.Node
 var file astproto.File
 
 func getNode() (*astproto.Node) {
-	id :=NodeNumber
+	id :=MainNodeNumber
 	if last_node == nil {
 		last_node = &astproto.Node{
 			NodeID: &id,
@@ -46,8 +47,6 @@ func getNode() (*astproto.Node) {
 
 func clearNode() {
 	// when last node is finished clear it
-	file.AddNode(last_node)
-	
 	last_node = nil
 }
 

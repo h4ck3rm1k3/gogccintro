@@ -199,6 +199,7 @@ enum Field {
 	vfld =32;
 	OP0 =23;
 	cond = 63;
+	rslt = 64;
 	// all indexed after this
 	OPN=101;
 //	low=6;

@@ -1,7 +1,19 @@
-test : example2
-	./parser ~/experiments/gcc_py_introspector/tests
-	./parser ~/experiments/gcc_py_introspector/tests2/
-	./parser ~/experiments/lsof/
+# t4: t
+# 	~/gocode/bin/peg  -inline -switch  t4.peg
+
+# t3: t
+# 	~/gocode/bin/peg  -inline -switch  t3.peg
+
+test : parser
+	./parser ~/experiments/gogccintro/parser/tests/ > tests.txt
+	./parser ~/experiments/gcc-1/build/gcc/ > gcc.txt
+
+#./gcc/tree-dump.ii
+#mdupont@debian-build-speed:~/experiments/gcc-1/build$ grep "strg: lngt" ./gcc/tree-dump.c.001t.tu
+
+#	./parser ~/experiments/gcc_py_introspector/tests
+#	./parser ~/experiments/gcc_py_introspector/tests2/
+#	./parser ~/experiments/lsof/
 
 debug: test.peg
 	~/gocode/bin/pigeon -debug test.peg 
@@ -22,9 +34,6 @@ rtest : example
 test2.peg.go: test2.peg
 	~/gocode/bin/peg  -inline -switch  test2.peg
 
-example2 : test2.peg.go main.go
+parser :  main.go Parser.go Fields.go
 	GOPATH=/home/mdupont/gocode/ go build 
-
-peg: 
-	
 

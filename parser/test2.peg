@@ -6,100 +6,17 @@ type GccNode Peg {
 }
 TUFILE <- ws Statement+ EOF
 
-ws <- [ \t\r\n]*
+ws <- [ \t\r\n]* {}
+ws2 <- [ ] {}
+ws3 <- " "+ "\n" " "+ {} 
+                         
 
-NodeType <- < "addr_expr" /
-"array_ref"/
-"array_type" /
-"asm_expr" /
-"bind_expr"/
-"binfo" /
-"bit_and_expr"/
-"bit_field_ref"/
-"bit_ior_expr"/
-"bit_not_expr"/
-"bit_xor_expr"/
-"boolean_type" /
-"call_expr"/
-"case_label_expr"/
-"complex_type"/
-"component_ref" /
-"component_ref"/
-"compound_expr"/
-"cond_expr"/
-"const_decl"/
-"constructor" /
-"convert_expr"/
-"decl_expr"/
-"enumeral_type" /
-"eq_expr"/
-"error_mark" /
-"field_decl" /
-"function_decl" /
-"function_type" /
-"ge_expr"/
-"goto_expr"/
-"gt_expr"/
-"identifier_node" /
-"indirect_ref"/
-"integer_cst" /
-"integer_type"/
-"label_decl"/
-"label_expr"/
-"le_expr"/
-"lshift_expr"/
-"lt_expr"/
-"mem_ref"/
-"minus_expr"/
-"modify_expr"/
-"mult_expr"/
-"namespace_decl"/
-"ne_expr"/
-"negate_expr"/
-"nop_expr"/
-"offset_type" /
-"parm_decl"/
-"plus_expr"/
-"pointer_bounds_type"/
-"pointer_plus_expr"/
-"pointer_type" /
-"postdecrement_expr"/
-"postincrement_expr"/
-"predecrement_expr"/
-"predict_expr"/
-"preincrement_expr"/
-"real_type"/
-"record_type" /
-"reference_type" /
-"result_decl" /
-"return_expr"/
-"rshift_expr"/
-"save_expr" /
-"save_expr"/
-"statement_list"/
-"string_cst" /
-"string_cst"/
-"switch_expr"/
-"target_expr"/
-"template_type_parm" /
-"translation_unit_decl" /
-"tree_list"/
-"trunc_div_expr"/
-"trunc_mod_expr"/
-"truth_and_expr"/
-"truth_andif_expr"/
-"truth_or_expr"/
-"truth_orif_expr"/
-"type_decl" /
-"type_decl"/
-"typename_type"/
-"union_type"/
-"var_decl" /
-"var_decl"/
-"vector_type"/
-"void_type"
+OtherType <- <[a-z_]+> {
+	fmt.Printf("Other Type: %s\n",buffer[begin:end])
+}
 
-> {
+
+NodeType <- OtherType  {
 	s := astproto.NodeType(astproto.NodeType_value[buffer[begin:end]])
 	NodeType=s
 }
@@ -110,12 +27,18 @@ OpAttr <- "op " <[0-9]> {
     //fmt.Printf("op check1 %s %d\n", string(buffer[begin:end]), OpNumber)    
 }
 
+OpAttr2 <- <[0-9]> {
+    OpNumber = Atoi(buffer[begin:end])
+    FieldName="opn"
+    //fmt.Printf("op check1 %s %d\n", string(buffer[begin:end]), OpNumber)    
+}
+
 
 LineNumber <- <Integer> {
    LineNum = Atoi(buffer[begin:end])
 }
 
-FileName <- < ( [\-A-Za-z0-9_]+ ('.' [A-Za-z_]+)* / "<built-in>") >{
+FileName <- < ( [+\-A-Za-z0-9_]+ ('.' [A-Za-z_]+)* / "<built-in>") >{
 	FileName=string(buffer[begin:end])
 }
 
@@ -126,7 +49,11 @@ FileRef <- ('_'? < FileName> ) ':' <LineNumber> ws {
 
 SourceAttr <-  <'srcp'> ':' ws <FileRef > # handled in fileref
 
-IntAttr    <-  <("bases"/"used"/"prec")> ws ':' ws <Integer> ws {
+LangAttr <-  <'lang'> ':' ws "C" {
+	getNode().AddStringField("lang", "C")
+}
+
+IntAttr    <-  <("line"/"bases"/"used"/"ctor"/"prec")> ws ':' ws <Integer> ws {
 	// base
 	getNode().AddIntField(FieldName,buffer[begin:end])
 }
@@ -174,58 +101,23 @@ LinkAttr <- ( <"link"> ws ':' ws <("extern"/"static")>) {
 	getNode().AddLink(astproto.LinkType(astproto.LinkType_value[buffer[begin:end]]))
 }
 
-NoteAttr <- <"note"> ws ':' ws <("artificial"
-/"member"/"ptrmem"/
-"operator" ws (
-"andassign"/
-"and" /
-"assign"/
-"call"/
-"delete" / 
-"deref"/
-"divassign" /
-"div" /
-"eq"/
-"ge" /
-"ge"/
-"gt"/
-"land"/
-"le"/
-"lnot"/
-"lor"/
-"lshiftassign" / 
-"lshift"/
-"lt"/
-"minusassign" / 
-"minus" / 
-"multassign" / 
-"mult" / 
-"neg" / 
-"new" /
-"ne"/
-"not" / 
-"orassign" / 
-"or"/
-"plusassign"/
-"plus" / 
-"postdec" / 
-"postinc" /
-"pos" /
-"predec" / 
-"preinc"/
-"ref" / 
-"rshiftassign" /
-"rshift"/
-"subs" / 
-"vecdelete" / 
-"vecnew" / 
-"xorassign" /
-"xor"/
-)?
+#OpArgs <-  
+#				"operator " ([ \n]+) (OpArgs)?/
 
-/"pseudo tmpl"
-/"destructor"
-)> {
+NoteAttr <-
+	(
+	(
+		<"note"> ws ':' ws <(
+			"artificial" /
+				"ptrmem"/
+				"constructor" /
+				"conversion" /
+				"pseudo tmpl"/
+				"destructor"	
+		)>
+	)
+) ws
+	{
 	getNode().AddNote(buffer[begin:end])
 }
 	
@@ -240,13 +132,18 @@ SignAttr   <-  (<"sign"> ws ':' ws <("signed"/"unsigned")>) {
 	getNode().AddSign(astproto.SignType(astproto.SignType_value[buffer[begin:end]]))	
 }
 
+OtherField <- <[a-z]+> {
+	fmt.Printf("Other Field: %s\n",buffer[begin:end])
+}
+
+
 # field that references a node
-NodeFieldName   <- < ( "retn" / "prms" / "args" /  "base" / "orig" / "OP0" / "argt" / "decl" / "dcls" / "expr" / "fncs" / "fn"/ "cnst" / "cond" / "vars" / "vfld" / "valu"/ "chan" / "purp" / "refd" /	"flds" / "ptd" / "cls" / "csts" /  "labl" / "type"/ "unql" / "min"/"max"/ "binf"/ "name"/"mngl"/"type"/ "scpe"/ "domn"/ "elts" / "init" /  "chain" / "bpos" / "size"/"idx"/"val" /  Integer ) > {
+NodeFieldName   <- < ( "retn" / "prms" / "args" /  "base" / "orig" / "OP0" / "argt" / "decl" / "dcls" / "expr" / "fncs" / "fn"/ "cnst" / "cond" / "vars" / "vfld" / "valu"/ "chan" / "purp" / "refd" /	"flds" / "clas" / "ptd" / "cls" / "csts" /  "labl" / "type"/ "unql" / "min"/"max"/ "binf"/ "name"/"mngl"/"type"/ "scpe"/ "domn"/ "elts" / "init" / "rslt" /"chain" / "bpos" / "size"/"idx"/"val" /  Integer ) > {
 	       FieldName=buffer[begin:end]
 	//fmt.Printf("set fieldname %s\n",FieldName) 
    }
 
-NodeAttr   <- ws (NodeFieldName/OpAttr) ws ':' ws < Node >  ws {
+NodeAttr   <- ws (NodeFieldName/OpAttr/OpAttr2/OtherField) ws ':' ws < Node >  ws {
 	if FieldName == "opn" {
 		getNode().AddOpNodeRef(FieldName,OpNumber,NodeNumber)
 	}else {
@@ -267,7 +164,7 @@ RandomSpec <-  ws "spec" ws	   {}
 OneAttr <- (StringAttr/SpecValue/NodeAttr/SourceAttr/IntAttr/SignAttr/IntAttr3/IntAttrLow/
 	TagAttr/RandomSpec/
 	BodyAttr/AccsAttr/
-	NoteAttr/
+	NoteAttr/LangAttr/
 	LinkAttr/
 	QualAttr/IntAttr2/SignedIntAttr/LngtAttr/AddrAttr
 	) {

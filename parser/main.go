@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/golang/protobuf/proto"
+	//"github.com/golang/protobuf/proto"
 	"strconv"
 	//"filepath"
 	"strings"
@@ -11,14 +11,14 @@ import (
 	"os"
 	"io"
 	"io/ioutil"
-	"encoding/json"	
+	//"encoding/json"	
 )
 
 
 
 
-func Parse2(filename string, b string) (*GccNode, error){
-	calc := &GccNode{Buffer: b}
+func Parse2(filename string, b string) (*GccNodeTest, error){
+	calc := &GccNodeTest{Buffer: b}
 	calc.Init()
 	if err := calc.Parse(); err != nil {
 		log.Fatal(err)
@@ -26,7 +26,7 @@ func Parse2(filename string, b string) (*GccNode, error){
 	return calc,nil
 }
 
-func ParseReader2(filename string, r io.Reader) (*GccNode, error) {
+func ParseReader2(filename string, r io.Reader) (*GccNodeTest, error) {
 	b, err := ioutil.ReadAll(r)
 	if err != nil {
 		return nil, err
@@ -35,7 +35,7 @@ func ParseReader2(filename string, r io.Reader) (*GccNode, error) {
 	return Parse2(filename, string(b))
 }
 
-func ParseFile2(filename string) (*GccNode, error) {
+func ParseFile2(filename string) (*GccNodeTest, error) {
 	f, err := os.Open(filename)
 	if err != nil {
 		return nil, err
@@ -44,64 +44,6 @@ func ParseFile2(filename string) (*GccNode, error) {
 	return ParseReader2(filename, f)
 }
 
-func main() {
-
-
-	//func TestOne(t *testing.T) {
-	if len(os.Args) < 2 {
-		name := os.Args[0]
-		fmt.Printf("Usage: %v \"Test Directory\"\n", name)
-		os.Exit(1)
-	}
-	dir := os.Args[1]
-	
-	files := testTUFiles(dir)
-	for _, cfile := range files {
-		
-		
-		//pgot, err := ParseFile(file,Debug(true))
-		os.Remove("file.tu")
-		os.Symlink(cfile, "file.tu")
-		tree, err := ParseFile2(cfile)
-		// pgot
-
-		
-		if err != nil {
-			fmt.Printf("In %s\n",cfile)
-			fmt.Printf("err %s\n",err)
-			//t.Errorf("%s: pigeon.ParseFile: %v", file, err)
-			//_, err := ParseFile2(file)
-
-			//fmt.Printf("err %s\n",err)
-			continue
-		} else {
-			fmt.Printf("OK %s\n",cfile)
-
-			//fmt.Printf("syntax tree\n")
-			//tree.PrintSyntaxTree();
-			file.Filename = &cfile
-			//fmt.Printf("exec\n")
-			tree.Execute();
-			
-			//fmt.Printf("tokens: %#v\n",tree.Tokens())
-			//fmt.Printf("got %#v\n",pgot)
-		}
-		//fmt.Printf("File %s\n",file.String())
-		body, _ := json.Marshal(file)
-		err = ioutil.WriteFile(fmt.Sprintf("%s.json",cfile), body, 0644)
-		if err != nil { panic (err); }
-
-		data, err := proto.Marshal(&file)
-		if err != nil {
-			log.Fatal("marshaling error: ", err)
-		}
-		err = ioutil.WriteFile(fmt.Sprintf("%s.proto",cfile), data, 0644)
-		if err != nil { panic (err); }
-		//fmt.Printf("File : %s\n",body)
-
-		resetFile()
-	}
-}
 
 func testTUFiles(rootDir string) []string {
 //	const rootDir = "/home/mdupont/experiments/gcc_py_introspector/tests"
@@ -175,4 +117,64 @@ func Atoi64(s string) int64 {
 		panic("error converting")
 	}
 	return r
+}
+
+
+func main() {
+
+
+	//func TestOne(t *testing.T) {
+	if len(os.Args) < 2 {
+		name := os.Args[0]
+		fmt.Printf("Usage: %v \"Test Directory\"\n", name)
+		os.Exit(1)
+	}
+	dir := os.Args[1]
+	
+	files := testTUFiles(dir)
+	for _, cfile := range files {
+		
+		
+		//pgot, err := ParseFile(file,Debug(true))
+		os.Remove("file.tu")
+		os.Symlink(cfile, "file.tu")
+		tree, err := ParseFile2(cfile)
+		// pgot
+
+		
+		if err != nil {
+			fmt.Printf("In %s\n",cfile)
+			fmt.Printf("err %s\n",err)
+			//t.Errorf("%s: pigeon.ParseFile: %v", file, err)
+			//_, err := ParseFile2(file)
+
+			//fmt.Printf("err %s\n",err)
+			continue
+		} else {
+			fmt.Printf("OK %s\n",cfile)
+
+			//fmt.Printf("syntax tree\n")
+			//tree.PrintSyntaxTree();
+			file.Filename = &cfile
+			//fmt.Printf("exec\n")
+			tree.Execute();
+			tree.Report();
+			//fmt.Printf("tokens: %#v\n",tree.Tokens())
+			//fmt.Printf("got %#v\n",pgot)
+		}
+		//fmt.Printf("File %s\n",file.String())
+		//body, _ := json.Marshal(file)
+		//err = ioutil.WriteFile(fmt.Sprintf("%s.json",cfile), body, 0644)
+		//if err != nil { panic (err); }
+
+		//data, err := proto.Marshal(&file)
+		//if err != nil {
+		//log.Fatal("marshaling error: ", err)
+		//}
+		//err = ioutil.WriteFile(fmt.Sprintf("%s.proto",cfile), data, 0644)
+		//if err != nil { panic (err); }
+		//fmt.Printf("File : %s\n",body)
+
+		resetFile()
+	}
 }

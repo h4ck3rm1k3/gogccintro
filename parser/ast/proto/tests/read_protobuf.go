@@ -34,23 +34,31 @@ func main() {
 	filename := os.Args[1]
 	otype := os.Args[2]
 
-	fmt.Printf("type: %s\n", otype)
+
 	
 	newTest := ReadProto(filename)
 	//g  := &simple.DirectedGraph{}
-	g := simple.NewDirectedGraph(0, 3000)
+	g := simple.NewDirectedGraph(-1, 0)
 
 	var v Graph
 	if otype == "print" {
+		fmt.Printf("print %s\n", otype)
 		// create a graph
 		v=&GraphVistor{	Out:g }
 	} else if otype == "create" {
+		fmt.Printf("create: %s\n", otype)
 		v=&GraphCreator{	Out:g }
 	}else {
 		panic("unknown")
 	}
 	
-	v.RecFile(newTest)	
+	v.RecFile(newTest)
+
+	// fmt.Printf("create: %s\n", g)
+	// fmt.Printf("nodes: %s\n", g.Nodes())
+	// fmt.Printf("edges: %s\n", g.Edges())
+	
+	Report(g)
 	//n0 := Node(g.NewNodeID())
 	//g.AddNode(n0)
 	

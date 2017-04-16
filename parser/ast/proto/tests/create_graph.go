@@ -1,6 +1,7 @@
 package main
 
 import (
+
 	//"fmt"
 	//"os"	
 	//"io/ioutil"
@@ -15,11 +16,42 @@ type GraphCreator struct {
 }
 
 func (v *GraphCreator)Edge(from int32, to int32, edge int){
+
+	// max := int32(5)
+	
+	// if from > max {
+	// 	return
+	// }
+
+	
+	// if to > max {
+	// 	return
+	// }
+	
+	if edge == int(astproto.Field_chain) {
+		// skip this
+		return
+	}
+
+	f:= simple.Node(from)
+	t:= simple.Node(to)
+	e:=float64(edge)
+
+	// debug
+	//fmt.Printf("edge to %d from %d edge Create %f:%s \n",t,f,e,		astproto.Field_name[int32(e)])
+	
 	v.Out.SetEdge(
 		simple.Edge{
-			F: simple.Node(from),
-			T: simple.Node(to),
-			W: float64(edge)})
+			F: f,
+			T: t,
+			W: e})
+
+//	fmt.Printf("create: %#v\n", v.Out)
+//	fmt.Printf("nodes: %#v\n", v.Out.Nodes())
+//	fmt.Printf("edges: %#v\n", v.Out.Edges())
+
+//	Report(v.Out)
+		
 }
 
 func (v *GraphCreator)RecFile(In * astproto.File){

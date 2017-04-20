@@ -14,34 +14,31 @@ import (
 	//"encoding/json"	
 )
 
-
-
-
-func Parse2(filename string, b string) (*GccNodeTest, error){
+func Parse2(filename string, b string,args*ParserGlobal) (*GccNodeTest, error){
 	calc := &GccNodeTest{Buffer: b}
-	calc.Init()
+	calc.Init(filename, args)
 	if err := calc.Parse(); err != nil {
 		log.Fatal(err)
 	}
 	return calc,nil
 }
 
-func ParseReader2(filename string, r io.Reader) (*GccNodeTest, error) {
+func ParseReader2(filename string, r io.Reader,args*ParserGlobal) (*GccNodeTest, error) {
 	b, err := ioutil.ReadAll(r)
 	if err != nil {
 		return nil, err
 	}
 
-	return Parse2(filename, string(b))
+	return Parse2(filename, string(b),args)
 }
 
-func ParseFile2(filename string) (*GccNodeTest, error) {
+func ParseFile2(filename string,args*ParserGlobal) (*GccNodeTest, error) {
 	f, err := os.Open(filename)
 	if err != nil {
 		return nil, err
 	}
 	defer f.Close()
-	return ParseReader2(filename, f)
+	return ParseReader2(filename, f, args)
 }
 
 
@@ -122,7 +119,7 @@ func Atoi64(s string) int64 {
 
 func main() {
 
-
+	args := NewParser()	
 	//func TestOne(t *testing.T) {
 	if len(os.Args) < 2 {
 		name := os.Args[0]
@@ -138,7 +135,7 @@ func main() {
 		//pgot, err := ParseFile(file,Debug(true))
 		os.Remove("file.tu")
 		os.Symlink(cfile, "file.tu")
-		tree, err := ParseFile2(cfile)
+		tree, err := ParseFile2(cfile,args)
 		// pgot
 
 		
@@ -158,7 +155,7 @@ func main() {
 			file.Filename = &cfile
 			//fmt.Printf("exec\n")
 			tree.Execute();
-			tree.Report();
+//			tree.Report();
 			//fmt.Printf("tokens: %#v\n",tree.Tokens())
 			//fmt.Printf("got %#v\n",pgot)
 		}
@@ -177,4 +174,8 @@ func main() {
 
 		resetFile()
 	}
+	for i,_ := range(args.Attrnames) {
+	 	fmt.Printf("attrnames %s\n",i)
+	}
+
 }

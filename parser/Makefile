@@ -5,8 +5,8 @@
 # 	~/gocode/bin/peg  -inline -switch  t3.peg
 
 test : parser
-	./parser ~/experiments/gogccintro/parser/tests/ > tests.txt
-	./parser ~/experiments/gcc-1/build/gcc/ > gcc.txt
+	./parser ~/experiments/gogccintro/parser/tests/ 
+	./parser ~/experiments/gcc-1/build/gcc/ | tee gcc.txt
 
 #./gcc/tree-dump.ii
 #mdupont@debian-build-speed:~/experiments/gcc-1/build$ grep "strg: lngt" ./gcc/tree-dump.c.001t.tu
@@ -34,6 +34,6 @@ rtest : example
 test2.peg.go: test2.peg
 	~/gocode/bin/peg  -inline -switch  test2.peg
 
-parser :  main.go Parser.go Fields.go
+parser :  main.go Parser.go Fields.go Trie.go
 	GOPATH=/home/mdupont/gocode/ go build 
 

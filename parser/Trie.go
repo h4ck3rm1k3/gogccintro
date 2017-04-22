@@ -1,47 +1,58 @@
 package main;
 
 import (
-	"github.com/anknown/ahocorasick"
-	"bytes"
+	//"github.com/anknown/ahocorasick"
+	//"github.com/cloudflare/ahocorasick"
+	"github.com/derekparker/trie"
+	//"bytes"
 	"fmt"
 )
 
 type Machine struct {
-	Machine *goahocorasick.Machine
+	Machine *trie.Trie
+	Dict[] string
 	MaxLen int
 }
 
 //type [][]rune DictType
 
 func GenericTrieFields(
-	dict [][]rune,
+	dict []string,
 	maxlen int,
 ) (*Machine){
-	m := new(goahocorasick.Machine)
-	if err := m.Build(dict); err != nil {
-		fmt.Println(err)
-		return nil
+	//fmt.Printf("Build %s", dict)
+	m :=  trie.New()
+	for _,x := range(dict){
+		m.Add(x,1)
 	}
 	return &Machine{
 		Machine: m,
+		Dict: dict,
 		MaxLen: maxlen,
 	}
-
 }
 
 func NewTrieFields(in []string) (*Machine){
-	dict := [][]rune{}
+	dict := []string{}
 	maxlen := 0
 	// process the fields
 	for _,l := range(in) {
 		ln := len(l)
 		if ln > maxlen {
 			maxlen = ln
-		}		
+		}
+
 		if len(l) == 3 {
-			dict = append(dict, bytes.Runes( []byte(l + " :")))
-		} else if len(l) == 4 {
-			dict = append(dict, bytes.Runes( []byte(l + ":")))
+			//fmt.Printf("adding2 %s\n", l + " :")
+			dict = append(dict, l + " :")
+		} else if len(l) == 2 {
+			//fmt.Printf("adding3 %s\n", l + "  :")
+			dict = append(dict, l + "  :")
+		} else if len(l) >= 4 {
+			//fmt.Printf("adding2 %s\n", l + ":")
+			dict = append(dict, l + ":")
+		} else {
+			panic(l)
 		}
 	}
 	return GenericTrieFields(dict, maxlen)
@@ -49,13 +60,35 @@ func NewTrieFields(in []string) (*Machine){
 
 func NewTrie(in []string) (*Machine){
 	maxlen := 0
-	dict := [][]rune{}
+	dict := []string{}
+
 	for _,l := range(in) {
 		ln := len(l)
 		if ln > maxlen {
 			maxlen = ln
 		}
-		dict = append(dict, bytes.Runes( []byte(l)))
+		//fmt.Printf("adding %s\n", l)
+		dict = append(dict, l)
 	}
 	return GenericTrieFields(dict,maxlen)
+}
+
+func (t *Machine) MultiPatternSearch(s string) (bool){
+	//fmt.Printf("looking for %s in %s", s, t.Dict)
+	r := t.Machine.HasKeysWithPrefix(s)
+	return r 
+}
+func (t *Machine) ExactSearch(s string) (bool){
+	_,r := t.Machine.Find(s)
+	return r
+	
+	// if (len(r) == 1 ){
+	// 	fmt.Printf("Exact found: %s = %s\n", r, s)
+	// 	return true
+	// }
+	// fmt.Printf("Not Exact %s\n", r)
+	// return false
+}
+func (t*Machine) PrintOutput(){
+	fmt.Printf("Machine %s", t)
 }

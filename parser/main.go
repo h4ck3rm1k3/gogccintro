@@ -1,5 +1,9 @@
 package main
+import "github.com/pkg/profile"
 
+//func main() {
+
+	
 import (
 	"fmt"
 	//"github.com/golang/protobuf/proto"
@@ -15,6 +19,8 @@ import (
 )
 
 func Parse2(filename string, b string,args*ParserGlobal) (*GccNodeTest, error){
+	//defer profile.Start(profile.TraceProfile).Stop()
+	defer profile.Start(profile.CPUProfile).Stop()
 	calc := &GccNodeTest{Buffer: b}
 	calc.Init(filename, args)
 	if err := calc.Parse(); err != nil {

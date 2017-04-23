@@ -73,13 +73,13 @@ func NewTrie(in []string) (*Machine){
 	return GenericTrieFields(dict,maxlen)
 }
 
-func (t *Machine) MultiPatternSearch(s string) (bool){
+func (t *Machine) MultiPatternSearch(s []byte) (bool){
 	//fmt.Printf("looking for %s in %s", s, t.Dict)
-	r := t.Machine.HasKeysWithPrefix(s)
+	r := t.Machine.HasKeysWithPrefix(string(s))
 	return r 
 }
-func (t *Machine) ExactSearch(s string) (bool){
-	_,r := t.Machine.Find(s)
+func (t *Machine) ExactSearch(s []byte) (bool){
+	_,r := t.Machine.Find(string(s))
 	return r
 	
 	// if (len(r) == 1 ){

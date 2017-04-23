@@ -307,7 +307,7 @@ func (p *ParserInstance) EXPECT_ATTRNAME() {
 }
 func (p *ParserInstance) TokenEnd() byte {
 	t:=p.Token[len(p.Token)-1]
-	p.Debug2(fmt.Sprintf("Token end '%s'",string(t)))
+	p.Debug3("Token end '%s'",string(t))
 	return t
 }
 
@@ -366,7 +366,7 @@ func (p *ParserInstance) EXPECT_ATTRVALUE() {
 }
 
 func (p *ParserInstance) NOTE_OPERATOR_VALUE() {
-	p.Debug2(fmt.Sprintf("check note operator %s \n", p.Token))
+	p.DebugBytes("check note operator %s \n", p.Token)
 	p.AttrValues = append(p.AttrValues, string(p.Token))
 	p.Skip()
 	p.ConsumeToken()
@@ -393,9 +393,9 @@ func (p *ParserInstance) ATTRVALUE() {
 	} else {
 		v = "<null>"
 	}
-	p.Debug2(fmt.Sprintf("check len %d\n", l))
-	p.Debug2(fmt.Sprintf("check last %s\n", v))
-	p.Debug2(fmt.Sprintf("check values %s\n", p.AttrValues))
+	p.DebugInt("check len %d\n", l)
+	p.Debug3("check last %s\n", v)
+	p.DebugAttrs("check values %s\n")
 
 	if (p.C == ' ') || (p.C == '\n') { // ws separator
 
@@ -420,18 +420,19 @@ func (p *ParserInstance) ATTRVALUE() {
 				// there was a space so it is the end with a : but the field name does not match known fields so ignore it.
 				// could be a : in a string, but we should be able to match that better
 				p.Add()
-				p.Debug2(fmt.Sprintf("Check : in token:%s\n", p.Token))
+				p.DebugBytes("Check : in token:%s\n", p.Token)
 				//panic(p.Token)
 			}
 		} else {
 			if p.AttrName == "note:" {
 				//p.Debug()
-				p.Debug2(fmt.Sprintf("in note operator %d token:%s\n", l, p.Token))
+				p.DebugInt("in note operator %d\n", l)
+				p.DebugBytes("in note operator token:%s\n", p.Token)
 				if l > 0 {
 					if v == "operator" {
 						p.NOTE_OPERATOR()
 					} else {
-						p.Debug2(fmt.Sprintf("check note operator2 %s\n", p.Token))
+						p.DebugBytes("check note operator2 %s\n", p.Token)
 						p.Add()
 						p.SetState(NOTEVALUE)
 					}
@@ -456,7 +457,7 @@ func (p *ParserInstance) ATTRVALUE() {
 													
 					} else {
 						p.Add()
-						p.Debug2(fmt.Sprintf(fmt.Sprintf("unmatched first note nodeid:%s nodetype:%s attrname:%s attrvals:%s : token '%s'o\n", p.NodeId, p.NodeType, p.AttrName, p.AttrValues, p.Token)))
+						//p.Debug3("unmatched first note nodeid:%s nodetype:%s attrname:%s attrvals:%s : token '%s'o\n", p.NodeId, p.NodeType, p.AttrName, p.AttrValues, p.Token))
 						//p.Skip()
 						//p.ConsumeToken()
 						p.SetState(NOTEVALUE)					
@@ -490,8 +491,8 @@ func (p *ParserInstance) AFTERATTRVALUE() {
 		p.Skip()
 	} else {
 
-		p.Debug2(fmt.Sprintf("Attrname: '%s'\t", p.AttrName))
-		p.Debug2(fmt.Sprintf("AttrValues: '%v'\n", p.AttrValues))
+		p.Debug3("Attrname: '%s'\t", p.AttrName)
+		p.DebugAttrs("AttrValues: '%v'\n")
 		// the next could be a name of an attr or a value
 
 		if p.AttrName == "note:" {
@@ -550,7 +551,7 @@ func (p *ParserInstance) NOTEVALUE() {
 		p.Add()
 		if p.Parser.CheckNote(p.Token) {
 			// end of the token.	
-			p.Debug2(fmt.Sprintf(fmt.Sprintf("matched and ended note %s %s %s %s\n", p.NodeId, p.NodeType, p.AttrName, p.AttrValues)))
+			//p.Debug3(fmt.Sprintf("matched and ended note %s %s %s %s\n", p.NodeId, p.NodeType, p.AttrName, p.AttrValues))
 			if string(p.Token) == "operator" {
 				p.NOTE_OPERATOR()
 			} else {
@@ -594,12 +595,12 @@ func (p *ParserInstance) NEWLINE() {
 type ParseFunc func()
 
 func (p *ParserInstance) LenCheck() {
-	if len(p.Token) > 250 {
+	if len(p.Token) > 1250 {
 		fmt.Printf("Too Long P.Token %d: %s\n", p.State, p.Token)
 		p.Panic("")
 	}
 	if p.Pos > 1 {
-		if p.Pos%100000 == 0 {
+		if p.Pos%10000000 == 0 {
 			fmt.Printf("Proc %d %s %d\n", p.Pos, p.Token, p.State)
 		}
 	}
@@ -655,6 +656,18 @@ func (p *ParserInstance) Debug2(v string) {
 	if p.Parser.Globals.DebugLevel > 11 {
 		fmt.Printf("Debug: '%s'\n", v)
 	}
+}
+
+func (p *ParserInstance) Debug3(fmt string, val string) {
+}
+
+func (p *ParserInstance) DebugBytes(fmt string,  s []byte ) {
+}
+
+func (p *ParserInstance) DebugInt(fmt string,  s int ) {
+}
+
+func (p *ParserInstance) DebugAttrs(fmt string) {
 }
 
 func (p *ParserInstance) Debug() {

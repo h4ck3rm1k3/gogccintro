@@ -5,6 +5,9 @@
 # 	~/gocode/bin/peg  -inline -switch  t3.peg
 
 test : parser
+	# remove the old profiles
+	rm  /tmp/profile*/*
+
 	./parser ~/experiments/gogccintro/parser/tests/ 
 	./parser ~/experiments/gcc-1/build/gcc/ | tee gcc.txt
 
@@ -31,8 +34,8 @@ rtest : example
 	go test
 #-debug
 
-test2.peg.go: test2.peg
-	~/gocode/bin/peg  -inline -switch  test2.peg
+#test2.peg.go: test2.peg
+#	~/gocode/bin/peg  -inline -switch  test2.peg
 
 parser :  main.go Parser.go Fields.go Trie.go
 	GOPATH=/home/mdupont/gocode/ go build 

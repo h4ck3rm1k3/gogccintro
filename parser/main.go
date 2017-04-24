@@ -123,9 +123,10 @@ func Atoi64(s string) int64 {
 }
 
 
+	
 func main() {
 
-	args := NewParser()	
+	args := NewParser(NewConsumer())	
 	//func TestOne(t *testing.T) {
 	if len(os.Args) < 2 {
 		name := os.Args[0]
@@ -180,8 +181,8 @@ func main() {
 
 		resetFile()
 	}
-	for i,_ := range(args.Attrnames) {
-	 	fmt.Printf("attrnames %s\n",i)
-	}
+	// for i,_ := range(args.Attrnames) {
+	//  	fmt.Printf("attrnames %s\n",i)
+	// }
 
 }

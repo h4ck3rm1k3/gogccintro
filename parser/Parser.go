@@ -20,15 +20,26 @@ type ParserGlobal struct {
 	SpecMachine     *Machine
 	LinkMachine     *Machine
 	DebugLevel      int
+	Consumer TreeConsumer
 }
+
+type TreeNode interface {
+	SetAttr(attrname string, values []string)
+	Finish()
+}
+
+type TreeConsumer interface {
+	NodeType(nodetype string, nodeid string) (TreeNode)
+}
+
 type GccNodeTest struct {
 	Filename string
 	Buffer   string
 	Globals  *ParserGlobal
-
+	
 	//
-	Nodeids   map[string]int
-	Nodetypes map[string]map[string]int
+	//Nodeids   map[string]int
+	//Nodetypes map[string]map[string]int
 }
 type ParserInstance struct {
 	State      Token
@@ -43,10 +54,10 @@ type ParserInstance struct {
 	AttrValues []string
 	C          rune // current rune
 	Parser     *GccNodeTest
-	
+	Current    TreeNode   // interface
 }
 
-func NewParser() *ParserGlobal {
+func NewParser(Consumer TreeConsumer) *ParserGlobal {
 
 	lookup := map[Token]string{
 		START:            "START",
@@ -76,6 +87,7 @@ func NewParser() *ParserGlobal {
 		OperatorMachine: NewTrie(Operators[:]),
 		SpecMachine:     NewTrie(Spec[:]),
 		LinkMachine:     NewTrie(Link[:]),
+		Consumer:Consumer,
 	}
 }
 
@@ -84,8 +96,8 @@ func (t *GccNodeTest) Init(Filename string, Globals *ParserGlobal) {
 	t.Filename = Filename
 	t.Globals = Globals
 
-	t.Nodeids = make(map[string]int)
-	t.Nodetypes = make(map[string]map[string]int)
+	//t.Nodeids = make(map[string]int)
+	//t.Nodetypes = make(map[string]map[string]int)
 }
 
 type Token int
@@ -151,18 +163,18 @@ func (t *GccNodeTest) CheckNotePartial(field []byte) bool {
 }
 
 func (t *GccNodeTest) NodeId(nodeid string) {
-	t.Nodeids[nodeid] = 1
+	//t.Nodeids[nodeid] = 1
 }
 
-func (t *GccNodeTest) NodeType(nodetype string, nodeid string) {
-	if val, ok := t.Nodetypes[nodetype]; ok {
-		val[nodeid] = 1
-	} else {
+func (p *ParserInstance) ProcessNodeType(nodetype string, nodeid string) {
+	p.Current = p.Parser.Globals.Consumer.NodeType(nodetype,nodeid)
+	// if val, ok := t.Nodetypes[nodetype]; ok {
+	// 	val[nodeid] = 1
+	// } else {
 
-		t.Nodetypes[nodetype] = make(map[string]int)
-		t.Nodetypes[nodetype][nodeid] = 1
-	}
-
+	// 	t.Nodetypes[nodetype] = make(map[string]int)
+	// 	t.Nodetypes[nodetype][nodeid] = 1
+	// }
 }
 
 func (t *GccNodeTest) AttrValue(field string) {
@@ -287,7 +299,7 @@ func (p *ParserInstance) NODETYPE() {
 	if p.C == ' ' {
 		p.NodeType = string(p.Token)
 		//fmt.Printf("found node type %s %s\n", p.NodeId, p.NodeType)
-		p.Parser.NodeType(p.NodeType, p.NodeId)
+		p.ProcessNodeType(p.NodeType, p.NodeId)
 		p.Skip()
 		p.ConsumeToken()
 		p.SetState(EXPECT_ATTRNAME)
@@ -573,6 +585,10 @@ func (p *ParserInstance) NOTEVALUE() {
 
 func (p *ParserInstance) FinishStatement() {
 	p.Line = ""
+	if (p.Current != nil) {
+		p.Current.Finish()
+		p.Current = nil
+	}
 }
 
 func (p *ParserInstance) Panic(l string ) {

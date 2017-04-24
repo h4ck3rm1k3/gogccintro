@@ -1,0 +1,1 @@
+@12249  string_cst       type: @13722  strg: Detect paths that trigger erroneous or undefined behavior due a null value being used in a way forbidden by a returns_nonnull or nonnull attribute.  Isolate those paths from the main control flow and turn the statement with erroneous or undefined behavior into a trap.  lngt: 269     

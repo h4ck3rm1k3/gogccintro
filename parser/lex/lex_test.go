@@ -3,7 +3,7 @@ import (
 	"testing"
 	"strings"
 	"reflect"
-//	"fmt"
+	//"fmt"
 )
 
 var Fields  = [...]string {
@@ -90,7 +90,108 @@ func TestDFA(b *testing.T){
 		_,_ = matchFunc(l)		
 	}
 }
-	
+
+func BenchmarkSwitch(b *testing.B){
+	//c := 0
+	h := map[string]string{
+		"low " : "Low",
+		"op 0" : "Op0",
+		"op 1" : "Op1",
+		"op 2" : "Op2",
+		"op 3" : "Op3",
+		"-uid" : "Uid",
+	}	
+	for _,l := range(Fields) {
+		if _,ok := h[l]; ok  {} else{
+			
+			h[l]=strings.Title(l)
+			
+		}
+
+		//fmt.Printf("case \"%s\": X.%s=1\n",l,h[l])
+	}
+
+	b.ResetTimer()
+	X :=  &Foo {
+		Accs : 1,
+	}
+
+	for i := 0; i < b.N; i++ {
+		for _,l := range(Fields) {
+			switch (l) {
+
+			case "accs": X.Accs=1
+case "addr": X.Addr=1
+case "algn": X.Algn=1
+case "args": X.Args=1
+case "argt": X.Argt=1
+case "bases": X.Bases=1
+case "binf": X.Binf=1
+case "body": X.Body=1
+case "bpos": X.Bpos=1
+case "chain": X.Chain=1
+case "chan": X.Chan=1
+case "clas": X.Clas=1
+case "clnp": X.Clnp=1
+case "cnst": X.Cnst=1
+case "cond": X.Cond=1
+case "csts": X.Csts=1
+case "decl": X.Decl=1
+case "domn": X.Domn=1
+case "elts": X.Elts=1
+case "expr": X.Expr=1
+case "flds": X.Flds=1
+case "fn": X.Fn=1
+case "fncs": X.Fncs=1
+case "high": X.High=1
+case "idx": X.Idx=1
+case "init": X.Init=1
+case "int": X.Int=1
+case "labl": X.Labl=1
+case "link": X.Link=1
+case "lngt": X.Lngt=1
+case "low ": X.Low=1
+case "max": X.Max=1
+case "min": X.Min=1
+case "mngl": X.Mngl=1
+case "name": X.Name=1
+case "note": X.Note=1
+case "op": X.Op=1
+case "op 0": X.Op0=1
+case "op 1": X.Op1=1
+case "op 2": X.Op2=1
+case "op 3": X.Op3=1
+case "orig": X.Orig=1
+case "prec": X.Prec=1
+case "prms": X.Prms=1
+case "ptd": X.Ptd=1
+case "purp": X.Purp=1
+case "qual": X.Qual=1
+case "refd": X.Refd=1
+case "retn": X.Retn=1
+case "saturating": X.Saturating=1
+case "scpe": X.Scpe=1
+case "sign": X.Sign=1
+case "size": X.Size=1
+case "spec": X.Spec=1
+case "srcp": X.Srcp=1
+case "strg": X.Strg=1
+case "tag": X.Tag=1
+case "type": X.Type=1
+case "-uid": X.Uid=1
+case "unql": X.Unql=1
+case "used": X.Used=1
+case "val": X.Val=1
+case "valu": X.Valu=1
+case "vars": X.Vars=1
+			case "rslt": X.Rslt=1
+			default:
+				panic(l)
+			}
+		}
+	}
+}
+
 
 func BenchmarkReflect(b *testing.B){
 	c := 0

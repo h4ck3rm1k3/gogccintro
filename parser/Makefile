@@ -37,6 +37,6 @@ rtest : example
 #test2.peg.go: test2.peg
 #	~/gocode/bin/peg  -inline -switch  test2.peg
 
-parser :  main.go Parser.go Fields.go Trie.go
+parser :  main.go Parser.go Fields.go Trie.go Consumer.go
 	GOPATH=/home/mdupont/gocode/ go build 
 

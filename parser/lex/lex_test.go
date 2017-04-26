@@ -4,6 +4,7 @@ import (
 	"strings"
 	"reflect"
 	//"fmt"
+	import "../ast/proto"
 )
 
 var Fields  = [...]string {

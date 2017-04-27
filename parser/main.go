@@ -26,6 +26,7 @@ func Parse2(filename string, b string,args*ParserGlobal) (*GccNodeTest, error){
 	if err := calc.Parse(); err != nil {
 		log.Fatal(err)
 	}
+	calc.Report()
 	return calc,nil
 }
 

@@ -30,6 +30,7 @@ type TreeNode interface {
 
 type TreeConsumer interface {
 	NodeType(nodetype string, nodeid string) (TreeNode)
+	Report()
 }
 
 type GccNodeTest struct {
@@ -823,7 +824,7 @@ func (t *GccNodeTest) Execute() *int {
 }
 
 func (t *GccNodeTest) Report() {
-
+	t.Globals.Consumer.Report()
 }
 
 func (p *ParserInstance) Debug2(v string) {

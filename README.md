@@ -8,6 +8,15 @@ golang interfaces for the gcc introspector
 
     go get github.com/h4ck3rm1k3/gogccintro
 
+## Usage
+
+   Compile programs with these flags to get tu files
+
+    CFLAGS=-O0 -fdump-translation-unit -save-temps
+    CPPFLAGS=-O0 -fdump-translation-unit -save-temps
+    CXXFLAGS=-O0 -fdump-translation-unit -save-temps
+
+
 ## Author
 
 James Michael Du Pont [jamesmikedupont@gmail.com]

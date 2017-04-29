@@ -212,18 +212,66 @@ func (t *SNodeType) Node(n *TestNode, t2 *TestConsumer) {
 type TestConsumer struct {
 	Count       Stat
 	NodeTypes   map[string]*SNodeType
+
+	// parser stats
+	Transitions   map[int]map[int]int
+	States        map[int]int
+
+	
 	CoOccurance *CoOccurance
 }
 
+func (t *TestConsumer) StateUsage(from int) {
+	old := t.States[from]
+	t.States[from]=old + 1	
+}
+
+func (t *TestConsumer) StateTransition(from int, to int) {
+
+	if val, ok := t.Transitions[from]; ok {
+		old := val[to]
+		val[to]=old + 1
+	} else {
+		v := make(map[int]int)
+	        v[to]=1
+		t.Transitions[from] = v
+	}
+}
+
 func (t *TestConsumer) Report() {
-	t.CoOccurance.Report()
-	return
+
+	//
+	for k, v := range t.States {
+		fmt.Printf("\tS %20s %10d\n", StateLookup[Token(k)], v)
+	}
+	// report on transitions
+
+	to_count := make(map[int]int)
+	
+	for k, v := range t.Transitions {
+		c:=0
+		for k2, v2 := range v {
+			fmt.Printf("\tT %20s %20s %10d\n", StateLookup[Token(k)], StateLookup[Token(k2)], v2)
+			c = c+ v2
+			to_count[k2] = to_count[k2] + v2
+		}
+		//
+		fmt.Printf("\tAS %20s %10d\n", StateLookup[Token(k)], t.States[k]/c)
+		
+	}
+	for k, v := range to_count {
+		fmt.Printf("\tTAS %20s %10d\n", StateLookup[Token(k)], t.States[k]/v)
+	}
+		
 	t.Count.Report(1)
+	
 	//fmt.Printf("Report %#v\n", t.NodeTypes)
 	for k, v := range t.NodeTypes {
-		fmt.Printf("\tNT %s \n", k)
-		v.Report(k)
+		fmt.Printf("\tNT %s %d\n", k, v.Count.TheCount)
+		//v.Report(k)
 	}
+	
+	t.CoOccurance.Report()
 }
 
 func (t *TestConsumer) Node(n *TestNode) {
@@ -301,6 +349,8 @@ func (t *TestConsumer) NodeType(nodetype string, nodeid string) TreeNode {
 
 func NewConsumer() *TestConsumer {
 	return &TestConsumer{
+		Transitions   :make(map[int]map[int]int),
+		States        :make(map[int]int),	
 		CoOccurance: &CoOccurance{},
 	}
 }

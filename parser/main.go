@@ -20,13 +20,13 @@ import (
 
 func Parse2(filename string, b string,args*ParserGlobal) (*GccNodeTest, error){
 	//defer profile.Start(profile.TraceProfile).Stop()
-	defer profile.Start(profile.CPUProfile).Stop()
+
 	calc := &GccNodeTest{Buffer: b}
 	calc.Init(filename, args)
 	if err := calc.Parse(); err != nil {
 		log.Fatal(err)
 	}
-	calc.Report()
+
 	return calc,nil
 }
 
@@ -126,8 +126,30 @@ func Atoi64(s string) int64 {
 
 	
 func main() {
+	defer profile.Start(profile.CPUProfile).Stop()
 
-	args := NewParser(NewConsumer())	
+
+	StateLookup = map[Token]string{
+		START:            "START",
+		AT:               "AT",
+		NODEID:           "NODEID",
+		EXPECT_NODE_TYPE: "EXPECT_NODE_TYPE",
+		NODETYPE:         "NODETYPE",
+		EXPECT_ATTRNAME:  "EXPECT_ATTRNAME",
+		ATTRNAME:         "ATTRNAME",
+		EXPECT_ATTRVALUE: "EXPECT_ATTRVALUE",
+		ATTRVALUE:        "ATTRVALUE",
+		AFTERATTRVALUE:   "AFTERATTRVALUE",
+		AFTERATTRVALUE2:  "AFTERATTRVALUE2",
+		NEWLINE:          "NEWLINE",
+		NOTEVALUE:        "NOTEVALUE",
+		OPERATORVALUE:    "OPERATORVALUE",
+		ATTRVALUE_STRG:   "ATTRVALUE_STRG",
+		ATTRVALUE_LNGT:   "ATTRVALUE_LNGT",
+	}
+
+	c := NewConsumer()
+	args := NewParser(c)	
 	//func TestOne(t *testing.T) {
 	if len(os.Args) < 2 {
 		name := os.Args[0]
@@ -137,15 +159,13 @@ func main() {
 	dir := os.Args[1]
 	
 	files := testTUFiles(dir)
-	for _, cfile := range files {
-		
+	for _, cfile := range files {	
 		
 		//pgot, err := ParseFile(file,Debug(true))
 		os.Remove("file.tu")
 		os.Symlink(cfile, "file.tu")
 		tree, err := ParseFile2(cfile,args)
 		// pgot
-
 		
 		if err != nil {
 			fmt.Printf("In %s\n",cfile)
@@ -185,5 +205,6 @@ func main() {
 	// for i,_ := range(args.Attrnames) {
 	//  	fmt.Printf("attrnames %s\n",i)
 	// }
-
+	fmt.Printf("report\n")
+	c.Report()
 }

@@ -56,6 +56,7 @@ var Operators = [...] string { // "note operator"
 	"le",
 	"lor",
 	"lshift",
+	"function",
 	"lshiftassign",
 	"lt",
 	"memref",

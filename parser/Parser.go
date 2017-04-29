@@ -10,8 +10,14 @@ import (
 
 type AttrNames map[string]int
 
+type StateNames map[Token]string
+	
+// global
+var StateLookup    StateNames
+
+
 type ParserGlobal struct {
-	StateLookup     map[Token]string
+
 	Attrnames       AttrNames
 	FieldMachine    *Machine
 	NotesMachine    *Machine
@@ -31,6 +37,8 @@ type TreeNode interface {
 type TreeConsumer interface {
 	NodeType(nodetype string, nodeid string) (TreeNode)
 	Report()
+	StateTransition(from int, to int) // state
+	StateUsage(from int) // state usage
 }
 
 type GccNodeTest struct {
@@ -60,30 +68,12 @@ type ParserInstance struct {
 
 func NewParser(Consumer TreeConsumer) *ParserGlobal {
 
-	lookup := map[Token]string{
-		START:            "START",
-		AT:               "AT",
-		NODEID:           "NODEID",
-		EXPECT_NODE_TYPE: "EXPECT_NODE_TYPE",
-		NODETYPE:         "NODETYPE",
-		EXPECT_ATTRNAME:  "EXPECT_ATTRNAME",
-		ATTRNAME:         "ATTRNAME",
-		EXPECT_ATTRVALUE: "EXPECT_ATTRVALUE",
-		ATTRVALUE:        "ATTRVALUE",
-		AFTERATTRVALUE:   "AFTERATTRVALUE",
-		AFTERATTRVALUE2:  "AFTERATTRVALUE2",
-		NEWLINE:          "NEWLINE",
-		NOTEVALUE:        "NOTEVALUE",
-		OPERATORVALUE:    "OPERATORVALUE",
-		ATTRVALUE_STRG:   "ATTRVALUE_STRG",
-		ATTRVALUE_LNGT:   "ATTRVALUE_LNGT",
-	}
-
+	
 	return &ParserGlobal{
 		//DebugLevel:      100,
 		//DebugLevel:      11,
 		DebugLevel:      0,
-		StateLookup:     lookup,
+		//StateLookup:     lookup,
 		Attrnames:       make(map[string]int),
 		FieldMachine:    NewTrieFields(Fields[:]),
 		NotesMachine:    NewTrie(Notes[:]),
@@ -281,16 +271,19 @@ func (p *ParserInstance) NextState(val bool, nextState Token) {
 }
 
 func (p *ParserInstance) SetState(nextState Token) {
+
+	p.Parser.Globals.Consumer.StateTransition(int(p.State),int(nextState))
+
 	p.State = nextState
 }
 
 func (p *ParserInstance) Check(m *Machine) bool {
 	if len(p.Token) <= m.MaxLen {
 		if p.Parser.CheckName(m, p.Token) {
-			p.Add()
+
 			return true
 		} else {
-			p.Skip()
+
 			return false
 		}
 	} else {
@@ -673,6 +666,7 @@ func (p *ParserInstance) AFTERATTRVALUE() {
 }
 
 func (p *ParserInstance) AFTERATTRVALUE2() {
+
 	p.Debug3("AFTERATTRVALUE2 '%s'\n",string(p.C))
 	if p.C == '\n' {
 		p.Skip()
@@ -687,16 +681,33 @@ func (p *ParserInstance) AFTERATTRVALUE2() {
 }
 
 func (p *ParserInstance) OPERATORVALUE() {
+
+	if len(p.Token) > 20 {
+		p.Panic(fmt.Sprintf("Too big %s", p.Token))
+	}
 	if p.C == ' ' || p.C == '\t' || p.C == '\n' {
 		p.Skip() //
 	} else {
-		if p.Check(p.Parser.Globals.OperatorMachine) { // will call add or skip
+		
+		if p.Check(p.Parser.Globals.OperatorMachine) { // will call add as well
 			p.AddAttrValue()
 			p.FinishAttribute()
+			p.Debug2(fmt.Sprintf("found operator value: '%s' '%s'\n", p.Token, string(p.C)))
 			p.ConsumeToken()
+			p.Add()
 			p.NextState(true, AFTERATTRVALUE)
+		} else {
+			if p.C == '@' {
+				p.NextState(true, AFTERATTRVALUE)
+				p.Add()
+				p.Debug2(fmt.Sprintf("empty operator, next value: '%s' '%s'\n", p.Token, string(p.C)))
+			} else {
+				p.Debug2(fmt.Sprintf("skip operator value: '%s' '%s'\n", p.Token, string(p.C)))
+				p.Add()
+			}
 		}
 	}
+
 }
 
 func (p *ParserInstance) NOTEVALUE() {
@@ -811,6 +822,10 @@ func (t *GccNodeTest) Parse() *int {
 		Funcs[p.State]()
 		p.LenCheck()
 		p.Debug()
+
+		// usage of a state
+		p.Parser.Globals.Consumer.StateUsage(int(p.State))
+		
 	} // while
 	// final finish statement
 	p.FinishStatement()
@@ -851,7 +866,7 @@ func (p *ParserInstance) DebugAttrs(fmt string) {
 func (p *ParserInstance) Debug() {
 	if p.Parser.Globals.DebugLevel > 10 {
 		fmt.Printf("Char: '%s'\t", string(p.C))
-		fmt.Printf("State: '%s'\t", p.Parser.Globals.StateLookup[p.State])
+		fmt.Printf("State: '%s'\t", StateLookup[p.State])
 		fmt.Printf("Token: '%s'\n", p.Token)
 	}
 }
@@ -859,7 +874,7 @@ func (p *ParserInstance) Debug() {
 func (p *ParserInstance) DebugIn() {
 	if p.Parser.Globals.DebugLevel > 10 {
 		fmt.Printf("In Char: '%s'\t", string(p.C))
-		fmt.Printf("In State: '%s'\t", p.Parser.Globals.StateLookup[p.State])
+		fmt.Printf("In State: '%s'\t", StateLookup[p.State])
 		fmt.Printf("In Token: '%s'\n", p.Token)
 	}
 }
@@ -867,7 +882,7 @@ func (p *ParserInstance) DebugIn() {
 func (p *ParserInstance) DebugNow() {
 
 	fmt.Printf("Char: '%s'\t", string(p.C))
-	fmt.Printf("State: '%s'\t", p.Parser.Globals.StateLookup[p.State])
+	fmt.Printf("State: '%s'\t", StateLookup[p.State])
 	fmt.Printf("Token: '%s'\n", p.Token)
 	
 }

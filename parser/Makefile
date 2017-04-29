@@ -5,11 +5,11 @@
 # 	~/gocode/bin/peg  -inline -switch  t3.peg
 
 test : parser
-	# remove the old profiles
-	rm  /tmp/profile*/*
 
-	./parser ~/experiments/gogccintro/parser/tests/ 
-	./parser ~/experiments/gcc-1/build/gcc/ | tee gcc.txt
+	./parser ~/experiments/gogccintro/parser/tests/
+	#	./parser ~/experiments/gcc-1/build/gcc/tests/| tee gcc.txt
+	./parser ~/experiments/gcc-1/build/gcc/tests| tee gcctest.txt
+	#./parser ~/experiments/gcc-1/build/gcc/types| tee gcc_types.txt
 
 #./gcc/tree-dump.ii
 #mdupont@debian-build-speed:~/experiments/gcc-1/build$ grep "strg: lngt" ./gcc/tree-dump.c.001t.tu
@@ -37,6 +37,7 @@ rtest : example
 #test2.peg.go: test2.peg
 #	~/gocode/bin/peg  -inline -switch  test2.peg
 
-parser :  main.go Parser.go Fields.go Trie.go Consumer.go
+parser :  main.go Parser.go Fields.go Trie.go Consumer.go CoOccurance.go
+
 	GOPATH=/home/mdupont/gocode/ go build 
 

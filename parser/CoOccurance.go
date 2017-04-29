@@ -2,6 +2,7 @@ package main
 import (
 	"fmt"
 	"strings"
+	"sort"
 )
 
 type  CoOccuranceField struct {
@@ -30,14 +31,41 @@ type  CoOccurance struct {
 }
 
 func (t *CoOccurance) Report() {
+
+	n := map[int][]string{}
+	
 	for k,v := range( t.TheFields) {
 		//fmt.Printf("\tkv '%s' -> '%s'\n", k,v)
-		v.Report(k)
+		//v.Report(k)
+		for k2,v2 := range( v.Fields) {
+			//fmt.Printf("\tCO '%s' -> '%s' %d\n", k,k2,v2)
+			key := fmt.Sprintf("\tCO '%s' -> '%s'", k,k2)
+			n[v2] = append(n[v2], key)
+		}	
+
+	}
+
+	var a []int
+	for k := range n {
+		a = append(a, k)
+	}
+	sort.Sort(sort.Reverse(sort.IntSlice(a)))
+	for _, k := range a {
+		for _, s := range n[k] {
+			fmt.Printf("%s, %d\n", s, k)
+		}
 	}
 }
 
 func (t *CoOccurance) Fields(a string, b string) {
-
+	// skip the digit fields
+	if (a[0]>= '0' && a[0] <= '9'){
+		return
+	}
+	if (b[0]>= '0' && b[0] <= '9'){
+		return
+	}
+	
 	if strings.Compare(a, b) < 0 {
 		c :=a
 		a=b

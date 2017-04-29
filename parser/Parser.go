@@ -609,7 +609,10 @@ func (p *ParserInstance) ATTRVALUE_STRG() {
 	p.DebugAttrs("check values %s\n")
 	if p.TokenEnd()== ':' {
 		if strings.HasSuffix(string(p.Token),"lngt:") {
-			p.Token= p.Token[0:len(p.Token) - len(" lngt:")] // strip off end
+			end := len(p.Token) - len(" lngt:")
+			if end > 0 && end < len(p.Token)  {
+				p.Token= p.Token[0:end] // strip off end
+			}
 			p.AddAttrValue()
 			p.FinishAttribute()
 			p.Skip()

@@ -4,12 +4,20 @@
 # t3: t
 # 	~/gocode/bin/peg  -inline -switch  t3.peg
 
-test : parser
+op.txt: parser ~/experiments/gogccintro/parser/tests/naked_operator.tu
+	./parser -debuglevel 1000 -file ~/experiments/gogccintro/parser/tests/naked_operator.tu
 
-	./parser ~/experiments/gogccintro/parser/tests/
-	#	./parser ~/experiments/gcc-1/build/gcc/tests/| tee gcc.txt
-	./parser ~/experiments/gcc-1/build/gcc/tests| tee gcctest.txt
-	#./parser ~/experiments/gcc-1/build/gcc/types| tee gcc_types.txt
+gcc.txt : parser
+	./parser -directory ~/experiments/gcc-1/build/gcc/
+
+tests.txt: parser
+	./parser -directory ~/experiments/gogccintro/parser/tests/ 
+
+test : parser tests.txt
+
+#	./parser ~/experiments/gcc-1/build/gcc/tests > gcctest.txt
+#	./parser ~/experiments/gcc-1/build/gcc/types > gcc_types.txt
+
 
 #./gcc/tree-dump.ii
 #mdupont@debian-build-speed:~/experiments/gcc-1/build$ grep "strg: lngt" ./gcc/tree-dump.c.001t.tu
@@ -37,7 +45,7 @@ rtest : example
 #test2.peg.go: test2.peg
 #	~/gocode/bin/peg  -inline -switch  test2.peg
 
-parser :  main.go Parser.go Fields.go Trie.go Consumer.go CoOccurance.go
+parser :  main.go Parser.go Fields.go Trie.go Consumer.go CoOccurance.go Groups.go
 
 	GOPATH=/home/mdupont/gocode/ go build 
 

@@ -113,7 +113,7 @@ func (t *SAttributeNames) Report() {
 	}
 }
 
-func (t *SAttributeNames) Vals(n *TestNode, t2 *TestConsumer) {
+func (t *SAttributeNames) Vals(n *TestNode, t2 *TestConsumer, t3 *SNodeType) {
 	for key, v := range n.Vals {
 		//t.TheVals[k].Vals(&v)
 		if t.TheVals == nil {
@@ -131,12 +131,12 @@ func (t *SAttributeNames) Vals(n *TestNode, t2 *TestConsumer) {
 	for key, _ := range n.Vals {
 
 		// peg each node type
-		t2.CoOccurance.Fields(n.NodeType,key)
+		//t2.CoOccurance.Fields(n.NodeType,key)
 		
 		for key2, _ := range n.Vals {
 			if key2 != key {
 				if strings.Compare(key, key2) > 0 {
-					t2.CoOccurance.Fields(key, key2)
+					t3.CoOccurance.Fields(key, key2)
 				}
 			}
 		}
@@ -158,7 +158,7 @@ func (t *SAttributeVector) Report(nodetype string, attrcount int) {
 	}
 }
 
-func (t *SAttributeVector) Vals(n *TestNode, t2 *TestConsumer) {
+func (t *SAttributeVector) Vals(n *TestNode, t2 *TestConsumer, t3 *SNodeType) {
 	t.Count.Count()
 	keys := make([]string, 0, len(n.Vals))
 	for k := range n.Vals {
@@ -171,26 +171,29 @@ func (t *SAttributeVector) Vals(n *TestNode, t2 *TestConsumer) {
 		t.TheVals = make(map[string]*SAttributeNames)
 	}
 	if val, ok := t.TheVals[key]; ok {
-		val.Vals(n, t2)
+		val.Vals(n, t2, t3)
 	} else {
 		o := &SAttributeNames{}
 		t.TheVals[key] = o
-		o.Vals(n, t2)
+		o.Vals(n, t2, t3)
 	}
 }
 
 type SNodeType struct {
 	Count          Stat
 	AttributeCount map[int]*SAttributeVector // Attribute County
+	CoOccurance *CoOccurance
 }
 
 func (t *SNodeType) Report(nodetype string) {
 	t.Count.Report(2)
 	fmt.Printf("\t\tlen attrcount %d:\n", len(t.AttributeCount))
-	for k, v := range t.AttributeCount {
-		fmt.Printf("\t\tattrcount %d:\n", k)
-		v.Report(nodetype, k)
-	}
+	t.CoOccurance.Report()
+	
+	// for k, _ := range t.AttributeCount {
+	// 	fmt.Printf("\t\tattrcount %d:\n", k)
+	// 	//v.Report(nodetype, k)	
+	// }
 }
 
 func (t *SNodeType) Node(n *TestNode, t2 *TestConsumer) {
@@ -200,11 +203,13 @@ func (t *SNodeType) Node(n *TestNode, t2 *TestConsumer) {
 		t.AttributeCount = make(map[int]*SAttributeVector)
 	}
 	if val, ok := t.AttributeCount[key]; ok {
-		val.Vals(n, t2)
+		val.Vals(n, t2, t)
 	} else {
-		o := &SAttributeVector{}
+		o := &SAttributeVector{
+
+		}
 		t.AttributeCount[key] = o
-		o.Vals(n, t2)
+		o.Vals(n, t2, t)
 	}
 	//t.AttributeCount[len(n.Vals)].Vals(n)
 }
@@ -218,7 +223,7 @@ type TestConsumer struct {
 	States        map[int]int
 
 	
-	CoOccurance *CoOccurance
+	
 }
 
 func (t *TestConsumer) StateUsage(from int) {
@@ -268,10 +273,10 @@ func (t *TestConsumer) Report() {
 	//fmt.Printf("Report %#v\n", t.NodeTypes)
 	for k, v := range t.NodeTypes {
 		fmt.Printf("\tNT %s %d\n", k, v.Count.TheCount)
-		//v.Report(k)
+		v.Report(k)
 	}
 	
-	t.CoOccurance.Report()
+
 }
 
 func (t *TestConsumer) Node(n *TestNode) {
@@ -283,7 +288,9 @@ func (t *TestConsumer) Node(n *TestNode) {
 	if val, ok := t.NodeTypes[n.NodeType]; ok {
 		val.Node(n, t)
 	} else {
-		o := &SNodeType{}
+		o := &SNodeType{
+			CoOccurance: &CoOccurance{},
+		}
 		t.NodeTypes[n.NodeType] = o
 		o.Node(n, t)
 	}
@@ -351,6 +358,6 @@ func NewConsumer() *TestConsumer {
 	return &TestConsumer{
 		Transitions   :make(map[int]map[int]int),
 		States        :make(map[int]int),	
-		CoOccurance: &CoOccurance{},
+		
 	}
 }

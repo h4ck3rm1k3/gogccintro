@@ -9,6 +9,10 @@ var Fields  = [...]string {
 	"rslt",
 }
 
+var Flags  = [...]string {
+	"bitfield", // flag
+}
+
 var Notes = [...] string { //, "note",
 	"operator",
 	"artificial",

@@ -15,7 +15,8 @@ import (
 	"os"
 	"io"
 	"io/ioutil"
-	//"encoding/json"	
+	//"encoding/json"
+	"flag"
 )
 
 func Parse2(filename string, b string,args*ParserGlobal) (*GccNodeTest, error){
@@ -123,7 +124,23 @@ func Atoi64(s string) int64 {
 	return r
 }
 
-
+func ProcessFile (cfile string, args *ParserGlobal) {
+	os.Remove("file.tu")
+	os.Symlink(cfile, "file.tu")
+	tree, err := ParseFile2(cfile,args)
+	
+	if err != nil {
+		fmt.Printf("In %s\n",cfile)
+		fmt.Printf("err %s\n",err)
+		
+	} else {
+		fmt.Printf("OK %s\n",cfile)
+		file.Filename = &cfile
+		tree.Execute();
+		
+	}
+	resetFile()
+}
 	
 func main() {
 	defer profile.Start(profile.CPUProfile).Stop()
@@ -151,57 +168,36 @@ func main() {
 	c := NewConsumer()
 	args := NewParser(c)	
 	//func TestOne(t *testing.T) {
-	if len(os.Args) < 2 {
-		name := os.Args[0]
-		fmt.Printf("Usage: %v \"Test Directory\"\n", name)
-		os.Exit(1)
-	}
-	dir := os.Args[1]
+
+	var debug_level = flag.Int("debuglevel", 0, "debug level")
+
+	var scan_dir = flag.String("directory", "", "scan directory")
+	var read_file = flag.String("file", "", "scan file")
 	
-	files := testTUFiles(dir)
-	for _, cfile := range files {	
-		
-		//pgot, err := ParseFile(file,Debug(true))
-		os.Remove("file.tu")
-		os.Symlink(cfile, "file.tu")
-		tree, err := ParseFile2(cfile,args)
-		// pgot
-		
-		if err != nil {
-			fmt.Printf("In %s\n",cfile)
-			fmt.Printf("err %s\n",err)
-			//t.Errorf("%s: pigeon.ParseFile: %v", file, err)
-			//_, err := ParseFile2(file)
+	flag.Parse()
 
-			//fmt.Printf("err %s\n",err)
-			continue
-		} else {
-			fmt.Printf("OK %s\n",cfile)
-
-			//fmt.Printf("syntax tree\n")
-			//tree.PrintSyntaxTree();
-			file.Filename = &cfile
-			//fmt.Printf("exec\n")
-			tree.Execute();
-//			tree.Report();
-			//fmt.Printf("tokens: %#v\n",tree.Tokens())
-			//fmt.Printf("got %#v\n",pgot)
-		}
-		//fmt.Printf("File %s\n",file.String())
-		//body, _ := json.Marshal(file)
-		//err = ioutil.WriteFile(fmt.Sprintf("%s.json",cfile), body, 0644)
-		//if err != nil { panic (err); }
-
-		//data, err := proto.Marshal(&file)
-		//if err != nil {
-		//log.Fatal("marshaling error: ", err)
-		//}
-		//err = ioutil.WriteFile(fmt.Sprintf("%s.proto",cfile), data, 0644)
-		//if err != nil { panic (err); }
-		//fmt.Printf("File : %s\n",body)
-
-		resetFile()
+	if *debug_level != 0 {
+		args.DebugLevel = *debug_level
 	}
+	// if len(os.Args) < 2 {
+	// 	name := os.Args[0]
+	// 	fmt.Printf("Usage: %v \"Test Directory\"\n", name)
+	// 	os.Exit(1)
+	// }
+	// dir := os.Args[1]
+
+	if (*scan_dir != "") {
+		files := testTUFiles(*scan_dir)
+		for _, cfile := range files {		
+			ProcessFile(cfile, args)
+		}
+	}
+
+	if (*read_file != "") {
+		fmt.Printf("read just one file %s", *read_file)
+		ProcessFile(*read_file, args)
+	}
+	
 	// for i,_ := range(args.Attrnames) {
 	//  	fmt.Printf("attrnames %s\n",i)
 	// }

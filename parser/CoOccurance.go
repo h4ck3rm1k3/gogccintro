@@ -39,7 +39,7 @@ func (t *CoOccurance) Report() {
 		//v.Report(k)
 		for k2,v2 := range( v.Fields) {
 			//fmt.Printf("\tCO '%s' -> '%s' %d\n", k,k2,v2)
-			key := fmt.Sprintf("\tCO '%s' -> '%s'", k,k2)
+			key := fmt.Sprintf("\t\tCO '%s' -> '%s'", k,k2)
 			n[v2] = append(n[v2], key)
 		}	
 

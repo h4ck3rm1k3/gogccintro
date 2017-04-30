@@ -20,6 +20,7 @@ type ParserGlobal struct {
 
 	Attrnames       AttrNames
 	FieldMachine    *Machine
+	FlagsMachine     *Machine
 	NotesMachine    *Machine
 	AccessMachine   *Machine
 	OperatorMachine *Machine
@@ -76,6 +77,7 @@ func NewParser(Consumer TreeConsumer) *ParserGlobal {
 		//StateLookup:     lookup,
 		Attrnames:       make(map[string]int),
 		FieldMachine:    NewTrieFields(Fields[:]),
+		FlagsMachine:    NewTrie(Flags[:]),
 		NotesMachine:    NewTrie(Notes[:]),
 		AccessMachine:   NewTrie(Access[:]),
 		OperatorMachine: NewTrie(Operators[:]),
@@ -149,6 +151,15 @@ func (t *GccNodeTest) CheckFieldName(field []byte) bool {
 	return t.CheckName(t.Globals.FieldMachine, field)
 }
 
+func (t *GccNodeTest) CheckFlagName(field []byte) bool {
+	return t.CheckName(t.Globals.FlagsMachine, field)
+}
+
+func (t *GccNodeTest) AddFlag(flag string) {
+	//return t.CheckName(t.Globals.FlagsMachine, field)
+	fmt.Printf("added flag: %s\n",flag)
+}
+
 func (t *GccNodeTest) CheckNote(field []byte) bool {
 	return t.CheckName(t.Globals.NotesMachine, field)
 }
@@ -173,22 +184,29 @@ func (p *ParserInstance) ProcessNodeType(nodetype string, nodeid string) {
 	// }
 }
 
-// func (t *GccNodeTest) AttrValue(field string) {
-// }
-
-// func (t *GccNodeTest) AttrName(field string) {
-// }
-
-
-
 func (p *ParserInstance) SetAttrName(name string) {
+	
 	if len(name) == 0 {
 		p.Panic("nul name")
 	}
-	if name[0] == '\n' {
-		fmt.Printf("err Set attrname:%s", name)
-		p.Panic("nl name")
+	sc := 0 
+	for _,v := range(name) {
+
+		if v == '\n' || v == '@' {
+			fmt.Printf("err Set attrname:%s", name)
+			p.Panic("nl name")
+		}
+
+		if v == ' ' {
+			sc = sc +1
+			// 0   : has 3 spaces
+			if sc > 4 {
+				fmt.Printf("err Set attrname2:%s", name)
+				p.Panic("2 spaces name")
+			}
+		}
 	}
+
 	p.AttrName = name
 }
 
@@ -232,7 +250,7 @@ func (p *ParserInstance) FinishAttribute() {
 }
 
 func (p *ParserInstance) Add() {
-	if  p.LastPos !=p.Pos {
+	if  p.LastPos ==  p.Pos  - 1 {  // only one char
 		p.LastPos =p.Pos
 		p.Token = append(p.Token, byte(p.C))
 		p.Line = append(p.Line, byte(p.C))
@@ -374,6 +392,7 @@ func (p *ParserInstance) EXPECT_ATTRNAME() {
 		p.Skip()
 		return
 	} else {
+		p.ConsumeToken()
 		p.Add()
 		p.SetState(ATTRNAME)
 	}
@@ -385,7 +404,8 @@ func (p *ParserInstance) TokenEnd() byte {
 }
 
 func (p *ParserInstance) ATTRNAME() {
-	p.Debug3("Debug attrname '%s'\n",string(p.C))
+	p.Debug3("Debug attrname token:'%s'\n",string(p.Token))
+	p.Debug3("Debug attrname nextchar:'%s'\n",string(p.C))
 	if p.C == '@' {
 		p.Panic("not allowd in name")
 	}
@@ -395,12 +415,20 @@ func (p *ParserInstance) ATTRNAME() {
 		p.Skip()
 		return
 	}
+	token := string(p.Token)
 	if p.C == ' ' {		
 		//if ((len(p.Token) > 1)(p.Token[0] == 'o' && p.Token[1] =='p')) {
-		if strings.HasPrefix(string(p.Token),"op") {
+		if p.Parser.CheckFlagName(p.Token) {
+			p.Parser.AddFlag(token)
+			p.Skip()
+			p.ConsumeToken()
+			p.SetState(EXPECT_ATTRVALUE)
+		} else if strings.HasPrefix(token,"op") {
 			p.Debug2("Starting op")
 			if p.TokenEnd()== ':' {
-				p.SetAttrName(string(p.Token))
+				s := string(p.Token)
+				s = strings.Replace(s," ","_",-1)
+				p.SetAttrName(s)
 				p.Skip()
 				p.ConsumeToken()
 				p.SetState(EXPECT_ATTRVALUE)
@@ -491,7 +519,7 @@ func (p *ParserInstance) ATTRVALUE() {
 	}
 	p.DebugInt("check len %d\n", l)
 	p.Debug3("check last %s\n", v)
-	p.DebugAttrs("check values %s\n")
+	p.DebugAttrs("check values:")
 
 	if (p.C == '\n') {
 		p.SetState(NEWLINE)
@@ -642,25 +670,26 @@ func (p *ParserInstance) ATTRVALUE_LNGT() {
 }
 
 func (p *ParserInstance) AFTERATTRVALUE() {
-
+	p.Debug3("enter AFTERATTRVALUE: '%s'\t", string(p.C))
 	if p.C == '\n' {
 		p.SetState(NEWLINE)
 		p.Skip()
-	} else if p.C == ' ' {
-		p.SetState(AFTERATTRVALUE)
+		p.ConsumeToken() // reset the token to get rid of ws
+	} else if p.C == ' ' || p.C == '\t' {
 		p.Skip()
+		p.ConsumeToken() // reset the token to get rid of ws
 	} else {
 
-		p.Debug3("Attrname: '%s'\t", p.AttrName)
-		p.DebugAttrs("AttrValues: '%v'\n")
+		//p.Debug3("Attrname: '%s'\t", p.AttrName)
+		p.DebugAttrs("AttrValues:\n")
 		// the next could be a name of an attr or a value
 
 		if p.AttrName == "note:" {
 			p.SetState(ATTRVALUE)
 			p.Add()
-		} else {
-			p.Add()
+		} else {			
 			p.SetState(ATTRNAME)
+			p.Add()
 		}
 	}
 }
@@ -685,7 +714,18 @@ func (p *ParserInstance) OPERATORVALUE() {
 	if len(p.Token) > 20 {
 		p.Panic(fmt.Sprintf("Too big %s", p.Token))
 	}
-	if p.C == ' ' || p.C == '\t' || p.C == '\n' {
+	if (p.C == '\n' ) {
+		if p.Check(p.Parser.Globals.OperatorMachine) { // will call add as well
+			p.AddAttrValue()
+			p.FinishAttribute()
+			p.Debug2(fmt.Sprintf("found operator value: Token('%s') Char('%s')\n", p.Token, string(p.C)))
+			p.ConsumeToken()
+			p.Add()
+			p.NextState(true, NEWLINE)
+		} else {
+			p.Skip() 
+		}
+	} else if p.C == ' ' || p.C == '\t'  {
 		p.Skip() //
 	} else {
 		
@@ -758,6 +798,9 @@ func (p *ParserInstance) FinishStatement() {
 
 func (p *ParserInstance) Panic(l string ) {
 	p.Debug3("Panic: %s\n", l)
+	
+	p.Parser.Globals.DebugLevel=1000
+	p.DebugAttrs("Panic")
 	panic(p.Line)
 }
 
@@ -776,7 +819,7 @@ func (p *ParserInstance) NEWLINE() {
 type ParseFunc func()
 
 func (p *ParserInstance) LenCheck() {
-	if len(p.Token) > 1250 {
+	if len(p.Token) > 10250 {
 		fmt.Printf("Too Long P.Token %d: %s\n", p.State, p.Token)
 		p.Panic("")
 	}
@@ -851,21 +894,64 @@ func (p *ParserInstance) Debug2(v string) {
 	}
 }
 
-func (p *ParserInstance) Debug3(fmt string, val string) {
+func (p *ParserInstance) Debug3(fmts string, val string) {
+	if p.Parser.Globals.DebugLevel > 12 {
+		fmt.Printf(fmts, val)
+	}
 }
 
-func (p *ParserInstance) DebugBytes(fmt string,  s []byte ) {
+func (p *ParserInstance) DebugBytes(fmts string,  s []byte ) {
+	if p.Parser.Globals.DebugLevel > 13 {
+		fmt.Printf(fmts, string(s))
+	}
 }
 
-func (p *ParserInstance) DebugInt(fmt string,  s int ) {
+func (p *ParserInstance) DebugInt(fmts string,  s int ) {
+	if p.Parser.Globals.DebugLevel > 14 {
+		fmt.Printf(fmts, s)
+	}
 }
 
-func (p *ParserInstance) DebugAttrs(fmt string) {
+func (p *ParserInstance) DebugAttrs(fmts string) {
+	if p.Parser.Globals.DebugLevel > 200 {
+		fmt.Printf("State: '%s'\t", StateLookup[p.State])
+		fmt.Printf("Attrs: '%s'\t", fmts)
+		fmt.Printf("Statements: '%d'\t", p.Statements)
+		fmt.Printf("Pos: '%d'\t", p.Pos)
+		fmt.Printf("LastPos: '%d'\t", p.LastPos)
+		fmt.Printf("Token: '%s'\t", p.Token)
+		fmt.Printf("Line: '%s'\t", p.Line)
+		fmt.Printf("NodeId: '%s'\t", p.NodeId)
+		fmt.Printf("NodeType: '%s'\t", p.NodeType)
+		fmt.Printf("AttrName: '%s'\t", p.AttrName)
+		fmt.Printf("AttrValues: '%s'\t", p.AttrValues)
+		//fmt.Printf("C: '%s'\n", string(p.C))
+		if p.C == '\n' {
+			fmt.Printf("In Char: '<newline>'\t")
+		}else if p.C == '\t' {
+			fmt.Printf("In Char: '<tab>'\t")
+		}else if p.C == ' ' {
+			fmt.Printf("In Char: '<space>'\t")
+		} else {
+			fmt.Printf("In Char: '%s'\t", string(p.C))
+		}
+	}
+	
+	
 }
 
 func (p *ParserInstance) Debug() {
 	if p.Parser.Globals.DebugLevel > 10 {
-		fmt.Printf("Char: '%s'\t", string(p.C))
+		//fmt.Printf("Char: '%s'\t", string(p.C))
+		if p.C == '\n' {
+			fmt.Printf("In Char: '<newline>'\t")
+		}else if p.C == '\t' {
+			fmt.Printf("In Char: '<tab>'\t")
+		}else if p.C == ' ' {
+			fmt.Printf("In Char: '<space>'\t")
+		} else {
+			fmt.Printf("In Char: '%s'\t", string(p.C))
+		}
 		fmt.Printf("State: '%s'\t", StateLookup[p.State])
 		fmt.Printf("Token: '%s'\n", p.Token)
 	}
@@ -873,15 +959,37 @@ func (p *ParserInstance) Debug() {
 
 func (p *ParserInstance) DebugIn() {
 	if p.Parser.Globals.DebugLevel > 10 {
-		fmt.Printf("In Char: '%s'\t", string(p.C))
+		if p.C == '\n' {
+			fmt.Printf("In Char: '<newline>'\t")
+		}else if p.C == '\t' {
+			fmt.Printf("In Char: '<tab>'\t")
+		}else if p.C == ' ' {
+			fmt.Printf("In Char: '<space>'\t")
+		} else {
+			fmt.Printf("In Char: '%s'\t", string(p.C))
+		}
 		fmt.Printf("In State: '%s'\t", StateLookup[p.State])
+		t := string(p.Token)
+		t = strings.Replace(t,"\n","<newline>",-1)
+		t = strings.Replace(t," ","<space>",-1)
+		t = strings.Replace(t,"\t","<tab>",-1)
 		fmt.Printf("In Token: '%s'\n", p.Token)
 	}
 }
 
 func (p *ParserInstance) DebugNow() {
 
-	fmt.Printf("Char: '%s'\t", string(p.C))
+	//fmt.Printf("Char: '%s'\t", string(p.C))
+	if p.C == '\n' {
+		fmt.Printf("Char: '<newline>'\t")
+	}else if p.C == '\t' {
+		fmt.Printf("Char: '<tab>'\t")
+	}else if p.C == ' ' {
+		fmt.Printf("Char: '<space>'\t")
+	} else {
+		fmt.Printf("Char: '%s'\t", string(p.C))
+	}
+	
 	fmt.Printf("State: '%s'\t", StateLookup[p.State])
 	fmt.Printf("Token: '%s'\n", p.Token)
 	

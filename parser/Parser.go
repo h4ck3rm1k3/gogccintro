@@ -15,6 +15,28 @@ type StateNames map[Token]string
 // global
 var StateLookup    StateNames
 
+func CreateStateLookup() (StateNames ){
+	return map[Token]string{
+	START:            "START",
+	AT:               "AT",
+	NODEID:           "NODEID",
+	EXPECT_NODE_TYPE: "EXPECT_NODE_TYPE",
+	NODETYPE:         "NODETYPE",
+	EXPECT_ATTRNAME:  "EXPECT_ATTRNAME",
+	ATTRNAME:         "ATTRNAME",
+	EXPECT_ATTRVALUE: "EXPECT_ATTRVALUE",
+	ATTRVALUE:        "ATTRVALUE",
+	AFTERATTRVALUE:   "AFTERATTRVALUE",
+	AFTERATTRVALUE2:  "AFTERATTRVALUE2",
+	NEWLINE:          "NEWLINE",
+	NOTEVALUE:        "NOTEVALUE",
+	OPERATORVALUE:    "OPERATORVALUE",
+	OPERATORVALUE_MATCH:    "OPERATORVALUE_MATCH",
+	OPERATORVALUE_NL:    "OPERATORVALUE_NL",
+	ATTRVALUE_STRG:   "ATTRVALUE_STRG",
+	ATTRVALUE_LNGT:   "ATTRVALUE_LNGT",
+	}
+}
 
 type ParserGlobal struct {
 
@@ -118,6 +140,8 @@ const (
 	NOTEVALUE
 	// Note : operator ...
 	OPERATORVALUE
+	OPERATORVALUE_MATCH
+	OPERATORVALUE_NL
 )
 
 func isIdent(ch rune) bool {
@@ -157,7 +181,9 @@ func (t *GccNodeTest) CheckFlagName(field []byte) bool {
 
 func (t *GccNodeTest) AddFlag(flag string) {
 	//return t.CheckName(t.Globals.FlagsMachine, field)
-	fmt.Printf("added flag: %s\n",flag)
+	if t.Globals.DebugLevel > 1000 {
+		fmt.Printf("added flag: %s\n",flag)
+	}
 }
 
 func (t *GccNodeTest) CheckNote(field []byte) bool {
@@ -606,8 +632,10 @@ func (p *ParserInstance) ATTRVALUE() {
 				p.Skip()
 				p.ConsumeToken()
 				//p.Debug3("debug name4 %s\n", string(p.C))
-				p.Debug3("Attrname : %s\n", p.AttrName)
-				p.FinishAttribute()
+				if p.AttrName != "" {
+					p.Debug3("Attrname : %s\n", p.AttrName)
+					p.FinishAttribute()
+				}
 				p.SetState(AFTERATTRVALUE)
 			}
 		}
@@ -709,27 +737,22 @@ func (p *ParserInstance) AFTERATTRVALUE2() {
 	}
 }
 
-func (p *ParserInstance) OPERATORVALUE() {
-
-	if len(p.Token) > 20 {
-		p.Panic(fmt.Sprintf("Too big %s", p.Token))
+func (p *ParserInstance) OPERATORVALUE_NL() {
+	// after operator, if we get a newline, this is a special case.
+	p.Debug2(fmt.Sprintf("OPERATORVALUE_NL: Token('%s') Char('%s')\n", p.Token, string(p.C)))
+	if p.C == '@' {
+		p.FinishStatement()
+		p.Skip()
+		p.SetState(NODEID)
 	}
-	if (p.C == '\n' ) {
-		if p.Check(p.Parser.Globals.OperatorMachine) { // will call add as well
-			p.AddAttrValue()
-			p.FinishAttribute()
-			p.Debug2(fmt.Sprintf("found operator value: Token('%s') Char('%s')\n", p.Token, string(p.C)))
-			p.ConsumeToken()
-			p.Add()
-			p.NextState(true, NEWLINE)
-		} else {
-			p.Skip() 
-		}
-	} else if p.C == ' ' || p.C == '\t'  {
-		p.Skip() //
-	} else {
-		
-		if p.Check(p.Parser.Globals.OperatorMachine) { // will call add as well
+}
+
+func (p *ParserInstance) OPERATORVALUE_MATCH (){
+	// could have matched not, but we get note:
+	
+	// after we match an operator, look for the space because the names are ambigious
+	if (p.C == ' ' ) {
+		if p.Check(p.Parser.Globals.OperatorMachine) { 
 			p.AddAttrValue()
 			p.FinishAttribute()
 			p.Debug2(fmt.Sprintf("found operator value: '%s' '%s'\n", p.Token, string(p.C)))
@@ -737,11 +760,68 @@ func (p *ParserInstance) OPERATORVALUE() {
 			p.Add()
 			p.NextState(true, AFTERATTRVALUE)
 		} else {
+			t:=string(p.Token)
+			if (t == "note:") {
+				// this is a special case, with note:operator <note:> method
+				// where the note: could have matched not
+				p.SetAttrName(t)
+				p.ConsumeToken()
+				p.SetState(EXPECT_ATTRVALUE)
+				p.Add()
+			} else {
+				p.Debug2(fmt.Sprintf("other operator value: '%s' '%s'\n", p.Token, string(p.C)))
+				p.Add()
+			}
+		}
+	} else {
+		p.Add()
+	}
+	//else if p.Check(p.Parser.Globals.OperatorMachine) { 
+	//	}
+}
+
+func (p *ParserInstance) OPERATORVALUE() {
+	// this could be an operator or just the next token or end of line
+	if len(p.Token) > 20 {
+		p.Panic(fmt.Sprintf("Too big %s", p.Token))
+	}
+	if (p.C == '\n' ) {
+		if p.Check(p.Parser.Globals.OperatorMachine) { 
+			p.AddAttrValue()
+			p.FinishAttribute()
+			p.Debug2(fmt.Sprintf("found operator value: Token('%s') Char('%s')\n", p.Token, string(p.C)))
+			p.ConsumeToken()
+			p.Add()
+			p.NextState(true, NEWLINE)
+		} else {
+			p.NextState(true, OPERATORVALUE_NL)
+			p.Skip() 
+		}
+	} else if p.C == ' ' || p.C == '\t'  {
+		if p.Check(p.Parser.Globals.OperatorMachine) { 
+			p.AddAttrValue()
+			p.FinishAttribute()
+			p.Debug2(fmt.Sprintf("found operator value: Token('%s') Char('%s')\n", p.Token, string(p.C)))
+			p.ConsumeToken()
+			p.Add()
+			p.NextState(true, NEWLINE)
+		} else {
+			p.Debug2(fmt.Sprintf("check operator value: Token('%s') Char('%s')\n", p.Token, string(p.C)))
+			p.Skip() 
+		}
+
+	} else {
+		
+		if p.Check(p.Parser.Globals.OperatorMachine) { 
+			p.Add()
+			p.NextState(true, OPERATORVALUE_MATCH)
+		} else {
 			if p.C == '@' {
 				p.NextState(true, AFTERATTRVALUE)
 				p.Add()
 				p.Debug2(fmt.Sprintf("empty operator, next value: '%s' '%s'\n", p.Token, string(p.C)))
 			} else {
+				// could be another 
 				p.Debug2(fmt.Sprintf("skip operator value: '%s' '%s'\n", p.Token, string(p.C)))
 				p.Add()
 			}
@@ -855,6 +935,8 @@ func (t *GccNodeTest) Parse() *int {
 		NODETYPE:         p.NODETYPE,
 		NOTEVALUE:        p.NOTEVALUE,
 		OPERATORVALUE:    p.OPERATORVALUE,
+		OPERATORVALUE_NL:    p.OPERATORVALUE_NL,
+		OPERATORVALUE_MATCH:    p.OPERATORVALUE_MATCH,
 		START:            p.START,
 		ATTRVALUE_STRG:   p.ATTRVALUE_STRG,
 		ATTRVALUE_LNGT:   p.ATTRVALUE_LNGT,

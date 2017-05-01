@@ -146,24 +146,7 @@ func main() {
 	defer profile.Start(profile.CPUProfile).Stop()
 
 
-	StateLookup = map[Token]string{
-		START:            "START",
-		AT:               "AT",
-		NODEID:           "NODEID",
-		EXPECT_NODE_TYPE: "EXPECT_NODE_TYPE",
-		NODETYPE:         "NODETYPE",
-		EXPECT_ATTRNAME:  "EXPECT_ATTRNAME",
-		ATTRNAME:         "ATTRNAME",
-		EXPECT_ATTRVALUE: "EXPECT_ATTRVALUE",
-		ATTRVALUE:        "ATTRVALUE",
-		AFTERATTRVALUE:   "AFTERATTRVALUE",
-		AFTERATTRVALUE2:  "AFTERATTRVALUE2",
-		NEWLINE:          "NEWLINE",
-		NOTEVALUE:        "NOTEVALUE",
-		OPERATORVALUE:    "OPERATORVALUE",
-		ATTRVALUE_STRG:   "ATTRVALUE_STRG",
-		ATTRVALUE_LNGT:   "ATTRVALUE_LNGT",
-	}
+	StateLookup = CreateStateLookup()
 
 	c := NewConsumer()
 	args := NewParser(c)	

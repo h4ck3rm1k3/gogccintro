@@ -4,6 +4,12 @@
 # t3: t
 # 	~/gocode/bin/peg  -inline -switch  t3.peg
 
+vecdelete.txt: parser ~/experiments/gogccintro/parser/tests/vecdelete.tu
+	./parser -debuglevel 1000 -file ~/experiments/gogccintro/parser/tests/vecdelete.tu
+
+spec.txt: parser ~/experiments/gogccintro/parser/tests/naked_operator.tu
+	./parser -debuglevel 1000 -file ~/experiments/gogccintro/parser/tests/spec.tu
+
 op.txt: parser ~/experiments/gogccintro/parser/tests/naked_operator.tu
 	./parser -debuglevel 1000 -file ~/experiments/gogccintro/parser/tests/naked_operator.tu
 
@@ -11,7 +17,7 @@ gcc.txt : parser
 	./parser -directory ~/experiments/gcc-1/build/gcc/
 
 tests.txt: parser
-	./parser -directory ~/experiments/gogccintro/parser/tests/ 
+	./parser -debuglevel 2000 -directory ~/experiments/gogccintro/parser/tests/ 
 
 test : parser tests.txt
 

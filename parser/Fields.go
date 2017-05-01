@@ -11,6 +11,7 @@ var Fields  = [...]string {
 
 var Flags  = [...]string {
 	"bitfield", // flag
+	"spec", 
 }
 
 var Notes = [...] string { //, "note",
@@ -67,8 +68,8 @@ var Operators = [...] string { // "note operator"
 	"minusassign",
 	"mod",
 	"modassign",
-	"mult",
 	"multassign",
+	"mult",
 	"ne",
 	"neg",
 	"new",

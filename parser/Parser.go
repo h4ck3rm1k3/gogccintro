@@ -4,6 +4,7 @@ import (
 	//"github.com/anknown/ahocorasick"
 	//"bytes"
 	"fmt"
+	"sync"
 	"strings"
 	//"unicode/utf8"
 )
@@ -39,7 +40,7 @@ func CreateStateLookup() (StateNames ){
 }
 
 type ParserGlobal struct {
-
+	Lock        sync.RWMutex
 	Attrnames       AttrNames
 	FieldMachine    *Machine
 	FlagsMachine     *Machine
@@ -50,6 +51,12 @@ type ParserGlobal struct {
 	LinkMachine     *Machine
 	DebugLevel      int
 	Consumer TreeConsumer
+}
+
+func (p *ParserGlobal) AddAttr(attrname string ) {
+	p.Lock.Lock()
+	defer p.Lock.Unlock()
+	p.Attrnames[attrname] = p.Attrnames[attrname] + 1
 }
 
 type TreeNode interface {
@@ -93,6 +100,7 @@ func NewParser(Consumer TreeConsumer) *ParserGlobal {
 
 	
 	return &ParserGlobal{
+		Lock :sync.RWMutex{},
 		//DebugLevel:      100,
 		//DebugLevel:      11,
 		DebugLevel:      0,
@@ -471,7 +479,8 @@ func (p *ParserInstance) ATTRNAME() {
 					p.ConsumeToken()
 
 					//p.Debug3("found p.AttrName %s %s %s\n", p.NodeId, p.NodeType, attrname)
-					p.Parser.Globals.Attrnames[p.AttrName] = p.Parser.Globals.Attrnames[p.AttrName] + 1
+					p.Parser.Globals.AddAttr(p.AttrName)
+					//p.Parser.Globals.Attrnames[p.AttrName] = p.Parser.Globals.Attrnames[p.AttrName] + 1
 					p.ResetAttrValues()
 					if p.AttrName == "note:" {
 						p.SetState(NOTEVALUE)
@@ -580,7 +589,8 @@ func (p *ParserInstance) ATTRVALUE() {
 				// it is an attribute name
 				p.SetAttrName( string(p.Token))
 				//p.Debug3("found p.AttrName %s %s %s\n", p.NodeId, p.NodeType, p.AttrName)
-				p.Parser.Globals.Attrnames[p.AttrName] = p.Parser.Globals.Attrnames[p.AttrName] + 1
+				p.Parser.Globals.AddAttr(p.AttrName)
+				//p.Parser.Globals.Attrnames[p.AttrName] = p.Parser.Globals.Attrnames[p.AttrName] + 1
 				p.ResetAttrValues()
 				p.Skip()
 				p.ConsumeToken()
@@ -668,8 +678,9 @@ func (p *ParserInstance) ATTRVALUE_STRG() {
 			p.ConsumeToken()
 
 			p.SetAttrName("lngt:")
-			
-			p.Parser.Globals.Attrnames[p.AttrName] = p.Parser.Globals.Attrnames[p.AttrName] + 1
+
+			p.Parser.Globals.AddAttr(p.AttrName)
+			//p.Parser.Globals.Attrnames[p.AttrName] = p.Parser.Globals.Attrnames[p.AttrName] + 1
 			p.ResetAttrValues()
 			p.SetState(EXPECT_ATTRVALUE)
 			return

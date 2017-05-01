@@ -1,6 +1,7 @@
 package main
 
 import (
+	"sync"
 	"fmt"
 	"sort"
 	"strconv"
@@ -182,14 +183,20 @@ func (t *SAttributeVector) Vals(n *TestNode, t2 *TestConsumer, t3 *SNodeType) {
 type SNodeType struct {
 	Count          Stat
 	AttributeCount map[int]*SAttributeVector // Attribute County
+
+	AttrNames map[string]int // simple count
 	CoOccurance *CoOccurance
 }
 
 func (t *SNodeType) Report(nodetype string) {
 	t.Count.Report(2)
 	fmt.Printf("\t\tlen attrcount %d:\n", len(t.AttributeCount))
+	for k, v := range t.AttrNames {
+		fmt.Printf("\t\tattr\t%s\t%d\n", k,v)
+	}
 	t.CoOccurance.Report()
-	
+
+
 	// for k, _ := range t.AttributeCount {
 	// 	fmt.Printf("\t\tattrcount %d:\n", k)
 	// 	//v.Report(nodetype, k)	
@@ -212,26 +219,36 @@ func (t *SNodeType) Node(n *TestNode, t2 *TestConsumer) {
 		o.Vals(n, t2, t)
 	}
 	//t.AttributeCount[len(n.Vals)].Vals(n)
+
+	for k, _ := range n.Vals {
+		if val, ok := t.AttrNames[k]; ok {
+			t.AttrNames[k] =val + 1		
+		} else {
+			t.AttrNames[k] =1
+		}
+	}
+	
 }
 
 type TestConsumer struct {
+	Lock        sync.RWMutex//= sync.RWMutex{}
 	Count       Stat
 	NodeTypes   map[string]*SNodeType
-
 	// parser stats
 	Transitions   map[int]map[int]int
 	States        map[int]int
-
-	
-	
 }
 
 func (t *TestConsumer) StateUsage(from int) {
+	t.Lock.Lock()
+	defer t.Lock.Unlock()
 	old := t.States[from]
 	t.States[from]=old + 1	
 }
 
 func (t *TestConsumer) StateTransition(from int, to int) {
+	t.Lock.Lock()
+	defer t.Lock.Unlock()
 
 	if val, ok := t.Transitions[from]; ok {
 		old := val[to]
@@ -280,6 +297,9 @@ func (t *TestConsumer) Report() {
 }
 
 func (t *TestConsumer) Node(n *TestNode) {
+	t.Lock.Lock()
+	defer t.Lock.Unlock()
+
 	t.Count.Count()
 
 	if t.NodeTypes == nil {
@@ -290,6 +310,7 @@ func (t *TestConsumer) Node(n *TestNode) {
 	} else {
 		o := &SNodeType{
 			CoOccurance: &CoOccurance{},
+			AttrNames: make(map[string]int),
 		}
 		t.NodeTypes[n.NodeType] = o
 		o.Node(n, t)
@@ -356,6 +377,7 @@ func (t *TestConsumer) NodeType(nodetype string, nodeid string) TreeNode {
 
 func NewConsumer() *TestConsumer {
 	return &TestConsumer{
+		Lock :sync.RWMutex{},
 		Transitions   :make(map[int]map[int]int),
 		States        :make(map[int]int),	
 		

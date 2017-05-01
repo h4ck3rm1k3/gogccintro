@@ -6,6 +6,7 @@ import "github.com/pkg/profile"
 	
 import (
 	"fmt"
+	"runtime"
 	//"github.com/golang/protobuf/proto"
 	"strconv"
 	//"filepath"
@@ -17,6 +18,8 @@ import (
 	"io/ioutil"
 	//"encoding/json"
 	"flag"
+	//"github.com/jeffail/tunny"
+	"github.com/goinggo/workpool"
 )
 
 func Parse2(filename string, b string,args*ParserGlobal) (*GccNodeTest, error){
@@ -141,11 +144,32 @@ func ProcessFile (cfile string, args *ParserGlobal) {
 	}
 	resetFile()
 }
-	
+
+type FileArgs struct {
+	File string 
+	Globals  *ParserGlobal
+}
+
+
+func (t * FileArgs) DoWork (workRoutine int) {
+	fmt.Printf("process %d\n", workRoutine)
+
+	fmt.Printf("the process %s\n", t.File)
+	ProcessFile(
+		t.File,
+		t.Globals,
+	)
+	fmt.Printf("after process %s\n", t.File)
+}
+
 func main() {
+	numCPUs := runtime.NumCPU()
+	runtime.GOMAXPROCS(numCPUs *3) // numCPUs hot threads + one for async tasks.
 	defer profile.Start(profile.CPUProfile).Stop()
 
-
+	//pool, _ := tunny.CreatePool(numCPUs, process).Open()
+	workPool := workpool.New(runtime.NumCPU(), 800)
+	
 	StateLookup = CreateStateLookup()
 
 	c := NewConsumer()
@@ -171,15 +195,32 @@ func main() {
 
 	if (*scan_dir != "") {
 		files := testTUFiles(*scan_dir)
-		for _, cfile := range files {		
-			ProcessFile(cfile, args)
+		for _, cfile := range files {
+
+			a := FileArgs {
+				File: cfile,
+				Globals :args,
+			}
+
+			result2 := workPool.PostWork("routine",&a)
+			fmt.Printf("res %#v\n", result2)
+			
 		}
 	}
 
 	if (*read_file != "") {
 		fmt.Printf("read just one file %s", *read_file)
-		ProcessFile(*read_file, args)
+		//ProcessFile(*read_file, args)
+		a := FileArgs {
+			File: *read_file,
+			Globals :args,
+		}
+		result2 := workPool.PostWork("routine",&a)
+		fmt.Printf("res %#v\n", result2)
+
 	}
+
+	workPool.Shutdown("routine")
 	
 	// for i,_ := range(args.Attrnames) {
 	//  	fmt.Printf("attrnames %s\n",i)

@@ -6,13 +6,15 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"io/ioutil"
+	//"bytes"
+	//"encoding/gob"
 )
 
 type Stat struct {
 	TheCount int
 }
 
-//t.Parent.Node(t)
 func (t *Stat) Count() {
 	t.TheCount++
 }
@@ -26,7 +28,7 @@ func (t *Stat) Report(indent int) {
 
 type SValue struct {
 	Count Stat
-	//Vals map [string] SValue
+
 }
 
 func (t *SValue) Report() {
@@ -230,47 +232,76 @@ func (t *SNodeType) Node(n *TestNode, t2 *TestConsumer) {
 	
 }
 
-type TestConsumer struct {
-	Lock        sync.RWMutex//= sync.RWMutex{}
-	Count       Stat
-	NodeTypes   map[string]*SNodeType
+type ProgramData struct {
+	Count         Stat
+	NodeTypes     map[string]*SNodeType
 	// parser stats
 	Transitions   map[int]map[int]int
-	States        map[int]int
+	States        map[int]int	
+}
+
+type TestConsumer struct {
+	Lock          sync.RWMutex//= sync.RWMutex{}
+	Filename      string
+	Data ProgramData
+	//Cache *       Cache
 }
 
 func (t *TestConsumer) StateUsage(from int) {
 	t.Lock.Lock()
 	defer t.Lock.Unlock()
-	old := t.States[from]
-	t.States[from]=old + 1	
+	old := t.Data.States[from]
+	t.Data.States[from]=old + 1	
 }
 
 func (t *TestConsumer) StateTransition(from int, to int) {
 	t.Lock.Lock()
 	defer t.Lock.Unlock()
 
-	if val, ok := t.Transitions[from]; ok {
+	if val, ok := t.Data.Transitions[from]; ok {
 		old := val[to]
 		val[to]=old + 1
 	} else {
 		v := make(map[int]int)
 	        v[to]=1
-		t.Transitions[from] = v
+		t.Data.Transitions[from] = v
 	}
+}
+
+func (t *TestConsumer) Write() {
+	b, err := t.Data.MarshalJSON()
+	if err != nil {
+		panic(err)
+	}	
+	//DEBUG : fmt.Printf("NodeTypes:%s\n",b)
+
+	err = ioutil.WriteFile(fmt.Sprintf("%s.json",t.Filename), b, 0644)
+	if (err != nil){panic(err)}
+}
+
+func (t *TestConsumer) Read() {
+
+	b,err := ioutil.ReadFile(fmt.Sprintf("%s.json",t.Filename))
+	if (err != nil){panic(err)}
+	
+	err = t.Data.UnmarshalJSON(b)
+	if err != nil {
+		panic(err)
+	}	
+	//DEBUG :
+	//fmt.Printf("Read:%s\n",t.Data)
 }
 
 func (t *TestConsumer) Report() {
 
-	//
-	for k, v := range t.States {
+	for k, v := range t.Data.States {
 		fmt.Printf("\tS %20s %10d\n", StateLookup[Token(k)], v)
 	}
 	// report on transitions
 
 	to_count := make(map[int]int)
 	
-	for k, v := range t.Transitions {
+	for k, v := range t.Data.Transitions {
 		c:=0
 		for k2, v2 := range v {
 			fmt.Printf("\tT %20s %20s %10d\n", StateLookup[Token(k)], StateLookup[Token(k2)], v2)
@@ -278,54 +309,57 @@ func (t *TestConsumer) Report() {
 			to_count[k2] = to_count[k2] + v2
 		}
 		//
-		fmt.Printf("\tAS %20s %10d\n", StateLookup[Token(k)], t.States[k]/c)
+		fmt.Printf("\tAS %20s %10d\n", StateLookup[Token(k)], t.Data.States[k]/c)
 		
 	}
 	for k, v := range to_count {
-		fmt.Printf("\tTAS %20s %10d\n", StateLookup[Token(k)], t.States[k]/v)
+		fmt.Printf("\tTAS %20s %10d\n", StateLookup[Token(k)], t.Data.States[k]/v)
 	}
 		
-	t.Count.Report(1)
+	t.Data.Count.Report(1)
 	
 	//fmt.Printf("Report %#v\n", t.NodeTypes)
-	for k, v := range t.NodeTypes {
+	for k, v := range t.Data.NodeTypes {
 		fmt.Printf("\tNT %s %d\n", k, v.Count.TheCount)
 		v.Report(k)
 	}
 	
-
+	//t.Cache.Add(x,b)
+	//t.Cache.Close()
 }
 
-func (t *TestConsumer) Node(n *TestNode) {
+func (t *TestConsumer) NodeImp(n *TestNode) {
+	//Gob(n)
 	t.Lock.Lock()
 	defer t.Lock.Unlock()
 
-	t.Count.Count()
+	t.Data.Count.Count()
 
-	if t.NodeTypes == nil {
-		t.NodeTypes = make(map[string]*SNodeType)
+	if t.Data.NodeTypes == nil {
+		t.Data.NodeTypes = make(map[string]*SNodeType)
 	}
-	if val, ok := t.NodeTypes[n.NodeType]; ok {
+	if val, ok := t.Data.NodeTypes[n.NodeType]; ok {
 		val.Node(n, t)
 	} else {
 		o := &SNodeType{
 			CoOccurance: &CoOccurance{},
 			AttrNames: make(map[string]int),
 		}
-		t.NodeTypes[n.NodeType] = o
+		t.Data.NodeTypes[n.NodeType] = o
 		o.Node(n, t)
 	}
 }
 
 type TestNode struct {
-	Parent   *TestConsumer
 	NodeType string
 	NodeId   string
 	Vals     map[string][]string
+	//StrVals     map[string]string
+	//IntVals     map[string]int
 }
 
-func (t *TestNode) Finish() {
-	t.Parent.Node(t)
+func (t *TestNode) Finish(Parent TreeConsumer) {
+	Parent.Node(t)
 }
 
 func (t *TestNode) Report() {
@@ -368,18 +402,31 @@ func (t *TestNode) SetAttr(name string, vals []string) {
 
 func (t *TestConsumer) NodeType(nodetype string, nodeid string) TreeNode {
 	return &TestNode{
-		Parent:   t,
+
 		NodeType: nodetype,
 		NodeId:   nodeid,
 		Vals:     make(map[string][]string),
 	}
 }
 
-func NewConsumer() *TestConsumer {
+func NewConsumer(Filename string ) *TestConsumer {
 	return &TestConsumer{
+		Filename : Filename,
 		Lock :sync.RWMutex{},
-		Transitions   :make(map[int]map[int]int),
-		States        :make(map[int]int),	
-		
+		Data : ProgramData {
+			Transitions   :make(map[int]map[int]int),
+			States        :make(map[int]int),
+		},
+		//Cache :  LoadCache(),
+	}
+}
+
+func (t *TestConsumer) Node(n TreeNode)  {
+
+	switch v:= n.(type) {
+	case * TestNode:
+		t.NodeImp(v)
+	default:
+		panic("unknown")
 	}
 }

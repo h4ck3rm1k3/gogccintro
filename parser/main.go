@@ -72,32 +72,6 @@ func testTUFiles(rootDir string) []string {
 	return files
 }
 
-func (e *parseError) Error() string {
-	tokens, error := []token32{e.max}, "\n"
-	positions, p := make([]int, 2*len(tokens)), 0
-	for _, token := range tokens {
-		positions[p], p = int(token.begin), p+1
-		positions[p], p = int(token.end), p+1
-	}
-	translations := translatePositions(e.p.buffer, positions)
-	format := "Error\nfile.tu:%d:  parse error near %v\n (line %v symbol %v - line %v symbol %v):\n%v\n"
-	if e.p.Pretty {
-		format = "parse error near \x1B[34m%v\x1B[m (line %v symbol %v - line %v symbol %v):\n%v\n"
-	}
-	for _, token := range tokens {
-		begin, end := int(token.begin), int(token.end)
-		error += fmt.Sprintf(format,
-			translations[begin].line,
-
-			
-			rul3s[token.pegRule],
-			translations[begin].line, translations[begin].symbol,
-			translations[end].line, translations[end].symbol,
-			strconv.Quote(string(e.p.buffer[begin:end])))
-	}
-
-	return error
-}
 
 func Atoi(s string) int32 {
 	var r int32
@@ -138,11 +112,11 @@ func ProcessFile (cfile string, args *ParserGlobal) {
 		
 	} else {
 		fmt.Printf("OK %s\n",cfile)
-		file.Filename = &cfile
+		//file.Filename = &cfile
 		tree.Execute();
 		
 	}
-	resetFile()
+	//resetFile()
 }
 
 type FileArgs struct {
@@ -162,7 +136,32 @@ func (t * FileArgs) DoWork (workRoutine int) {
 	fmt.Printf("after process %s\n", t.File)
 }
 
+type ProgramArgs struct {
+	debug_level *int
+	scan_dir *string
+	read_file *string
+	operation *string
+	name  *string
+}
+	
 func main() {
+	args := &ProgramArgs {
+		debug_level : flag.Int("debuglevel", 0, "debug level"),
+		scan_dir : flag.String("directory", "", "scan directory"),
+		read_file : flag.String("file", "", "scan file"),
+		operation : flag.String("operation", "parse", "parse or readcache"),
+		name  : flag.String("name", "test", "name of cachekey"),
+	}
+	
+	flag.Parse()
+	if *args.operation=="parse" {
+		parser_main(args)
+	} else if *args.operation=="readcache" {
+		read_cache_main(args)
+	}
+}
+	
+func parser_main(args *ProgramArgs) {
 	numCPUs := runtime.NumCPU()
 	runtime.GOMAXPROCS(numCPUs *3) // numCPUs hot threads + one for async tasks.
 	defer profile.Start(profile.CPUProfile).Stop()
@@ -172,19 +171,13 @@ func main() {
 	
 	StateLookup = CreateStateLookup()
 
-	c := NewConsumer()
-	args := NewParser(c)	
 	//func TestOne(t *testing.T) {
 
-	var debug_level = flag.Int("debuglevel", 0, "debug level")
+	c := NewConsumer(*args.name)
+	args2 := NewParser(c)		
 
-	var scan_dir = flag.String("directory", "", "scan directory")
-	var read_file = flag.String("file", "", "scan file")
-	
-	flag.Parse()
-
-	if *debug_level != 0 {
-		args.DebugLevel = *debug_level
+	if *args.debug_level != 0 {
+		args2.DebugLevel = *args.debug_level
 	}
 	// if len(os.Args) < 2 {
 	// 	name := os.Args[0]
@@ -193,13 +186,13 @@ func main() {
 	// }
 	// dir := os.Args[1]
 
-	if (*scan_dir != "") {
-		files := testTUFiles(*scan_dir)
+	if (*args.scan_dir != "") {
+		files := testTUFiles(*args.scan_dir)
 		for _, cfile := range files {
 
 			a := FileArgs {
 				File: cfile,
-				Globals :args,
+				Globals :args2,
 			}
 
 			result2 := workPool.PostWork("routine",&a)
@@ -208,12 +201,12 @@ func main() {
 		}
 	}
 
-	if (*read_file != "") {
-		fmt.Printf("read just one file %s", *read_file)
+	if (*args.read_file != "") {
+		fmt.Printf("read just one file %s", *args.read_file)
 		//ProcessFile(*read_file, args)
 		a := FileArgs {
-			File: *read_file,
-			Globals :args,
+			File: *args.read_file,
+			Globals :args2,
 		}
 		result2 := workPool.PostWork("routine",&a)
 		fmt.Printf("res %#v\n", result2)

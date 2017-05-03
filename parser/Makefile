@@ -4,6 +4,9 @@
 # t3: t
 # 	~/gocode/bin/peg  -inline -switch  t3.peg
 
+vecdelete2.txt: parser ~/experiments/gogccintro/parser/tests/vecdelete.tu
+	./parser -file ~/experiments/gogccintro/parser/tests/vecdelete.tu -name vecdel
+
 vecdelete.txt: parser ~/experiments/gogccintro/parser/tests/vecdelete.tu
 	./parser -debuglevel 1000 -file ~/experiments/gogccintro/parser/tests/vecdelete.tu
 
@@ -13,8 +16,12 @@ spec.txt: parser ~/experiments/gogccintro/parser/tests/naked_operator.tu
 op.txt: parser ~/experiments/gogccintro/parser/tests/naked_operator.tu
 	./parser -debuglevel 1000 -file ~/experiments/gogccintro/parser/tests/naked_operator.tu
 
+
+gcctest.txt : parser
+	./parser -directory ~/experiments/gcc-1/build/gcc/tests/ -name gcctests
+
 gcc.txt : parser
-	./parser -directory ~/experiments/gcc-1/build/gcc/
+	./parser -directory ~/experiments/gcc-1/build/gcc/ -name gcc
 
 tests.txt: parser
 	./parser -debuglevel 2000 -directory ~/experiments/gogccintro/parser/tests/ 
@@ -51,7 +58,9 @@ rtest : example
 #test2.peg.go: test2.peg
 #	~/gocode/bin/peg  -inline -switch  test2.peg
 
-parser :  main.go Parser.go Fields.go Trie.go Consumer.go CoOccurance.go Groups.go
+parser :  main.go Parser.go Fields.go Trie.go Consumer.go CoOccurance.go Groups.go Ybc.go Gob.go readcache.go Ast_ffjson.go
 
 	GOPATH=/home/mdupont/gocode/ go build 
 
+readcache :  parser
+	./parser -operation readcache  -name gccpretty

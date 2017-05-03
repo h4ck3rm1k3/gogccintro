@@ -61,7 +61,7 @@ func (p *ParserGlobal) AddAttr(attrname string ) {
 
 type TreeNode interface {
 	SetAttr(attrname string, values []string)
-	Finish()
+	//Finish(TreeConsumer)
 }
 
 type TreeConsumer interface {
@@ -69,6 +69,7 @@ type TreeConsumer interface {
 	Report()
 	StateTransition(from int, to int) // state
 	StateUsage(from int) // state usage
+	Node(TreeNode)
 }
 
 type GccNodeTest struct {
@@ -880,7 +881,8 @@ func (p *ParserInstance) FinishStatement() {
 	p.Line = []byte{}
 	if (p.Current != nil) {
 		p.Statements++
-		p.Current.Finish()
+//		fmt.Printf("Node: %#v\n", p.Current)
+		p.Parser.Globals.Consumer.Node(p.Current)
 		p.Current = nil
 	} else {
 		p.Panic("no current\n")

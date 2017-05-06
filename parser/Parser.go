@@ -4,6 +4,7 @@ import (
 	//"github.com/anknown/ahocorasick"
 	//"bytes"
 	"fmt"
+	"time"
 	"sync"
 	"strings"
 	//"unicode/utf8"
@@ -82,6 +83,7 @@ type GccNodeTest struct {
 	//Nodetypes map[string]map[string]int
 }
 type ParserInstance struct {
+	LastTime time.Time
 	Statements int
 	State      Token
 	Pos        int
@@ -401,7 +403,7 @@ func (p *ParserInstance) NODETYPE() {
 	if p.C == ' ' {
 		p.NodeType = string(p.Token)
 		if p.NodeType[0] == '1' || p.NodeType[0] == '2' || p.NodeType[0] == '6'|| p.NodeType[0] == '7' {
-			panic(p.NodeType)
+			p.Panic(p.NodeType)
 		}
 		p.Debug3("found node type %s %s\n", p.NodeType)
 		p.ProcessNodeType(p.NodeType, p.NodeId)
@@ -892,9 +894,9 @@ func (p *ParserInstance) FinishStatement() {
 func (p *ParserInstance) Panic(l string ) {
 	p.Debug3("Panic: %s\n", l)
 	
-	p.Parser.Globals.DebugLevel=1000
+	//p.Parser.Globals.DebugLevel=1000
 	p.DebugAttrs("Panic")
-	panic(p.Line)
+	//panic(p.Line)
 }
 
 func (p *ParserInstance) NEWLINE() {
@@ -917,9 +919,21 @@ func (p *ParserInstance) LenCheck() {
 		p.Panic("")
 	}
 	if p.Pos > 1 {
-		if p.Pos%10000000 == 0 {
+		
+		if p.Pos% 10000000 == 0 {
 			fmt.Printf("Proc %d %s %d\n", p.Pos, p.Token, p.State)
 		}
+
+
+
+
+		if p.Pos% 100000 == 0 {
+
+			p.Parser.Globals.Consumer.Report()
+			d := time.Since(p.LastTime)
+			fmt.Printf("Committed post:%d token:%s state:%d min:%f seconds:%f nanoseconds:%f\n", p.Pos, p.Token, p.State, d.Minutes(),d.Seconds(),d.Nanoseconds())
+		}
+		p.LastTime = time.Now()
 	}
 	p.Pos = p.Pos + 1
 }
@@ -929,6 +943,7 @@ func (t *GccNodeTest) Parse() *int {
 	//fmt.Printf("machine %s\n",t.Machine)
 
 	p := ParserInstance{
+		LastTime: time.Now(),
 		Parser: t,
 		Line:   []byte{},
 		Statements : 0,

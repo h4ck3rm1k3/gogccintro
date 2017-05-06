@@ -129,6 +129,8 @@ func (t * FileArgs) DoWork (workRoutine int) {
 		c = NewMemoryGraphConsumer(*t.Args.name)
 	} else if *t.Args.consumer== "graph"{
 		c = NewGraphConsumer(t.File) //*t.Args.name
+	} else if *t.Args.consumer== "grapht"{
+		c = NewGraphTransactionConsumer(t.File) //*t.Args.name
 	}
 	args2 := NewParser(c)
 	t.Globals =args2

@@ -5,10 +5,10 @@
 # 	~/gocode/bin/peg  -inline -switch  t3.peg
 
 vecdelete2.txt: parser ~/experiments/gogccintro/parser/tests/vecdelete.tu
-	./parser -file ~/experiments/gogccintro/parser/tests/vecdelete.tu -name vecdel -consumer graph
+	./parser -file ~/experiments/gogccintro/parser/tests/vecdelete.tu -name vecdel -consumer grapht
 
 vecdelete.txt: parser ~/experiments/gogccintro/parser/tests/vecdelete.tu
-	./parser -debuglevel 1000 -file ~/experiments/gogccintro/parser/tests/vecdelete.tu -consumer graph
+	./parser -debuglevel 1000 -file ~/experiments/gogccintro/parser/tests/vecdelete.tu -consumer grapht
 
 spec.txt: parser ~/experiments/gogccintro/parser/tests/naked_operator.tu
 	./parser -debuglevel 1000 -file ~/experiments/gogccintro/parser/tests/spec.tu -consumer graph
@@ -17,15 +17,18 @@ op.txt: parser ~/experiments/gogccintro/parser/tests/naked_operator.tu
 	./parser -debuglevel 1000 -file ~/experiments/gogccintro/parser/tests/naked_operator.tu -consumer graph
 
 
+big.txt : parser
+	./parser -file ~/experiments/gcc-1/build/gcc/tests/tree-dump.c.001t.tu -consumer grapht
+
 gcctest.txt : parser
-	./parser -directory ~/experiments/gcc-1/build/gcc/tests/ -name gcctests -consumer graph
+	./parser -directory ~/experiments/gcc-1/build/gcc/tests/ -name gcctests -consumer grapht
 #mem2
 
 gcc.txt : parser
 	./parser -directory ~/experiments/gcc-1/build/gcc/ -name gcc -consumer graph
 
 tests.txt: parser
-	./parser -debuglevel 2000 -directory ~/experiments/gogccintro/parser/tests/  -consumer graph
+	./parser -debuglevel 2000 -directory ~/experiments/gogccintro/parser/tests/  -consumer grapht
 
 test : parser tests.txt
 

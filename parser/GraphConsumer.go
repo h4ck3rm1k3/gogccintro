@@ -19,6 +19,7 @@ type TestGraphConsumer struct {
 	//Lock          sync.RWMutex//= sync.RWMutex{}
 	Filename      string
 	Store         graph.QuadWriter
+	Transaction   * graph.Transaction
 	//Data ProgramData
 	//Cache *       Cache
 }
@@ -29,6 +30,13 @@ func (t *TestGraphConsumer) Write() {}
 func (t *TestGraphConsumer) Read() {}
 func (t *TestGraphConsumer) Report() {
 
+	if t.Transaction != nil {
+		err := t.Store.ApplyTransaction(t.Transaction)
+		if err != nil {
+			panic(err)
+		}
+		t.Transaction = cayley.NewTransaction()
+	}
 	// buf := bytes.NewBuffer(nil)
 	// for _, c := range t.Store {
 	// 	buf.Reset()
@@ -51,12 +59,20 @@ func (t *TestGraphConsumer) Report() {
 func (t *TestGraphConsumer) NodeImp(n *TestGraphNode) {
 	//t.Lock.Lock()
 	//defer t.Lock.Unlock()
-	t.Store.AddQuad(quad.Make(n.NodeId, "nodetype", n.NodeType,""))//, n.Filename
+	if t.Transaction != nil{
+		t.Transaction.AddQuad(quad.Make(n.NodeId, "nodetype", n.NodeType,""))//, n.Filename
+		for key, v := range n.Vals {
+			vals := strings.Join(v, "|")
+			t.Transaction.AddQuad(quad.Make(n.NodeId, key, vals,""))//, n.Filename			
+		}
+	} else {
+		t.Store.AddQuad(quad.Make(n.NodeId, "nodetype", n.NodeType,""))//, n.Filename
 
-	for key, v := range n.Vals {
-		vals := strings.Join(v, "|")
-		t.Store.AddQuad(quad.Make(n.NodeId, key, vals,""))//, n.Filename
-
+		for key, v := range n.Vals {
+			vals := strings.Join(v, "|")
+			t.Store.AddQuad(quad.Make(n.NodeId, key, vals,""))//, n.Filename
+			
+		}
 	}
 	
 }
@@ -75,7 +91,7 @@ func (t *TestGraphNode) Finish(Parent TreeConsumer) {
 }
 
 func (t *TestGraphNode) Report() {
-
+	
 }
 
 func (t *TestGraphNode) SetAttr(name string, vals []string) {
@@ -115,6 +131,28 @@ func (t *TestGraphConsumer) NodeType(nodetype string, nodeid string, filename st
 	}
 }
 
+
+func NewGraphTransactionConsumer(Filename string ) *TestGraphConsumer {
+
+	boltfile := fmt.Sprintf("%s.bolt",Filename)
+	
+	// Initialize the database
+	graph.InitQuadStore("bolt", boltfile, nil)
+	store, err := cayley.NewGraph("bolt", boltfile, nil)
+	fmt.Printf("writing bolt %s\n", boltfile)
+	if err != nil {
+		panic(err)
+	}
+	t := cayley.NewTransaction()
+	return &TestGraphConsumer{
+		
+		Filename : Filename,
+		Store: store,
+		Transaction : t,
+		//Lock :sync.RWMutex{},
+	}
+}
+
 func NewGraphConsumer(Filename string ) *TestGraphConsumer {
 
 	boltfile := fmt.Sprintf("%s.bolt",Filename)
@@ -127,6 +165,7 @@ func NewGraphConsumer(Filename string ) *TestGraphConsumer {
 		panic(err)
 	}
 	return &TestGraphConsumer{
+		Transaction : nil,
 		Filename : Filename,
 		Store: store,
 		//Lock :sync.RWMutex{},
@@ -140,6 +179,7 @@ func NewMemoryGraphConsumer(Filename string ) *TestGraphConsumer {
 		panic(err)
 	}
 	return &TestGraphConsumer{
+		Transaction : nil,
 		Filename : Filename,
 		Store: store,
 		//Lock :sync.RWMutex{},

@@ -8,13 +8,17 @@ import (
 	"strings"
 	"io/ioutil"
 	//"bytes"
-	//"encoding/gob"
+
 )
 
 type Stat struct {
 	TheCount int
 }
 
+func (t *Stat) AppendTo(t2 *Stat) {
+	t2.TheCount = t2.TheCount + t.TheCount 
+}
+	
 func (t *Stat) Count() {
 	t.TheCount++
 }
@@ -102,6 +106,7 @@ func (t *SAttributeVals) Vals(vals *[]string) {
 	}
 }
 
+// simple node type 
 type SAttributeNames struct {
 	Count   Stat
 	TheVals map[string]*SAttributeVals
@@ -190,12 +195,58 @@ type SNodeType struct {
 	CoOccurance *CoOccurance
 }
 
-func (t *SNodeType) Report(nodetype string) {
-	t.Count.Report(2)
-	fmt.Printf("\t\tlen attrcount %d:\n", len(t.AttributeCount))
-	for k, v := range t.AttrNames {
-		fmt.Printf("\t\tattr\t%s\t%d\n", k,v)
+// copy all the data to the other 
+func (t *SNodeType) AppendTo(t2 *SNodeType) {
+
+	t.Count.AppendTo(&t2.Count)
+
+	t.CoOccurance.AppendTo(t2.CoOccurance)
+	
+	// copy the attrnames
+	for k, val1 := range t.AttrNames {
+		if (k[0]>= '0' && k[0] <= '9'){
+		}else {
+			//fmt.Printf("\t\tattr\t%s\t%d\n", k,v)
+			if val, ok := t2.AttrNames[k]; ok {
+				t2.AttrNames[k] =val + val1
+			} else {
+				t2.AttrNames[k] = val1
+			}
+		}
 	}
+}
+	
+func (t *SNodeType) Report(nodetype string) {
+	fmt.Printf("Report on node type %s:\n", nodetype)
+	
+	t.Count.Report(2)
+	//fmt.Printf("\t\tlen attrcount %d:\n", len(t.AttributeCount))
+	fmt.Printf("\t\tlen attrnames %d:\n", len(t.AttrNames))
+
+
+	// sort attribute names desc
+	n := map[int][]string{}
+	
+	for k, v := range t.AttrNames {
+
+		if (k[0]>= '0' && k[0] <= '9'){
+		} else {
+			//fmt.Printf("\t\tattr\t%s\t%d\n", k,v)
+			n[v] = append(n[v], k)
+		}
+	}
+
+	var a []int
+	for k := range n {
+		a = append(a, k)
+	}
+	sort.Sort(sort.Reverse(sort.IntSlice(a)))
+	for _, k := range a {
+		for _, s := range n[k] {
+			fmt.Printf("ATTR : %s, %d\n", s, k)
+		}
+	}
+	
 	t.CoOccurance.Report()
 
 
@@ -235,6 +286,10 @@ func (t *SNodeType) Node(n *TestNode, t2 *TestConsumer) {
 type ProgramData struct {
 	Count         Stat
 	NodeTypes     map[string]*SNodeType
+
+	// a summary node type of all the types rolled togehter
+	Summary       * SNodeType
+	
 	// parser stats
 	Transitions   map[int]map[int]int
 	States        map[int]int	
@@ -292,8 +347,23 @@ func (t *TestConsumer) Read() {
 	//fmt.Printf("Read:%s\n",t.Data)
 }
 
+func (t *TestConsumer) Rollup() {
+	// roll up the nodetypes into the summary
+	// Summary=sum(NodeTypes)
+
+	//  append each type to the summary
+	for _, v := range t.Data.NodeTypes {
+		v.AppendTo(t.Data.Summary)
+	}
+	fmt.Printf("total report:\n")
+	t.Data.Summary.Report("total")
+	t.Data.Summary.ReportDisjoint("total")
+}
+	
 func (t *TestConsumer) Report() {
 
+	t.Rollup()
+	
 	for k, v := range t.Data.States {
 		fmt.Printf("\tS %20s %10d\n", StateLookup[Token(k)], v)
 	}
@@ -322,6 +392,7 @@ func (t *TestConsumer) Report() {
 	for k, v := range t.Data.NodeTypes {
 		fmt.Printf("\tNT %s %d\n", k, v.Count.TheCount)
 		v.Report(k)
+		v.ReportDisjoint(k)
 	}
 	
 	//t.Cache.Add(x,b)
@@ -329,7 +400,7 @@ func (t *TestConsumer) Report() {
 }
 
 func (t *TestConsumer) NodeImp(n *TestNode) {
-	//Gob(n)
+
 	t.Lock.Lock()
 	defer t.Lock.Unlock()
 
@@ -414,6 +485,10 @@ func NewConsumer(Filename string ) *TestConsumer {
 		Filename : Filename,
 		Lock :sync.RWMutex{},
 		Data : ProgramData {
+			Summary : &SNodeType{
+				CoOccurance: &CoOccurance{},
+				AttrNames: make(map[string]int),
+			},
 			Transitions   :make(map[int]map[int]int),
 			States        :make(map[int]int),
 		},

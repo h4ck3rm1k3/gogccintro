@@ -5,26 +5,27 @@
 # 	~/gocode/bin/peg  -inline -switch  t3.peg
 
 vecdelete2.txt: parser ~/experiments/gogccintro/parser/tests/vecdelete.tu
-	./parser -file ~/experiments/gogccintro/parser/tests/vecdelete.tu -name vecdel
+	./parser -file ~/experiments/gogccintro/parser/tests/vecdelete.tu -name vecdel -consumer graph
 
 vecdelete.txt: parser ~/experiments/gogccintro/parser/tests/vecdelete.tu
-	./parser -debuglevel 1000 -file ~/experiments/gogccintro/parser/tests/vecdelete.tu
+	./parser -debuglevel 1000 -file ~/experiments/gogccintro/parser/tests/vecdelete.tu -consumer graph
 
 spec.txt: parser ~/experiments/gogccintro/parser/tests/naked_operator.tu
-	./parser -debuglevel 1000 -file ~/experiments/gogccintro/parser/tests/spec.tu
+	./parser -debuglevel 1000 -file ~/experiments/gogccintro/parser/tests/spec.tu -consumer graph
 
 op.txt: parser ~/experiments/gogccintro/parser/tests/naked_operator.tu
-	./parser -debuglevel 1000 -file ~/experiments/gogccintro/parser/tests/naked_operator.tu
+	./parser -debuglevel 1000 -file ~/experiments/gogccintro/parser/tests/naked_operator.tu -consumer graph
 
 
 gcctest.txt : parser
-	./parser -directory ~/experiments/gcc-1/build/gcc/tests/ -name gcctests
+	./parser -directory ~/experiments/gcc-1/build/gcc/tests/ -name gcctests -consumer graph
+#mem2
 
 gcc.txt : parser
-	./parser -directory ~/experiments/gcc-1/build/gcc/ -name gcc
+	./parser -directory ~/experiments/gcc-1/build/gcc/ -name gcc -consumer graph
 
 tests.txt: parser
-	./parser -debuglevel 2000 -directory ~/experiments/gogccintro/parser/tests/ 
+	./parser -debuglevel 2000 -directory ~/experiments/gogccintro/parser/tests/  -consumer graph
 
 test : parser tests.txt
 
@@ -58,7 +59,7 @@ rtest : example
 #test2.peg.go: test2.peg
 #	~/gocode/bin/peg  -inline -switch  test2.peg
 
-parser :  main.go Parser.go Fields.go Trie.go Consumer.go CoOccurance.go Groups.go Ybc.go Gob.go readcache.go Ast_ffjson.go ContainmentHierarchy.go
+parser :  main.go Parser.go Fields.go Trie.go Consumer.go CoOccurance.go Groups.go Ybc.go Gob.go readcache.go Ast_ffjson.go ContainmentHierarchy.go GraphConsumer.go
 
 	GOPATH=/home/mdupont/gocode/ go build 
 

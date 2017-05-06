@@ -14,44 +14,13 @@ import (
 	filepath "path"
 	"log"
 	"os"
-	"io"
+	//"io"
 	"io/ioutil"
 	//"encoding/json"
 	"flag"
 	//"github.com/jeffail/tunny"
 	"github.com/goinggo/workpool"
 )
-
-func Parse2(filename string, b string,args*ParserGlobal) (*GccNodeTest, error){
-	//defer profile.Start(profile.TraceProfile).Stop()
-
-	calc := &GccNodeTest{Buffer: b}
-	calc.Init(filename, args)
-	if err := calc.Parse(); err != nil {
-		log.Fatal(err)
-	}
-
-	return calc,nil
-}
-
-func ParseReader2(filename string, r io.Reader,args*ParserGlobal) (*GccNodeTest, error) {
-	b, err := ioutil.ReadAll(r)
-	if err != nil {
-		return nil, err
-	}
-
-	return Parse2(filename, string(b),args)
-}
-
-func ParseFile2(filename string,args*ParserGlobal) (*GccNodeTest, error) {
-	f, err := os.Open(filename)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-	return ParseReader2(filename, f, args)
-}
-
 
 func testTUFiles(rootDir string) []string {
 //	const rootDir = "/home/mdupont/experiments/gcc_py_introspector/tests"
@@ -101,17 +70,41 @@ func Atoi64(s string) int64 {
 	return r
 }
 
-func ProcessFile (cfile string, args *ParserGlobal) {
+func ProcessFile (filename string, args *ParserGlobal) {
 	os.Remove("file.tu")
-	os.Symlink(cfile, "file.tu")
-	tree, err := ParseFile2(cfile,args)
+	os.Symlink(filename, "file.tu")
+//	tree, err := ParseFile2(cfile,args)
+	f, err := os.Open(filename)
+	if err != nil {
+		//return nil, err
+		panic(err)
+	}
+	defer f.Close()
+	//	return ParseReader2(filename, f, args)
+	b, err := ioutil.ReadAll(f)
+	if err != nil {
+		//return nil, err
+		panic(err)
+	}
+	//return Parse2(filename, string(b),args)
+		//defer profile.Start(profile.TraceProfile).Stop()
+
+	tree := &GccNodeTest{Buffer: string(b)}
+	tree.Init(filename, args)
+//	args.StartFile(filename)
+	if err := tree.Parse(); err != nil {
+		log.Fatal(err)
+	}
+	//args.EndFile(filename)
+
+	//return calc,nil
 	
 	if err != nil {
-		fmt.Printf("In %s\n",cfile)
+		fmt.Printf("In %s\n",filename)
 		fmt.Printf("err %s\n",err)
 		
 	} else {
-		fmt.Printf("OK %s\n",cfile)
+		fmt.Printf("OK %s\n",filename)
 		//file.Filename = &cfile
 		tree.Execute();
 		
@@ -122,10 +115,27 @@ func ProcessFile (cfile string, args *ParserGlobal) {
 type FileArgs struct {
 	File string 
 	Globals  *ParserGlobal
+	Args * ProgramArgs
 }
 
 
 func (t * FileArgs) DoWork (workRoutine int) {
+	StateLookup = CreateStateLookup()
+	var c TreeConsumer
+	
+	if *t.Args.consumer== "mem"{
+		c = NewConsumer(*t.Args.name)
+	} else if *t.Args.consumer== "mem2"{
+		c = NewMemoryGraphConsumer(*t.Args.name)
+	} else if *t.Args.consumer== "graph"{
+		c = NewGraphConsumer(t.File) //*t.Args.name
+	}
+	args2 := NewParser(c)
+	t.Globals =args2
+	
+	if *t.Args.debug_level != 0 {
+		args2.DebugLevel = *t.Args.debug_level
+	}
 	fmt.Printf("process %d\n", workRoutine)
 
 	fmt.Printf("the process %s\n", t.File)
@@ -134,11 +144,13 @@ func (t * FileArgs) DoWork (workRoutine int) {
 		t.Globals,
 	)
 	fmt.Printf("after process %s\n", t.File)
+	c.Report()
 }
 
 type ProgramArgs struct {
 	debug_level *int
 	scan_dir *string
+	consumer *string
 	read_file *string
 	operation *string
 	name  *string
@@ -148,6 +160,7 @@ func main() {
 	args := &ProgramArgs {
 		debug_level : flag.Int("debuglevel", 0, "debug level"),
 		scan_dir : flag.String("directory", "", "scan directory"),
+		consumer : flag.String("consumer", "mem", "consumer name"),
 		read_file : flag.String("file", "", "scan file"),
 		operation : flag.String("operation", "parse", "parse or readcache"),
 		name  : flag.String("name", "test", "name of cachekey"),
@@ -168,17 +181,10 @@ func parser_main(args *ProgramArgs) {
 
 	//pool, _ := tunny.CreatePool(numCPUs, process).Open()
 	workPool := workpool.New(runtime.NumCPU(), 800)
-	
-	StateLookup = CreateStateLookup()
 
 	//func TestOne(t *testing.T) {
 
-	c := NewConsumer(*args.name)
-	args2 := NewParser(c)		
 
-	if *args.debug_level != 0 {
-		args2.DebugLevel = *args.debug_level
-	}
 	// if len(os.Args) < 2 {
 	// 	name := os.Args[0]
 	// 	fmt.Printf("Usage: %v \"Test Directory\"\n", name)
@@ -191,12 +197,13 @@ func parser_main(args *ProgramArgs) {
 		for _, cfile := range files {
 
 			a := FileArgs {
+				Args: args,
 				File: cfile,
-				Globals :args2,
+				
 			}
 
-			result2 := workPool.PostWork("routine",&a)
-			fmt.Printf("res %#v\n", result2)
+			workPool.PostWork("routine",&a)
+			//fmt.Printf("res %#v\n", result2)
 			
 		}
 	}
@@ -205,8 +212,9 @@ func parser_main(args *ProgramArgs) {
 		fmt.Printf("read just one file %s", *args.read_file)
 		//ProcessFile(*read_file, args)
 		a := FileArgs {
+			Args: args,
 			File: *args.read_file,
-			Globals :args2,
+			//Globals :args2,
 		}
 		result2 := workPool.PostWork("routine",&a)
 		fmt.Printf("res %#v\n", result2)
@@ -219,5 +227,5 @@ func parser_main(args *ProgramArgs) {
 	//  	fmt.Printf("attrnames %s\n",i)
 	// }
 	fmt.Printf("report\n")
-	c.Report()
+	
 }

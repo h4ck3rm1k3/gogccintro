@@ -422,6 +422,7 @@ func (t *TestConsumer) NodeImp(n *TestNode) {
 }
 
 type TestNode struct {
+	Filename string
 	NodeType string
 	NodeId   string
 	Vals     map[string][]string
@@ -471,9 +472,9 @@ func (t *TestNode) SetAttr(name string, vals []string) {
 	t.Vals[name] = vals
 }
 
-func (t *TestConsumer) NodeType(nodetype string, nodeid string) TreeNode {
+func (t *TestConsumer) NodeType(nodetype string, nodeid string, filename string) TreeNode {
 	return &TestNode{
-
+		Filename : filename, 
 		NodeType: nodetype,
 		NodeId:   nodeid,
 		Vals:     make(map[string][]string),

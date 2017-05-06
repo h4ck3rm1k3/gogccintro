@@ -65,7 +65,7 @@ type TreeNode interface {
 }
 
 type TreeConsumer interface {
-	NodeType(nodetype string, nodeid string) (TreeNode)
+	NodeType(nodetype string, nodeid string, filename string) (TreeNode)
 	Report()
 	StateTransition(from int, to int) // state
 	StateUsage(from int) // state usage
@@ -209,7 +209,7 @@ func (t *GccNodeTest) NodeId(nodeid string) {
 }
 
 func (p *ParserInstance) ProcessNodeType(nodetype string, nodeid string) {
-	p.Current = p.Parser.Globals.Consumer.NodeType(nodetype,nodeid)
+	p.Current = p.Parser.Globals.Consumer.NodeType(nodetype,nodeid,p.Parser.Filename)
 	// if val, ok := t.Nodetypes[nodetype]; ok {
 	// 	val[nodeid] = 1
 	// } else {

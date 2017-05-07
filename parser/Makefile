@@ -18,7 +18,7 @@ op.txt: parser ~/experiments/gogccintro/parser/tests/naked_operator.tu
 
 
 big.txt : parser
-	./parser -file ~/experiments/gcc-1/build/gcc/tests/tree-dump.c.001t.tu -consumer grapht
+	./parser -file ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu -consumer grapht
 
 gcctest.txt : parser
 	./parser -directory ~/experiments/gcc-1/build/gcc/tests/ -name gcctests -consumer grapht

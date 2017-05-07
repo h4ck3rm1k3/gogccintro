@@ -920,18 +920,14 @@ func (p *ParserInstance) LenCheck() {
 	}
 	if p.Pos > 1 {
 		
+		//if p.Pos% 10000000 == 0 {
+		//fmt.Printf("Proc %d %s %d\n", p.Pos, p.Token, p.State)
+		//}
+
 		if p.Pos% 10000000 == 0 {
-			fmt.Printf("Proc %d %s %d\n", p.Pos, p.Token, p.State)
-		}
 
-
-
-
-		if p.Pos% 100000 == 0 {
-
-			p.Parser.Globals.Consumer.Report()
 			d := time.Since(p.LastTime)
-			fmt.Printf("Committed post:%d token:%s state:%d min:%f seconds:%f nanoseconds:%f\n", p.Pos, p.Token, p.State, d.Minutes(),d.Seconds(),d.Nanoseconds())
+			fmt.Printf("Committed post:%d token:%s state:%d min:%f seconds:%f nanoseconds:%d\n", p.Pos, p.Token, p.State, d.Minutes(),d.Seconds(),d.Nanoseconds())
 		}
 		p.LastTime = time.Now()
 	}

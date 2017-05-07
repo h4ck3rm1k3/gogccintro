@@ -126,9 +126,12 @@ func (t * FileArgs) DoWork (workRoutine int) {
 	if *t.Args.consumer== "mem"{
 		c = NewConsumer(*t.Args.name)
 	} else if *t.Args.consumer== "mem2"{
-		c = NewMemoryGraphConsumer(*t.Args.name)
+		c = NewGraphTransactionConsumer(t.File) //*t.Args.name
+		
+	//	c = NewMemoryGraphConsumer(*t.Args.name)
 	} else if *t.Args.consumer== "graph"{
-		c = NewGraphConsumer(t.File) //*t.Args.name
+		c = NewGraphTransactionConsumer(t.File) //*t.Args.name
+		//c = NewGraphConsumer(t.File) //*t.Args.name
 	} else if *t.Args.consumer== "grapht"{
 		c = NewGraphTransactionConsumer(t.File) //*t.Args.name
 	}
@@ -198,13 +201,16 @@ func parser_main(args *ProgramArgs) {
 		files := testTUFiles(*args.scan_dir)
 		for _, cfile := range files {
 
+			fmt.Printf("reading file %s\n", cfile)
+			
 			a := FileArgs {
 				Args: args,
 				File: cfile,
 				
 			}
-
-			workPool.PostWork("routine",&a)
+			
+			//workPool.PostWork("routine",&a)
+			a.DoWork(1)
 			//fmt.Printf("res %#v\n", result2)
 			
 		}

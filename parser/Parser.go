@@ -494,8 +494,9 @@ func (p *ParserInstance) ATTRNAME() {
 					p.Debug3("debug name2 %s\n", string(p.C))
 					p.SetAttrName(string(p.Token))
 					p.Add()
+					p.ConsumeToken() // clear out the old token
 					// it is not a attr name, but a value, so switch				
-					p.SetState(ATTRVALUE)
+					p.SetState(EXPECT_ATTRVALUE)
 				}
 			} else {
 				p.Debug3("debug name4 %s\n", string(p.C))

@@ -4,6 +4,9 @@
 # t3: t
 # 	~/gocode/bin/peg  -inline -switch  t3.peg
 
+statementlist.txt: parser ~/experiments/gogccintro/parser/tests/vecdelete.tu
+	./parser -debuglevel 1000 -file ~/experiments/gogccintro/parser/tests/statementlist.tu -consumer grapht
+
 vecdelete2.txt: parser ~/experiments/gogccintro/parser/tests/vecdelete.tu
 	./parser -file ~/experiments/gogccintro/parser/tests/vecdelete.tu -name vecdel -consumer grapht
 

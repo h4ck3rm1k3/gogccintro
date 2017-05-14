@@ -22,6 +22,7 @@ op.txt: parser ~/experiments/gogccintro/parser/tests/naked_operator.tu
 
 big.txt : parser
 	./parser -file ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu -consumer grapht
+	GOPATH=/home/mdupont/gocode ~/gocode/src/github.com/cayleygraph/cayley/cmd/cayley/cayley conv -i ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu.nq -o ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu.pq
 
 gcctest.txt : parser
 	./parser -directory ~/experiments/gcc-1/build/gcc/tests/ -name gcctests -consumer grapht

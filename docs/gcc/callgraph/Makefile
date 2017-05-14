@@ -19,3 +19,6 @@ test.png : test.dot
 test.svg:
 	dot -Tsvg -o test.svg test.dot
 
+
+ws:
+	./node_modules/wintersmith/bin/wintersmith  build

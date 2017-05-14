@@ -16,3 +16,6 @@ test.dot : test.json
 test.png : test.dot
 	dot -Tpng -o test.png test.dot
 
+test.svg:
+	dot -Tsvg -o test.svg test.dot
+

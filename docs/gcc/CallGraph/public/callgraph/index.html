@@ -53,8 +53,8 @@
   </header>
 
   <section class="post-excerpt">
-    <p>Example generating a call graph from the a standard gcc .tu tree dump.
-Compile with gcc and get the tu files CFLAGS=-O0 -fdump-translation-unit -save-temps CPPFLAGS=-O0 -fdump-translation-unit -save-temps CXXFLAGS=-O0 -fdump-translation-unit -save-temps  convert the tu file to a nquads ./parser -file ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu -consumer grapht  convert to a pquads for load speed GOPATH=/home/mdupont/gocode ~/gocode/src/github.com/cayleygraph/cayley/cmd/cayley/cayley conv -i ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu.nq -o ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu.pq  query with cayley cat callgraph.q |GOPATH=/home/mdupont/gocode ~/gocode/src/github.com/cayleygraph/cayley/cmd/cayley/cayley query -i ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu.pq --limit 999999999999999999 &gt; test.</p>
+    <p>Example generating a call graph from the a standard gcc .tu tree dump. Using the cayley graph tool for the query engine.
+Compile with gcc and get the tu files CFLAGS=-O0 -fdump-translation-unit -save-temps CPPFLAGS=-O0 -fdump-translation-unit -save-temps CXXFLAGS=-O0 -fdump-translation-unit -save-temps  convert the tu file to a nquads ./parser -file ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu -consumer grapht  convert to a pquads for load speed GOPATH=/home/mdupont/gocode ~/gocode/src/github.com/cayleygraph/cayley/cmd/cayley/cayley conv -i ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu.nq -o ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu.pq  query with cayley cat callgraph.</p>
   </section>
 
   <footer class="post-footer">

@@ -6,6 +6,7 @@ title = "TreeDump"
 +++
 
 Example generating a call graph from the a standard gcc .tu tree dump.
+Using the [cayley graph tool](https://cayley.io/) for the query engine. 
 
 # Compile with gcc and get the tu files
 

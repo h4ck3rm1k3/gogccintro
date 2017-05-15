@@ -2,12 +2,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on GOLang GCC Introspector</title>
-    <link>http://localhost:40843/gogccintro/gcc/CallGraph/public/tags/</link>
+    <link>https://h4ck3rm1k3.github.io/gogccintro/gcc/CallGraph/public/tags/</link>
     <description>Recent content in Tags on GOLang GCC Introspector</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     
-	<atom:link href="http://localhost:40843/gogccintro/gcc/CallGraph/public/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://h4ck3rm1k3.github.io/gogccintro/gcc/CallGraph/public/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
   </channel>

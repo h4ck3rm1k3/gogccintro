@@ -1,6 +1,9 @@
 The MIT License (MIT)
 
-Copyright (c) 2017 YOUR_NAME_HERE
+Copyright (c) 2017 James Michael DuPont
+
+Derived from https://github.com/allnightgrocery/hugo-theme-blueberry-detox
+Copyright (c) 2013 Oswaldo Acauan hello@oswaldoacauan.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in

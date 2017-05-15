@@ -1,5 +1,5 @@
 genhugo:
-	~/gocode/bin/hugo
+	~/gocode/bin/hugo --theme=Introspector
 
 
 query: cayley callgraph.q
@@ -23,4 +23,5 @@ test.svg:
 	dot -Tsvg -o test.svg test.dot
 
 hugo:
-	~/gocode/bin/hugo serve --bind 0.0.0.0 --log -v --verboseLog --renderToDisk
+	#	strace -f  -eopen,stat
+	~/gocode/bin/hugo serve --bind 0.0.0.0 --log -v --verboseLog  --logFile log.txt --enableGitInfo --theme=Introspector --baseURL http://new-host:1313/gogccintro/gcc/CallGraph/public

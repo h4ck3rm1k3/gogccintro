@@ -3,19 +3,19 @@
 
 name = "Introspector"
 license = "MIT"
-licenselink = "https://github.com/yourname/yourtheme/blob/master/LICENSE.md"
-description = ""
-homepage = "http://siteforthistheme.com/"
+licenselink = "https://github.com/h4ck3rm1k3/gogccintro/docs/gcc/CallGraph/themes/Introspector/LICENSE.md"
+description = "simple theme"
+homepage = "https://h4ck3rm1k3.github.io/gogccintro/gcc/CallGraph/public/"
 tags = []
 features = []
 min_version = "0.20"
 
 [author]
-  name = ""
+  name = "James Michael DuPont"
   homepage = ""
 
 # If porting an existing theme
 [original]
   name = ""
   homepage = ""
-  repo = ""
+  repo = "https://github.com/allnightgrocery/hugo-theme-blueberry-detox"

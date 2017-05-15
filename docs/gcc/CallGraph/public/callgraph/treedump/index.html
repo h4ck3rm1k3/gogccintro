@@ -77,7 +77,7 @@ CXXFLAGS=-O0 -fdump-translation-unit -save-temps
 
 <h1 id="query-with-cayley">query with cayley</h1>
 
-<pre><code>cat callgraph.q |GOPATH=/home/mdupont/gocode ~/gocode/src/github.com/cayleygraph/cayley/cmd/cayley/cayley query  -i ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu.pq --limit 999999999999999999 &gt; test.json
+<pre><code>cat callgraph.q |GOPATH=/home/mdupont/gocode ~/gocode/src/github.com/cayleygraph/cayley/cmd/cayley/cayley query  -i ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu.pq --limit -1 &gt; test.json
 </code></pre>
 
 <h1 id="files">files</h1>

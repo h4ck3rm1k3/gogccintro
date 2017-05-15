@@ -57,21 +57,33 @@
 
 <p>Example generating a call graph from the a standard gcc .tu tree dump.</p>
 
-<ol>
-<li><p>Compile with gcc and get the tu files</p>
+<h1 id="compile-with-gcc-and-get-the-tu-files">Compile with gcc and get the tu files</h1>
 
-<p>CFLAGS=-O0 -fdump-translation-unit -save-temps
+<pre><code>CFLAGS=-O0 -fdump-translation-unit -save-temps
 CPPFLAGS=-O0 -fdump-translation-unit -save-temps
-CXXFLAGS=-O0 -fdump-translation-unit -save-temps</p></li>
+CXXFLAGS=-O0 -fdump-translation-unit -save-temps
+</code></pre>
 
-<li><p>convert the tu file to a nquads</p>
+<h1 id="convert-the-tu-file-to-a-nquads">convert the tu file to a nquads</h1>
 
-<p>./parser -file ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu -consumer grapht</p></li>
+<pre><code>./parser -file ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu -consumer grapht
+</code></pre>
 
-<li><p>convert to a pquads for load speed</p>
+<h1 id="convert-to-a-pquads-for-load-speed">convert to a pquads for load speed</h1>
 
-<p>GOPATH=/home/mdupont/gocode ~/gocode/src/github.com/cayleygraph/cayley/cmd/cayley/cayley conv -i ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu.nq -o ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu.pq</p></li>
-</ol>
+<pre><code>GOPATH=/home/mdupont/gocode ~/gocode/src/github.com/cayleygraph/cayley/cmd/cayley/cayley conv -i ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu.nq -o ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu.pq
+</code></pre>
+
+<h1 id="query-with-cayley">query with cayley</h1>
+
+<pre><code>cat callgraph.q |GOPATH=/home/mdupont/gocode ~/gocode/src/github.com/cayleygraph/cayley/cmd/cayley/cayley query  -i ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu.pq --limit 999999999999999999 &gt; test.json
+</code></pre>
+
+<h1 id="files">files</h1>
+
+<p>you will find the input files here</p>
+
+<p><a href="https://gist.github.com/h4ck3rm1k3/a81776f6ac56eb4af82d25f01c9f42a2">DataFiles</a></p>
 
 <h1 id="query">query</h1>
 

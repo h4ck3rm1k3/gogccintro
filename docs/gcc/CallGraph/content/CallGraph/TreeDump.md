@@ -7,19 +7,28 @@ title = "TreeDump"
 
 Example generating a call graph from the a standard gcc .tu tree dump.
 
-1. Compile with gcc and get the tu files
+# Compile with gcc and get the tu files
 
     CFLAGS=-O0 -fdump-translation-unit -save-temps
     CPPFLAGS=-O0 -fdump-translation-unit -save-temps
     CXXFLAGS=-O0 -fdump-translation-unit -save-temps
 
-2. convert the tu file to a nquads
+# convert the tu file to a nquads
 
     ./parser -file ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu -consumer grapht
 
-3. convert to a pquads for load speed
+# convert to a pquads for load speed
 
     GOPATH=/home/mdupont/gocode ~/gocode/src/github.com/cayleygraph/cayley/cmd/cayley/cayley conv -i ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu.nq -o ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu.pq
+
+# query with cayley
+
+    cat callgraph.q |GOPATH=/home/mdupont/gocode ~/gocode/src/github.com/cayleygraph/cayley/cmd/cayley/cayley query  -i ~/experiments/gcc-1/build/gcc/tree-dump.c.001t.tu.pq --limit 999999999999999999 > test.json
+
+# files
+you will find the input files here
+
+[DataFiles](https://gist.github.com/h4ck3rm1k3/a81776f6ac56eb4af82d25f01c9f42a2)
 
 # query
 

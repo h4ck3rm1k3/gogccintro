@@ -36,19 +36,30 @@ Example generating a call graph from the a standard gcc .tu tree dump.
 
 # json
 
-![json](test.json)
+[json](test.json)
 
 # convert json to dot
 
   unique |.[] | "\"" + .source + "\"" + "->" + "\"" + .target + "\"" + ";\n"
 
-# dot
-![json](test.dot)
+# graphviz dot file
+
+    echo "digraph {" > test.dot
+    cat test.json | jq -f dot.jq -s -r >>  test.dot
+    echo "}" >> test.dot
+
+[json](test.dot)
 
 # png
+
+    dot -Tpng -o test.png test.dot
+    
 ![CallGraph](test.png)
 
 # svg
+
+    dot -Tsvg -o test.svg test.dot
+
 ![CallGraph](test.svg)
 
 

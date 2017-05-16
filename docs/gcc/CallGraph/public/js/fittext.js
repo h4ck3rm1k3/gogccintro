@@ -4,7 +4,7 @@
 	var compressor = kompressor || 1,
 	    settings = $.extend({
 		'minFontSize' : Number.NEGATIVE_INFINITY,
-		'maxFontSize' : Number.POSITIVE_INFINITY
+		'maxFontSize' : 18,
 	    }, options);
 
 	return this.each(function(){

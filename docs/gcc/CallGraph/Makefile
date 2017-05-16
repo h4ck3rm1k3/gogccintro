@@ -9,15 +9,17 @@ query: cayley callgraph.q
 test.json  : query
 	echo ok
 
-test.dot : test.json
+static/callgraph/treedump/test.dot : static/callgraph/treedump/test.json ./gendot.sh
 	bash ./gendot.sh
 
-test.png : test.dot
-	dot -Tpng -o test.png test.dot
+static/callgraph/treedump/test.png : static/callgraph/treedump/test.dot
+	dot -Tpng -o static/callgraph/treedump/test.png static/callgraph/treedump/test.dot
 
-test.svg:
-	dot -Tsvg -o test.svg test.dot
+static/callgraph/treedump/test.svg:
+	dot -Tsvg -o static/callgraph/treedump/test.svg static/callgraph/treedump/test.dot
 
-hugo:
+out : static/callgraph/treedump/test.svg static/callgraph/treedump/test.png
+
+hugo: out
 	#	strace -f  -eopen,stat
 	~/gocode/bin/hugo serve --bind 0.0.0.0 --log -v --verboseLog  --logFile log.txt --enableGitInfo --theme=Introspector --baseURL http://new-host:1313/gogccintro/gcc/CallGraph/public

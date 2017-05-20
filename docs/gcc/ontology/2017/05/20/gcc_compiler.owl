@@ -1,1 +1,542 @@
-# placeholder
+@prefix gcc: <https://h4ck3rm1k3.github.io/gogccintro/gcc/ontology/2017/05/20/gcc_compiler.owl#> . 
+@prefix ns0: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+[ rdf:type owl:Ontology ] .
+# 
+# 
+# #################################################################
+# #
+# #    Datatypes
+# #
+# #################################################################
+# 
+# 
+# gcc:ByteAlignment
+
+gcc:ByteAlignment a ns0:Datatype .
+# 
+# gcc:SimpleBoolean
+
+gcc:SimpleBoolean a ns0:Datatype .
+
+gcc:LinkType a ns0:Datatype .
+gcc:NoteType a ns0:Datatype .
+gcc:SignType a ns0:Datatype .
+
+
+# 
+# 
+# 
+# #################################################################
+# #
+# #    Object Properties
+# #
+# #################################################################
+# 
+# 
+# gcc:args
+
+gcc:args a owl:ObjectProperty ;
+	ns0:domain gcc:call_expr , gcc:function_decl ;
+	ns0:range gcc:parm_decl , gcc:tree_list .
+# 
+# gcc:argt
+
+gcc:argt a owl:ObjectProperty ;
+	ns0:domain gcc:parm_decl ;
+	ns0:range gcc:integer_type , gcc:pointer_type .
+# 
+# gcc:body
+
+gcc:body a owl:ObjectProperty ;
+	ns0:domain gcc:compound_stmt , gcc:function_decl , gcc:while_stmt ;
+	ns0:range gcc:compound_stmt , gcc:expr_stmt , gcc:if_stmt , gcc:scope_stmt .
+# 
+# gcc:bpos
+
+gcc:bpos a owl:ObjectProperty ;
+	ns0:domain gcc:field_decl ;
+	ns0:range gcc:integer_cst .
+
+# gcc:chan
+
+gcc:chan a owl:ObjectProperty ;
+	ns0:domain gcc:const_decl , gcc:field_decl , gcc:function_decl , gcc:parm_decl , gcc:tree_list , gcc:type_decl , gcc:var_decl ;
+	ns0:range gcc:const_decl , gcc:field_decl , gcc:function_decl , gcc:parm_decl , gcc:tree_list , gcc:type_decl , gcc:var_decl .
+# 
+# gcc:cnst
+
+gcc:cnst a owl:ObjectProperty ;
+	ns0:domain gcc:const_decl ;
+	ns0:range gcc:integer_cst .
+# 
+# gcc:cond
+
+gcc:cond a owl:ObjectProperty ;
+	ns0:domain gcc:if_stmt , gcc:while_stmt ;
+	ns0:range gcc:eq_expr , gcc:integer_cst , gcc:ne_expr , gcc:truth_andif_expr , gcc:truth_orif_expr .
+# 
+# gcc:csts
+
+gcc:csts a owl:ObjectProperty ;
+	ns0:domain gcc:enumeral_type ;
+	ns0:range gcc:tree_list .
+# 
+# gcc:decl
+
+gcc:decl a owl:ObjectProperty ;
+	ns0:domain gcc:decl_stmt ;
+	ns0:range gcc:var_decl .
+# 
+# gcc:domn
+
+gcc:domn a owl:ObjectProperty ;
+	ns0:domain gcc:array_type ;
+	ns0:range gcc:integer_type .
+# 
+# gcc:elts
+
+gcc:elts a owl:ObjectProperty ;
+	ns0:domain gcc:array_type ;
+	ns0:range gcc:integer_type , gcc:pointer_type , gcc:record_type .
+# 
+# gcc:expr
+
+gcc:expr a owl:ObjectProperty ;
+	ns0:domain gcc:expr_stmt , gcc:return_stmt ;
+	ns0:range gcc:modify_expr , gcc:preincrement_expr .
+# 
+# gcc:flds
+
+gcc:flds a owl:ObjectProperty ;
+	ns0:domain gcc:record_type , gcc:union_type ;
+	ns0:range gcc:field_decl .
+# 
+# gcc:fn
+
+gcc:fn a owl:ObjectProperty ;
+	ns0:domain gcc:call_expr ;
+	ns0:range gcc:addr_expr .
+# 
+# gcc:init
+
+gcc:init a owl:ObjectProperty ;
+	ns0:domain gcc:var_decl ;
+	ns0:range gcc:indirect_ref , gcc:integer_cst , gcc:var_decl .
+# 
+# gcc:max
+
+gcc:max a owl:ObjectProperty ;
+	ns0:domain gcc:enumeral_type , gcc:integer_type ;
+	ns0:range gcc:integer_cst .
+# 
+# gcc:min
+
+gcc:min a owl:ObjectProperty ;
+	ns0:domain gcc:enumeral_type , gcc:integer_type ;
+	ns0:range gcc:integer_cst .
+# 
+# gcc:mngl
+
+gcc:mngl a owl:ObjectProperty ;
+	ns0:domain gcc:function_decl ;
+	ns0:range gcc:identifier_node .
+# 
+# gcc:name
+
+gcc:name a owl:ObjectProperty ;
+	ns0:domain gcc:boolean_type , gcc:complex_type , gcc:const_decl , gcc:enumeral_type , gcc:field_decl , gcc:function_decl , gcc:function_type , gcc:integer_type , gcc:parm_decl , gcc:pointer_type , gcc:real_type , gcc:record_type , gcc:type_decl , gcc:union_type , gcc:var_decl , gcc:void_type ;
+	ns0:range gcc:identifier_node , gcc:type_decl .
+# 
+# gcc:next
+
+gcc:next a owl:ObjectProperty ;
+	ns0:domain gcc:break_stmt , gcc:decl_stmt , gcc:expr_stmt , gcc:if_stmt , gcc:return_stmt , gcc:scope_stmt , gcc:while_stmt ;
+	ns0:range gcc:break_stmt , gcc:decl_stmt , gcc:expr_stmt , gcc:if_stmt , gcc:return_stmt , gcc:scope_stmt , gcc:while_stmt .
+# 
+# gcc:op_0
+
+gcc:op_0 a owl:ObjectProperty ;
+	ns0:domain gcc:addr_expr , gcc:bit_and_expr , gcc:component_ref , gcc:cond_expr , gcc:convert_expr , gcc:eq_expr , gcc:ge_expr , gcc:indirect_ref , gcc:modify_expr , gcc:ne_expr , gcc:non_lvalue_expr , gcc:nop_expr , gcc:plus_expr , gcc:postincrement_expr , gcc:preincrement_expr , gcc:truth_andif_expr , gcc:truth_orif_expr ;
+	ns0:range gcc:bit_and_expr , gcc:call_expr , gcc:component_ref , gcc:convert_expr , gcc:eq_expr , gcc:function_decl , gcc:ge_expr , gcc:indirect_ref , gcc:modify_expr , gcc:ne_expr , gcc:non_lvalue_expr , gcc:nop_expr , gcc:parm_decl , gcc:plus_expr , gcc:postincrement_expr , gcc:result_decl , gcc:truth_andif_expr , gcc:truth_orif_expr , gcc:var_decl .
+# 
+# gcc:op_1
+
+gcc:op_1 a owl:ObjectProperty ;
+	ns0:domain gcc:bit_and_expr , gcc:component_ref , gcc:cond_expr , gcc:eq_expr , gcc:ge_expr , gcc:modify_expr , gcc:ne_expr , gcc:plus_expr , gcc:postincrement_expr , gcc:preincrement_expr , gcc:truth_andif_expr , gcc:truth_orif_expr ;
+	ns0:range gcc:call_expr , gcc:component_ref , gcc:cond_expr , gcc:convert_expr , gcc:eq_expr , gcc:field_decl , gcc:indirect_ref , gcc:integer_cst , gcc:ne_expr , gcc:nop_expr , gcc:parm_decl , gcc:postincrement_expr , gcc:var_decl .
+# 
+# gcc:op_2
+
+gcc:op_2 a owl:ObjectProperty ;
+	ns0:domain gcc:cond_expr ;
+	ns0:range gcc:integer_cst , gcc:nop_expr .
+# 
+# gcc:prms
+
+gcc:prms a owl:ObjectProperty ;
+	ns0:domain gcc:function_type ;
+	ns0:range gcc:tree_list .
+# 
+# gcc:ptd
+
+gcc:ptd a owl:ObjectProperty ;
+	ns0:domain gcc:pointer_type ;
+	ns0:range gcc:function_type , gcc:integer_type , gcc:pointer_type , gcc:real_type , gcc:record_type , gcc:void_type .
+# 
+# gcc:purp
+
+gcc:purp a owl:ObjectProperty ;
+	ns0:domain gcc:tree_list ;
+	ns0:range gcc:identifier_node .
+# 
+# gcc:refd
+
+gcc:refd a owl:ObjectProperty ;
+	ns0:domain gcc:reference_type ;
+	ns0:range gcc:pointer_type .
+# 
+# gcc:retn
+
+gcc:retn a owl:ObjectProperty ;
+	ns0:domain gcc:function_type ;
+	ns0:range gcc:complex_type , gcc:integer_type , gcc:pointer_type , gcc:real_type , gcc:record_type , gcc:void_type .
+# 
+# gcc:scpe
+
+gcc:scpe a owl:ObjectProperty ;
+	ns0:domain gcc:field_decl , gcc:parm_decl , gcc:result_decl , gcc:var_decl ;
+	ns0:range gcc:function_decl , gcc:record_type , gcc:union_type .
+# 
+# gcc:size
+
+gcc:size a owl:ObjectProperty ;
+	ns0:domain gcc:array_type , gcc:boolean_type , gcc:complex_type , gcc:enumeral_type , gcc:field_decl , gcc:function_type , gcc:integer_type , gcc:parm_decl , gcc:pointer_type , gcc:real_type , gcc:record_type , gcc:reference_type , gcc:result_decl , gcc:union_type , gcc:var_decl ;
+	ns0:range gcc:integer_cst .
+# 
+# gcc:then
+
+gcc:then a owl:ObjectProperty ;
+	ns0:domain gcc:if_stmt ;
+	ns0:range gcc:compound_stmt , gcc:expr_stmt .
+# 
+# gcc:type
+
+gcc:type a owl:ObjectProperty ;
+	ns0:domain gcc:addr_expr , gcc:bit_and_expr , gcc:call_expr , gcc:cond_expr , gcc:const_decl , gcc:convert_expr , gcc:eq_expr , gcc:field_decl , gcc:function_decl , gcc:ge_expr , gcc:integer_cst , gcc:modify_expr , gcc:ne_expr , gcc:non_lvalue_expr , gcc:nop_expr , gcc:parm_decl , gcc:plus_expr , gcc:postincrement_expr , gcc:preincrement_expr , gcc:result_decl , gcc:truth_andif_expr , gcc:truth_orif_expr , gcc:type_decl , gcc:var_decl ;
+	ns0:range gcc:array_type , gcc:boolean_type , gcc:complex_type , gcc:enumeral_type , gcc:function_type , gcc:integer_type , gcc:pointer_type , gcc:real_type , gcc:record_type , gcc:union_type , gcc:void_type .
+# 
+# gcc:unql
+
+gcc:unql a owl:ObjectProperty ;
+	ns0:domain gcc:enumeral_type , gcc:function_type , gcc:integer_type , gcc:pointer_type , gcc:record_type , gcc:union_type , gcc:void_type ;
+	ns0:range gcc:enumeral_type , gcc:function_type , gcc:integer_type , gcc:pointer_type , gcc:record_type , gcc:union_type , gcc:void_type .
+# 
+# gcc:valu
+
+gcc:valu a owl:ObjectProperty ;
+	ns0:domain gcc:tree_list ;
+	ns0:range gcc:complex_type , gcc:integer_cst , gcc:integer_type , gcc:nop_expr , gcc:parm_decl , gcc:pointer_type , gcc:real_type , gcc:reference_type , gcc:void_type .
+# 
+# 
+# 
+# #################################################################
+# #
+# #    Data properties
+# #
+# #################################################################
+# 
+# 
+# gcc:algn
+
+gcc:algn a owl:DatatypeProperty ;
+	ns0:domain gcc:array_type , gcc:boolean_type , gcc:complex_type , gcc:enumeral_type , gcc:field_decl , gcc:function_type , gcc:integer_type , gcc:parm_decl , gcc:pointer_type , gcc:real_type , gcc:record_type , gcc:reference_type , gcc:result_decl , gcc:union_type , gcc:var_decl , gcc:void_type ;
+	ns0:range gcc:ByteAlignment .
+# 
+# gcc:const
+
+gcc:const a owl:DatatypeProperty ;
+	ns0:domain gcc:integer_type , gcc:pointer_type , gcc:record_type , gcc:void_type .
+# 
+# gcc:filename
+
+gcc:filename a owl:DatatypeProperty ;
+	ns0:domain gcc:const_decl , gcc:field_decl , gcc:function_decl , gcc:parm_decl , gcc:result_decl , gcc:type_decl , gcc:var_decl .
+# 
+# gcc:high
+
+gcc:high a owl:DatatypeProperty ;
+	ns0:domain gcc:integer_cst .
+# 
+# gcc:line
+
+gcc:line a owl:DatatypeProperty ;
+	ns0:domain gcc:break_stmt , gcc:compound_stmt , gcc:decl_stmt , gcc:expr_stmt , gcc:if_stmt , gcc:return_stmt , gcc:scope_stmt , gcc:while_stmt .
+# 
+# gcc:linenumber
+
+gcc:linenumber a owl:DatatypeProperty ;
+	ns0:domain gcc:const_decl , gcc:field_decl , gcc:function_decl , gcc:parm_decl , gcc:result_decl , gcc:type_decl , gcc:var_decl .
+# 
+# gcc:lngt
+
+gcc:lngt a owl:DatatypeProperty ;
+	ns0:domain gcc:identifier_node .
+
+gcc:link a owl:DatatypeProperty;
+	 ns0:range gcc:LinkType .	  
+
+gcc:note a owl:DatatypeProperty;
+								    	ns0:range gcc:NoteType .	  
+
+gcc:sign a owl:DatatypeProperty;
+							    	ns0:sign gcc:SignType .	  
+
+###  gcc:prec
+gcc:prec rdf:type owl:ObjectProperty .
+
+
+# 
+# gcc:low
+
+gcc:low a owl:DatatypeProperty ;
+	ns0:domain gcc:integer_cst .
+# 
+# gcc:modifier
+
+gcc:modifier a owl:DatatypeProperty ;
+	ns0:domain gcc:enumeral_type , gcc:field_decl , gcc:function_decl , gcc:integer_type , gcc:record_type , gcc:scope_stmt , gcc:union_type , gcc:var_decl .
+# 
+# gcc:prec
+
+gcc:prec a owl:DatatypeProperty ;
+	ns0:domain gcc:enumeral_type , gcc:integer_type , gcc:real_type .
+# 
+# gcc:restrict
+
+gcc:restrict a owl:DatatypeProperty ;
+	ns0:domain gcc:pointer_type .
+# 
+# gcc:strg
+
+gcc:strg a owl:DatatypeProperty ;
+	ns0:domain gcc:identifier_node ;
+	ns0:range xsd:string .
+# 
+# gcc:tree-code-ref
+
+gcc:tree-code-ref a owl:DatatypeProperty ;
+	ns0:domain gcc:addr_expr , gcc:array_type , gcc:bit_and_expr , gcc:boolean_type , gcc:break_stmt , gcc:call_expr , gcc:complex_type , gcc:component_ref , gcc:compound_stmt , gcc:cond_expr , gcc:const_decl , gcc:convert_expr , gcc:decl_stmt , gcc:enumeral_type , gcc:eq_expr , gcc:expr_stmt , gcc:field_decl , gcc:function_decl , gcc:function_type , gcc:ge_expr , gcc:identifier_node , gcc:if_stmt , gcc:indirect_ref , gcc:integer_cst , gcc:integer_type , gcc:modify_expr , gcc:ne_expr , gcc:non_lvalue_expr , gcc:nop_expr , gcc:parm_decl , gcc:plus_expr , gcc:pointer_type , gcc:postincrement_expr , gcc:preincrement_expr , gcc:real_type , gcc:record_type , gcc:reference_type , gcc:result_decl , gcc:return_stmt , gcc:scope_stmt , gcc:tree_list , gcc:truth_andif_expr , gcc:truth_orif_expr , gcc:type_decl , gcc:union_type , gcc:var_decl , gcc:void_type , gcc:while_stmt .
+# 
+# gcc:used
+
+gcc:used a owl:DatatypeProperty ;
+	ns0:domain gcc:parm_decl , gcc:var_decl ;
+	ns0:range gcc:SimpleBoolean .
+# 
+# 
+# 
+# #################################################################
+# #
+# #    Classes
+# #
+# #################################################################
+# 
+# 
+# gcc:addr_expr
+
+gcc:addr_expr a owl:Class .
+# 
+# gcc:array_type
+
+gcc:array_type a owl:Class .
+# 
+# gcc:bit_and_expr
+
+gcc:bit_and_expr a owl:Class .
+# 
+# gcc:boolean_type
+
+gcc:boolean_type a owl:Class .
+# 
+# gcc:break_stmt
+
+gcc:break_stmt a owl:Class .
+# 
+# gcc:call_expr
+
+gcc:call_expr a owl:Class .
+# 
+# gcc:complex_type
+
+gcc:complex_type a owl:Class .
+# 
+# gcc:component_ref
+
+gcc:component_ref a owl:Class .
+# 
+# gcc:compound_stmt
+
+gcc:compound_stmt a owl:Class .
+# 
+# gcc:cond_expr
+
+gcc:cond_expr a owl:Class .
+# 
+# gcc:const_decl
+
+gcc:const_decl a owl:Class .
+# 
+# gcc:convert_expr
+
+gcc:convert_expr a owl:Class .
+# 
+# gcc:decl_stmt
+
+gcc:decl_stmt a owl:Class .
+# 
+# gcc:enumeral_type
+
+gcc:enumeral_type a owl:Class .
+# 
+# gcc:eq_expr
+
+gcc:eq_expr a owl:Class .
+# 
+# gcc:expr_stmt
+
+gcc:expr_stmt a owl:Class .
+# 
+# gcc:field_decl
+
+gcc:field_decl a owl:Class .
+# 
+# gcc:function_decl
+
+gcc:function_decl a owl:Class .
+# 
+# gcc:function_type
+
+gcc:function_type a owl:Class .
+# 
+# gcc:ge_expr
+
+gcc:ge_expr a owl:Class .
+# 
+# gcc:identifier_node
+
+gcc:identifier_node a owl:Class .
+# 
+# gcc:if_stmt
+
+gcc:if_stmt a owl:Class .
+# 
+# gcc:indirect_ref
+
+gcc:indirect_ref a owl:Class .
+# 
+# gcc:integer_cst
+
+gcc:integer_cst a owl:Class .
+# 
+# gcc:integer_type
+
+gcc:integer_type a owl:Class .
+# 
+# gcc:modify_expr
+
+gcc:modify_expr a owl:Class .
+# 
+# gcc:ne_expr
+
+gcc:ne_expr a owl:Class .
+# 
+# gcc:non_lvalue_expr
+
+gcc:non_lvalue_expr a owl:Class .
+# 
+# gcc:nop_expr
+
+gcc:nop_expr a owl:Class .
+# 
+# gcc:parm_decl
+
+gcc:parm_decl a owl:Class .
+# 
+# gcc:plus_expr
+
+gcc:plus_expr a owl:Class .
+# 
+# gcc:pointer_type
+
+gcc:pointer_type a owl:Class .
+# 
+# gcc:postincrement_expr
+
+gcc:postincrement_expr a owl:Class .
+# 
+# gcc:preincrement_expr
+
+gcc:preincrement_expr a owl:Class .
+# 
+# gcc:real_type
+
+gcc:real_type a owl:Class .
+# 
+# gcc:record_type
+
+gcc:record_type a owl:Class .
+# 
+# gcc:reference_type
+
+gcc:reference_type a owl:Class .
+# 
+# gcc:result_decl
+
+gcc:result_decl a owl:Class .
+# 
+# gcc:return_stmt
+
+gcc:return_stmt a owl:Class .
+# 
+# gcc:scope_stmt
+
+gcc:scope_stmt a owl:Class .
+# 
+# gcc:tree_list
+
+gcc:tree_list a owl:Class .
+# 
+# gcc:truth_andif_expr
+
+gcc:truth_andif_expr a owl:Class .
+# 
+# gcc:truth_orif_expr
+
+gcc:truth_orif_expr a owl:Class .
+# 
+# gcc:type_decl
+
+gcc:type_decl a owl:Class .
+# 
+# gcc:union_type
+
+gcc:union_type a owl:Class .
+# 
+# gcc:var_decl
+
+gcc:var_decl a owl:Class .
+# 
+# gcc:void_type
+
+gcc:void_type a owl:Class .
+# 
+# gcc:while_stmt
+
+gcc:while_stmt a owl:Class .
+# 
+# Generated by the OWL API (version 4.2.6.20160910-2108) https://github.com/owlcs/owlapi

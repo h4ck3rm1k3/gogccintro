@@ -20,6 +20,10 @@ static/callgraph/treedump/test.svg:
 
 out : static/callgraph/treedump/test.svg static/callgraph/treedump/test.png
 
-hugo: out
+hugo: out browserify
 	#	strace -f  -eopen,stat
 	~/gocode/bin/hugo serve --bind 0.0.0.0 --log -v --verboseLog  --logFile log.txt --enableGitInfo --theme=Introspector --baseURL http://new-host:1313/gogccintro/gcc/CallGraph/public
+
+
+browserify :
+	browserify --debug static/cayley/js/cayley_static.js -o static/cayley/js/bundle.js

@@ -1,9 +1,11 @@
-@prefix gcc: <https://h4ck3rm1k3.github.io/gogccintro/gcc/ontology/2017/05/20/gcc_compiler.owl#> . 
+@prefix gcc_compiler: <file:///home/mdupont/experiments/gogccintro/docs/gcc/ontology/2017/05/20/gcc_compiler.owl#> .
+@prefix gcc: <file:///home/mdupont/experiments/gogccintro/docs/gcc/ontology/2017/05/20/gcc_compiler.owl#> . 
 @prefix ns0: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 
 [ rdf:type owl:Ontology ] .
 # 
@@ -37,6 +39,713 @@ gcc:SignType a ns0:Datatype .
 # #
 # #################################################################
 # 
+gcc_compiler:P0
+    a owl:ObjectProperty .
+
+gcc_compiler:P1
+    a owl:ObjectProperty .
+
+gcc_compiler:P10
+    a owl:ObjectProperty .
+
+gcc_compiler:P100
+    a owl:ObjectProperty .
+
+gcc_compiler:P101
+    a owl:ObjectProperty .
+
+gcc_compiler:P102
+    a owl:ObjectProperty .
+
+gcc_compiler:P103
+    a owl:ObjectProperty .
+
+gcc_compiler:P104
+    a owl:ObjectProperty .
+
+gcc_compiler:P105
+    a owl:ObjectProperty .
+
+gcc_compiler:P106
+    a owl:ObjectProperty .
+
+gcc_compiler:P107
+    a owl:ObjectProperty .
+
+gcc_compiler:P108
+    a owl:ObjectProperty .
+
+gcc_compiler:P109
+    a owl:ObjectProperty .
+
+gcc_compiler:P11
+    a owl:ObjectProperty .
+
+gcc_compiler:P110
+    a owl:ObjectProperty .
+
+gcc_compiler:P111
+    a owl:ObjectProperty .
+
+gcc_compiler:P112
+    a owl:ObjectProperty .
+
+gcc_compiler:P113
+    a owl:ObjectProperty .
+
+gcc_compiler:P114
+    a owl:ObjectProperty .
+
+gcc_compiler:P115
+    a owl:ObjectProperty .
+
+gcc_compiler:P116
+    a owl:ObjectProperty .
+
+gcc_compiler:P117
+    a owl:ObjectProperty .
+
+gcc_compiler:P118
+    a owl:ObjectProperty .
+
+gcc_compiler:P119
+    a owl:ObjectProperty .
+
+gcc_compiler:P12
+    a owl:ObjectProperty .
+
+gcc_compiler:P120
+    a owl:ObjectProperty .
+
+gcc_compiler:P121
+    a owl:ObjectProperty .
+
+gcc_compiler:P122
+    a owl:ObjectProperty .
+
+gcc_compiler:P123
+    a owl:ObjectProperty .
+
+gcc_compiler:P124
+    a owl:ObjectProperty .
+
+gcc_compiler:P125
+    a owl:ObjectProperty .
+
+gcc_compiler:P126
+    a owl:ObjectProperty .
+
+gcc_compiler:P127
+    a owl:ObjectProperty .
+
+gcc_compiler:P128
+    a owl:ObjectProperty .
+
+gcc_compiler:P129
+    a owl:ObjectProperty .
+
+gcc_compiler:P13
+    a owl:ObjectProperty .
+
+gcc_compiler:P130
+    a owl:ObjectProperty .
+
+gcc_compiler:P131
+    a owl:ObjectProperty .
+
+gcc_compiler:P132
+    a owl:ObjectProperty .
+
+gcc_compiler:P133
+    a owl:ObjectProperty .
+
+gcc_compiler:P134
+    a owl:ObjectProperty .
+
+gcc_compiler:P135
+    a owl:ObjectProperty .
+
+gcc_compiler:P136
+    a owl:ObjectProperty .
+
+gcc_compiler:P137
+    a owl:ObjectProperty .
+
+gcc_compiler:P138
+    a owl:ObjectProperty .
+
+gcc_compiler:P139
+    a owl:ObjectProperty .
+
+gcc_compiler:P14
+    a owl:ObjectProperty .
+
+gcc_compiler:P140
+    a owl:ObjectProperty .
+
+gcc_compiler:P141
+    a owl:ObjectProperty .
+
+gcc_compiler:P142
+    a owl:ObjectProperty .
+
+gcc_compiler:P143
+    a owl:ObjectProperty .
+
+gcc_compiler:P144
+    a owl:ObjectProperty .
+
+gcc_compiler:P145
+    a owl:ObjectProperty .
+
+gcc_compiler:P146
+    a owl:ObjectProperty .
+
+gcc_compiler:P147
+    a owl:ObjectProperty .
+
+gcc_compiler:P148
+    a owl:ObjectProperty .
+
+gcc_compiler:P149
+    a owl:ObjectProperty .
+
+gcc_compiler:P15
+    a owl:ObjectProperty .
+
+gcc_compiler:P150
+    a owl:ObjectProperty .
+
+gcc_compiler:P151
+    a owl:ObjectProperty .
+
+gcc_compiler:P152
+    a owl:ObjectProperty .
+
+gcc_compiler:P153
+    a owl:ObjectProperty .
+
+gcc_compiler:P154
+    a owl:ObjectProperty .
+
+gcc_compiler:P155
+    a owl:ObjectProperty .
+
+gcc_compiler:P156
+    a owl:ObjectProperty .
+
+gcc_compiler:P157
+    a owl:ObjectProperty .
+
+gcc_compiler:P158
+    a owl:ObjectProperty .
+
+gcc_compiler:P159
+    a owl:ObjectProperty .
+
+gcc_compiler:P16
+    a owl:ObjectProperty .
+
+gcc_compiler:P160
+    a owl:ObjectProperty .
+
+gcc_compiler:P161
+    a owl:ObjectProperty .
+
+gcc_compiler:P162
+    a owl:ObjectProperty .
+
+gcc_compiler:P163
+    a owl:ObjectProperty .
+
+gcc_compiler:P164
+    a owl:ObjectProperty .
+
+gcc_compiler:P165
+    a owl:ObjectProperty .
+
+gcc_compiler:P166
+    a owl:ObjectProperty .
+
+gcc_compiler:P167
+    a owl:ObjectProperty .
+
+gcc_compiler:P168
+    a owl:ObjectProperty .
+
+gcc_compiler:P169
+    a owl:ObjectProperty .
+
+gcc_compiler:P17
+    a owl:ObjectProperty .
+
+gcc_compiler:P170
+    a owl:ObjectProperty .
+
+gcc_compiler:P171
+    a owl:ObjectProperty .
+
+gcc_compiler:P172
+    a owl:ObjectProperty .
+
+gcc_compiler:P173
+    a owl:ObjectProperty .
+
+gcc_compiler:P174
+    a owl:ObjectProperty .
+
+gcc_compiler:P175
+    a owl:ObjectProperty .
+
+gcc_compiler:P176
+    a owl:ObjectProperty .
+
+gcc_compiler:P177
+    a owl:ObjectProperty .
+
+gcc_compiler:P18
+    a owl:ObjectProperty .
+
+gcc_compiler:P19
+    a owl:ObjectProperty .
+
+gcc_compiler:P2
+    a owl:ObjectProperty .
+
+gcc_compiler:P20
+    a owl:ObjectProperty .
+
+gcc_compiler:P21
+    a owl:ObjectProperty .
+
+gcc_compiler:P22
+    a owl:ObjectProperty .
+
+gcc_compiler:P23
+    a owl:ObjectProperty .
+
+gcc_compiler:P24
+    a owl:ObjectProperty .
+
+gcc_compiler:P25
+    a owl:ObjectProperty .
+
+gcc_compiler:P26
+    a owl:ObjectProperty .
+
+gcc_compiler:P27
+    a owl:ObjectProperty .
+
+gcc_compiler:P28
+    a owl:ObjectProperty .
+
+gcc_compiler:P29
+    a owl:ObjectProperty .
+
+gcc_compiler:P3
+    a owl:ObjectProperty .
+
+gcc_compiler:P30
+    a owl:ObjectProperty .
+
+gcc_compiler:P31
+    a owl:ObjectProperty .
+
+gcc_compiler:P32
+    a owl:ObjectProperty .
+
+gcc_compiler:P33
+    a owl:ObjectProperty .
+
+gcc_compiler:P34
+    a owl:ObjectProperty .
+
+gcc_compiler:P35
+    a owl:ObjectProperty .
+
+gcc_compiler:P36
+    a owl:ObjectProperty .
+
+gcc_compiler:P37
+    a owl:ObjectProperty .
+
+gcc_compiler:P38
+    a owl:ObjectProperty .
+
+gcc_compiler:P39
+    a owl:ObjectProperty .
+
+gcc_compiler:P4
+    a owl:ObjectProperty .
+
+gcc_compiler:P40
+    a owl:ObjectProperty .
+
+gcc_compiler:P41
+    a owl:ObjectProperty .
+
+gcc_compiler:P42
+    a owl:ObjectProperty .
+
+gcc_compiler:P43
+    a owl:ObjectProperty .
+
+gcc_compiler:P44
+    a owl:ObjectProperty .
+
+gcc_compiler:P45
+    a owl:ObjectProperty .
+
+gcc_compiler:P46
+    a owl:ObjectProperty .
+
+gcc_compiler:P47
+    a owl:ObjectProperty .
+
+gcc_compiler:P48
+    a owl:ObjectProperty .
+
+gcc_compiler:P49
+    a owl:ObjectProperty .
+
+gcc_compiler:P5
+    a owl:ObjectProperty .
+
+gcc_compiler:P50
+    a owl:ObjectProperty .
+
+gcc_compiler:P51
+    a owl:ObjectProperty .
+
+gcc_compiler:P52
+    a owl:ObjectProperty .
+
+gcc_compiler:P53
+    a owl:ObjectProperty .
+
+gcc_compiler:P54
+    a owl:ObjectProperty .
+
+gcc_compiler:P55
+    a owl:ObjectProperty .
+
+gcc_compiler:P56
+    a owl:ObjectProperty .
+
+gcc_compiler:P57
+    a owl:ObjectProperty .
+
+gcc_compiler:P58
+    a owl:ObjectProperty .
+
+gcc_compiler:P59
+    a owl:ObjectProperty .
+
+gcc_compiler:P6
+    a owl:ObjectProperty .
+
+gcc_compiler:P60
+    a owl:ObjectProperty .
+
+gcc_compiler:P61
+    a owl:ObjectProperty .
+
+gcc_compiler:P62
+    a owl:ObjectProperty .
+
+gcc_compiler:P63
+    a owl:ObjectProperty .
+
+gcc_compiler:P64
+    a owl:ObjectProperty .
+
+gcc_compiler:P65
+    a owl:ObjectProperty .
+
+gcc_compiler:P66
+    a owl:ObjectProperty .
+
+gcc_compiler:P67
+    a owl:ObjectProperty .
+
+gcc_compiler:P68
+    a owl:ObjectProperty .
+
+gcc_compiler:P69
+    a owl:ObjectProperty .
+
+gcc_compiler:P7
+    a owl:ObjectProperty .
+
+gcc_compiler:P70
+    a owl:ObjectProperty .
+
+gcc_compiler:P71
+    a owl:ObjectProperty .
+
+gcc_compiler:P72
+    a owl:ObjectProperty .
+
+gcc_compiler:P73
+    a owl:ObjectProperty .
+
+gcc_compiler:P74
+    a owl:ObjectProperty .
+
+gcc_compiler:P75
+    a owl:ObjectProperty .
+
+gcc_compiler:P76
+    a owl:ObjectProperty .
+
+gcc_compiler:P77
+    a owl:ObjectProperty .
+
+gcc_compiler:P78
+    a owl:ObjectProperty .
+
+gcc_compiler:P79
+    a owl:ObjectProperty .
+
+gcc_compiler:P8
+    a owl:ObjectProperty .
+
+gcc_compiler:P80
+    a owl:ObjectProperty .
+
+gcc_compiler:P81
+    a owl:ObjectProperty .
+
+gcc_compiler:P82
+    a owl:ObjectProperty .
+
+gcc_compiler:P83
+    a owl:ObjectProperty .
+
+gcc_compiler:P84
+    a owl:ObjectProperty .
+
+gcc_compiler:P85
+    a owl:ObjectProperty .
+
+gcc_compiler:P86
+    a owl:ObjectProperty .
+
+gcc_compiler:P87
+    a owl:ObjectProperty .
+
+gcc_compiler:P88
+    a owl:ObjectProperty .
+
+gcc_compiler:P89
+    a owl:ObjectProperty .
+
+gcc_compiler:P9
+    a owl:ObjectProperty .
+
+gcc_compiler:P90
+    a owl:ObjectProperty .
+
+gcc_compiler:P91
+    a owl:ObjectProperty .
+
+gcc_compiler:P92
+    a owl:ObjectProperty .
+
+gcc_compiler:P93
+    a owl:ObjectProperty .
+
+gcc_compiler:P94
+    a owl:ObjectProperty .
+
+gcc_compiler:P95
+    a owl:ObjectProperty .
+
+gcc_compiler:P96
+    a owl:ObjectProperty .
+
+gcc_compiler:P97
+    a owl:ObjectProperty .
+
+gcc_compiler:P98
+    a owl:ObjectProperty .
+
+gcc_compiler:P99
+    a owl:ObjectProperty .
+
+gcc_compiler:accs
+    a owl:ObjectProperty .
+
+gcc_compiler:args
+    a owl:ObjectProperty .
+
+gcc_compiler:argt
+    a owl:ObjectProperty .
+
+gcc_compiler:base
+    a owl:ObjectProperty .
+
+gcc_compiler:bases
+    a owl:ObjectProperty .
+
+gcc_compiler:binf
+    a owl:ObjectProperty .
+
+gcc_compiler:body
+    a owl:ObjectProperty .
+
+gcc_compiler:bpos
+    a owl:ObjectProperty .
+
+gcc_compiler:chain
+    a owl:ObjectProperty .
+
+gcc_compiler:chan
+    a owl:ObjectProperty .
+
+gcc_compiler:clas
+    a owl:ObjectProperty .
+
+gcc_compiler:cnst
+    a owl:ObjectProperty .
+
+gcc_compiler:cond
+    a owl:ObjectProperty .
+
+gcc_compiler:crnt
+    a owl:ObjectProperty .
+
+gcc_compiler:csts
+    a owl:ObjectProperty .
+
+gcc_compiler:ctor
+    a owl:ObjectProperty .
+
+gcc_compiler:dcls
+    a owl:ObjectProperty .
+
+gcc_compiler:decl
+    a owl:ObjectProperty .
+
+gcc_compiler:domn
+    a owl:ObjectProperty .
+
+gcc_compiler:else
+    a owl:ObjectProperty .
+
+gcc_compiler:elts
+    a owl:ObjectProperty .
+
+gcc_compiler:expr
+    a owl:ObjectProperty .
+
+gcc_compiler:flds
+    a owl:ObjectProperty .
+
+gcc_compiler:fn
+    a owl:ObjectProperty .
+
+gcc_compiler:fncs
+    a owl:ObjectProperty .
+
+gcc_compiler:init
+    a owl:ObjectProperty .
+
+gcc_compiler:inst
+    a owl:ObjectProperty .
+
+gcc_compiler:int
+    a owl:ObjectProperty .
+
+gcc_compiler:labl
+    a owl:ObjectProperty .
+
+gcc_compiler:lang
+    a owl:ObjectProperty .
+
+
+gcc_compiler:max
+    a owl:ObjectProperty .
+
+gcc_compiler:min
+    a owl:ObjectProperty .
+
+gcc_compiler:mngl
+    a owl:ObjectProperty .
+
+gcc_compiler:name
+    a owl:ObjectProperty .
+
+
+gcc_compiler:op_0
+    a owl:ObjectProperty .
+
+gcc_compiler:op_1
+    a owl:ObjectProperty .
+
+gcc_compiler:op_2
+    a owl:ObjectProperty .
+
+gcc_compiler:orig
+    a owl:ObjectProperty .
+
+gcc_compiler:prms
+    a owl:ObjectProperty .
+
+gcc_compiler:ptd
+    a owl:ObjectProperty .
+
+gcc_compiler:purp
+    a owl:ObjectProperty .
+
+gcc_compiler:qual
+    a owl:ObjectProperty .
+
+gcc_compiler:refd
+    a owl:ObjectProperty .
+
+gcc_compiler:retn
+    a owl:ObjectProperty .
+
+gcc_compiler:rslt
+    a owl:ObjectProperty .
+
+gcc_compiler:scpe
+    a owl:ObjectProperty .
+
+
+gcc_compiler:size
+    a owl:ObjectProperty .
+
+gcc_compiler:spec
+    a owl:ObjectProperty .
+
+gcc_compiler:srcp
+    a owl:ObjectProperty .
+
+
+gcc_compiler:tag
+    a owl:ObjectProperty .
+
+gcc_compiler:then
+    a owl:ObjectProperty .
+
+gcc_compiler:type
+    a owl:ObjectProperty .
+
+gcc_compiler:unql
+    a owl:ObjectProperty .
+
+
+gcc_compiler:valu
+    a owl:ObjectProperty .
+
+gcc_compiler:vars
+    a owl:ObjectProperty .
+
+gcc_compiler:vfld
+    a owl:ObjectProperty .
+
 # 
 # gcc:args
 
@@ -297,7 +1006,7 @@ gcc:sign a owl:DatatypeProperty;
 							    	ns0:sign gcc:SignType .	  
 
 ###  gcc:prec
-gcc:prec rdf:type owl:ObjectProperty .
+
 
 
 # 
@@ -332,7 +1041,6 @@ gcc:strg a owl:DatatypeProperty ;
 gcc:tree-code-ref a owl:DatatypeProperty ;
 	ns0:domain gcc:addr_expr , gcc:array_type , gcc:bit_and_expr , gcc:boolean_type , gcc:break_stmt , gcc:call_expr , gcc:complex_type , gcc:component_ref , gcc:compound_stmt , gcc:cond_expr , gcc:const_decl , gcc:convert_expr , gcc:decl_stmt , gcc:enumeral_type , gcc:eq_expr , gcc:expr_stmt , gcc:field_decl , gcc:function_decl , gcc:function_type , gcc:ge_expr , gcc:identifier_node , gcc:if_stmt , gcc:indirect_ref , gcc:integer_cst , gcc:integer_type , gcc:modify_expr , gcc:ne_expr , gcc:non_lvalue_expr , gcc:nop_expr , gcc:parm_decl , gcc:plus_expr , gcc:pointer_type , gcc:postincrement_expr , gcc:preincrement_expr , gcc:real_type , gcc:record_type , gcc:reference_type , gcc:result_decl , gcc:return_stmt , gcc:scope_stmt , gcc:tree_list , gcc:truth_andif_expr , gcc:truth_orif_expr , gcc:type_decl , gcc:union_type , gcc:var_decl , gcc:void_type , gcc:while_stmt .
 # 
-# gcc:used
 
 gcc:used a owl:DatatypeProperty ;
 	ns0:domain gcc:parm_decl , gcc:var_decl ;
@@ -540,3 +1248,337 @@ gcc:void_type a owl:Class .
 gcc:while_stmt a owl:Class .
 # 
 # Generated by the OWL API (version 4.2.6.20160910-2108) https://github.com/owlcs/owlapi
+
+
+
+gcc:addr_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:aggr_init_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:array_ref
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:array_type
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:bind_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:binfo
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:bit_and_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:bit_field_ref
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+#gcc:body:
+#    a owl:Class ;
+#    rdfs:subClassOf owl:Thing .
+
+gcc:boolean_type
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:call_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:case_label_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:cleanup_point_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:component_ref
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:compound_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:cond_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:const_decl
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:constructor
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:convert_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:ctor_initializer
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:decl_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:enumeral_type
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:eq_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:expr_stmt
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:field_decl
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:function_decl
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:function_type
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:ge_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:goto_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:gt_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:identifier_node
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:if_stmt
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:indirect_ref
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:init_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:integer_cst
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:integer_type
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:label_decl
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:label_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:lang_type
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:le_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:loop_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:lshift_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:mem_ref
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:method_type
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:minus_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:modify_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:namespace_decl
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:ne_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:negate_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:non_lvalue_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:nop_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:overload
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:parm_decl
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:plus_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:pointer_type
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:postincrement_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:preincrement_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:record_type
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:reference_type
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:result_decl
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:return_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:scope_ref
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:statement_list
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:string_cst
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:switch_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:target_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:template_decl
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:template_parm_index
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:template_type_parm
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:translation_unit_decl
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:tree_list
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:tree_vec
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:trunc_div_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:trunc_mod_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:truth_andif_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:truth_not_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:truth_orif_expr
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:type_decl
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:typename_type
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:union_type
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:var_decl
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:void_cst
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+gcc:void_type
+    a owl:Class ;
+    rdfs:subClassOf owl:Thing .

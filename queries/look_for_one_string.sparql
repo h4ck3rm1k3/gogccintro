@@ -1,6 +1,4 @@
- /*
- here we look for a simple string constant called 'chan' 
-*/
+# here we look for a simple string constant called 'chan' 
 SELECT
         ?f
         WHERE {       

@@ -1,4 +1,7 @@
- SELECT
+ /*
+ here we look for a simple string constant called 'chan' 
+*/
+SELECT
         ?f
         WHERE {       
         ?f ?p 'chan'.

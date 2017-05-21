@@ -1,0 +1,17 @@
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX gcc: <https://h4ck3rm1k3.github.io/gogccintro/gcc/ontology/2017/05/20/gcc_compiler.owl#>
+SELECT ?p3  WHERE {          
+          ?name gcc:strg ?namestr.
+          ?f14 gcc:name ?name.
+          ?f14 rdf:type gcc:function_decl.
+          ?f14 gcc:body ?f13.
+          ?f13 ?p1 ?f2.
+          ?f2 ?p2 ?f3.
+  ?f3 ?p3 ?f4.
+  ?f4 ?p4 ?f5.
+  FILTER ( ?p3 NOT IN (rdf:type))
+  FILTER ( ?p2 NOT IN (rdf:type))
+  FILTER ( ?p1 NOT IN (rdf:type))
+  FILTER ( ?p4 NOT IN (rdf:type))
+          }
+group by ?p3

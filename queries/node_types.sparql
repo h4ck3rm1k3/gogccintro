@@ -1,0 +1,16 @@
+ SELECT
+
+        ?t
+        (count(?f) as ?count)
+        (min(?f) as ?first)
+        (max(?f) as ?last)
+
+        WHERE {
+
+       
+        ?f rdf:type ?t.
+
+
+        }
+        group by ?t
+order by DESC(?count )

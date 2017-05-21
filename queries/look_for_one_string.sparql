@@ -1,0 +1,5 @@
+ SELECT
+        ?f
+        WHERE {       
+        ?f ?p 'chan'.
+        }

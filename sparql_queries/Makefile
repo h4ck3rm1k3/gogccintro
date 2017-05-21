@@ -1,7 +1,7 @@
 
-blaze : recurse.go
+sparql_queries : recurse.go
 	GOPATH=~/gocode go build
 
-t: blaze
+t: sparql_queries
 	#strace -f -s9999
-	./blaze
+	./sparql_queries

@@ -1,13 +1,23 @@
 package main
 
-//p1body_type
-//"statement_list","P*"
-//"bind_expr", "body",type, vars
-// switch_expr "body/cond, type
-//return_expr expr,type
-//cleanup_point_expr/op_0,type
-//cond_expr /"op_0/op_1/op_2.type
+/*
+this is an examples of a semi recursive query in sparql.
+from what I understand in sparql there are no recursive queries.
+we can however query chains of predicates in a row.
 
+   S P O
+   O P2 O2
+   O2 P3 O3
+
+This would connect S via P to O and via P2 to O2 and via P3 to O3.
+
+It creates a set of queries that scans for function bodies with certain size by constructing a sparql query
+to look for a chain of connections of a certain length and filtering out object of certain types.
+
+So, we filter out predicate of some types and objects of types.
+
+We start with longer lengths of chains and then go down in the length to get all the objects.
+*/
 
 
 // levelone_types := [
@@ -432,7 +442,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	for x := 160; x > 1; x-- {
+	for x := 150; x > 1; x = x -1 {
 		//depth(x)
 		foo( repo, x)
 	}

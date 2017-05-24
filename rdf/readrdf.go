@@ -161,12 +161,13 @@ func (t * StrAttributeVals) ReportSizes(name string) {
 
 }
 
-func (t * StrAttributeVals) Val(val string) {
+func (t * StrAttributeVals) Val(val string) (int) {
 	if (t.TheVals == nil){
 		t.TheVals = make(map[string]*SAttributeValStrBlob)
 	}
 	if valo, ok := t.TheVals[val]; ok {
 		valo.Val(val)
+		return valo.CardinalPos
 	} else {
 		valo := &SAttributeValStrBlob{
 			BytePosition: t.NextPos,
@@ -185,6 +186,7 @@ func (t * StrAttributeVals) Val(val string) {
 		valo.Val(val)
 		t.NextPos=t.NextPos+uintptr(valo.Size)
 		t.TheVals[val] = valo
+		return valo.CardinalPos
 	}	
 }
 
@@ -242,6 +244,8 @@ type SAttributeNames struct {
 	
 	//IntValTotal IntAttributeVals
 	StrVals map[string]*StrAttributeVals
+
+	//PredicateIds map[string]int
 }
 
 func (t * SAttributeNames) Report() {
@@ -297,14 +301,31 @@ func (t * SAttributeNames) IntVal(key string, val int) {
 	
 }
 
-func (t * SAttributeNames) StrVal(key string, val string) {
+// func (t * SAttributeNames) PredVal(key string) (int){
+// /*
+// assign each predicate an id
+// */
+// 	if (t.PredicateIds == nil){
+// 		t.PredicateIds = make(map[string]int)
+// 	}
+// 	if valo, ok := t.PredicateIds[key]; ok {
+// 		return valo
+// 	} else {
+// 		valo := len(t.PredicateIds)
+// 		t.PredicateIds[key] = valo
+// 		return valo
+// 	}
+
+// }
+
+func (t * SAttributeNames) StrVal(key string, val string) (int){
 
 	if (t.StrVals == nil){
 		t.StrVals = make(map[string]*StrAttributeVals)
 	}
 
 	if valo, ok := t.StrVals[key]; ok {
-		valo.Val(val)
+		return valo.Val(val)
 	} else {
 		valo := &StrAttributeVals{
 			Count:0,
@@ -312,7 +333,7 @@ func (t * SAttributeNames) StrVal(key string, val string) {
 			NextPos : 0,			
 		}
 		t.StrVals[key] = valo
-		valo.Val(val)
+		return valo.Val(val)
 	}
 	
 }
@@ -359,13 +380,23 @@ func main(){
 			if p == stype {
 				//fmt.Printf("%d TYPE:%s\n", si,o)
 				datamap.IntVal(o,si)// peg node type as predicate...
+
+				datamap.StrVal("object_type",o) // other string value
 			} else {
 				//fmt.Printf("%d %s OTHER:%s\n", si,p,o)
-				datamap.StrVal(p,o) // other string value
+				oid := datamap.StrVal(p,o) // other string value
+				// the  object id are the indexes to the file where these will be output
+				sp2 := fmt.Sprintf("s_%s",p)
+				datamap.Pair( sp2, si,oid)  // use the cardinality of the string for the index
+
+				datamap.StrVal("string_predicate",p) // other string value
+				datamap.StrVal("string_predicate2",sp2) // other string value
 			}
 		} else {
+			datamap.StrVal("int_predicate",p) // other string value
 			datamap.IntVal("id",si)
-			datamap.IntVal(p,oi)
+			
+			//datamap.IntVal(p,oi)
 			datamap.Pair(p, si,oi)
 			//fmt.Printf("%d %s %d\n", si,p,oi)
 		}		

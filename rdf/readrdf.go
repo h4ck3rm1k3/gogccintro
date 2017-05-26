@@ -123,53 +123,37 @@ type StrAttributeVals struct {
 }
 
 func (t * StrAttributeVals) Report(name string) {
-	fmt.Printf("Str Name %s, Count %d, Max %d, Next %d\n",name, t.Count, t.Max, t.NextPos)
-	d := make([]byte,t.NextPos)	
-	for _, v := range t.TheVals {
-		for i:=0; i <v.Size; i++{
-			d[v.BytePosition+uintptr(i)]=v.Bytes[i]
-		}
-	}
-	fn := fmt.Sprintf("data/%s_str.dat",name)
-	err := ioutil.WriteFile(fn, d, 0644)
-	if err != nil {
-		panic(err)
-	}
-	//fmt.Printf("%x\n",d)
-}
 
-func (t * StrAttributeVals) ReportSizes(name string) {
-	fn := fmt.Sprintf("data/%s_str_sizes.dat",name)
+	fmt.Printf("Str Name %s, Count %d, Max %d, Next %d\n",name, t.Count, t.Max, t.NextPos)
+	fn := fmt.Sprintf("data/%s_str.dat",name)
 	f, err := os.Create(fn)
 	if err != nil {	panic(err)}
 	w := bufio.NewWriter(f)
-	buf2 := make([]byte,1)
+	//////////
+	fn2 := fmt.Sprintf("data/%s_str_sizes.dat",name)
+	f2, err := os.Create(fn2)
+	if err != nil {	panic(err)}
+	w2 := bufio.NewWriter(f2)
+	buf3 := make([]byte,1)	
+	///////////////
+	
 	for _, v := range t.TheVals {
+		//
+		//fmt.Printf("DEBUGSTR : %#v, %d, %s len:%d buf:%x\n",v,v.Size,v.Value,len(v.Value))
+		// write the string
+		w.Write(v.Bytes)
+		/// write the int
 		l := len(v.Value)
-		if l != v.Size{
-			fmt.Printf("DEBUG : %v, %d, %s len:%d\n",
-				//s2,
-				v,
-				v.Size,
-				v.Value,
-				len(v.Value))
-			
-			panic("mismatch")
-		}
 		s2 :=byte(l)
-		buf2[0]=s2
-		// fmt.Printf("DEBUG : %s, %v, %d, %s len:%d\n",
-		// 	s2,
-		// 	v,
-		// 	v.Size,
-		// 	v.Value,
-		// 	len(v.Value))
-		
-		w.Write(buf2)
+		buf3[0]=s2
+		w2.Write(buf3)
+		////
+
 	}
 	w.Flush()
-	fmt.Printf("Str Size %s, Count %d, Max %d, Next %d\n",name, t.Count, t.Max, t.NextPos)	
+	w2.Flush()
 }
+
 
 func (t * StrAttributeVals) Val(val string) (int) {
 	if (t.TheVals == nil){
@@ -260,9 +244,17 @@ type SAttributeNames struct {
 
 func (t * SAttributeNames) Report() {
 
+	// k:= "object_type"
+	// v := t.StrVals[k]
+	// fmt.Printf("Writing %s\n",k)
+	// v.Report(k)
+	// //v.ReportSizes(k)
+	// return
+	
 	for k, v := range t.StrVals {
+		fmt.Printf("Writing %s\n",k)
 		v.Report(k)
-		v.ReportSizes(k)
+		//v.ReportSizes(k)
 	}
 
 	for k, v := range t.Pairs {
@@ -388,7 +380,7 @@ func main(){
 			datamap.IntVal("id",si)
 			//panic(err)
 			if p == stype {
-				//fmt.Printf("%d TYPE:%s\n", si,o)
+				fmt.Printf("%d TYPE:%s\n", si,o)
 				datamap.IntVal(o,si)// peg node type as predicate...
 
 				datamap.StrVal("object_type",o) // other string value

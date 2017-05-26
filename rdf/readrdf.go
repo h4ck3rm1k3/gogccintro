@@ -1,9 +1,8 @@
 // read rdf file
-
 package main
 
-
 import (
+	"bufio"
 	"bytes"
 	"strconv"
 	"encoding/binary"
@@ -140,25 +139,36 @@ func (t * StrAttributeVals) Report(name string) {
 }
 
 func (t * StrAttributeVals) ReportSizes(name string) {
-	fmt.Printf("Str Size %s, Count %d, Max %d, Next %d\n",name, t.Count, t.Max, t.NextPos)
-	d := make([]byte,t.Count * sizeofint)
-	
-	bp := 0
-	
-	for _, v := range t.TheVals {
-		b2 := make([]byte,sizeofint)
-		binary.LittleEndian.PutUint32(b2,uint32(v.Size))
-		for i:=0; i < sizeofint; i++{
-			d[bp+i]=b2[i]
-		}
-		bp += sizeofint
-	}
 	fn := fmt.Sprintf("data/%s_str_sizes.dat",name)
-	err := ioutil.WriteFile(fn, d, 0644)
-	if err != nil {
-		panic(err)
+	f, err := os.Create(fn)
+	if err != nil {	panic(err)}
+	w := bufio.NewWriter(f)
+	buf2 := make([]byte,1)
+	for _, v := range t.TheVals {
+		l := len(v.Value)
+		if l != v.Size{
+			fmt.Printf("DEBUG : %v, %d, %s len:%d\n",
+				//s2,
+				v,
+				v.Size,
+				v.Value,
+				len(v.Value))
+			
+			panic("mismatch")
+		}
+		s2 :=byte(l)
+		buf2[0]=s2
+		// fmt.Printf("DEBUG : %s, %v, %d, %s len:%d\n",
+		// 	s2,
+		// 	v,
+		// 	v.Size,
+		// 	v.Value,
+		// 	len(v.Value))
+		
+		w.Write(buf2)
 	}
-
+	w.Flush()
+	fmt.Printf("Str Size %s, Count %d, Max %d, Next %d\n",name, t.Count, t.Max, t.NextPos)	
 }
 
 func (t * StrAttributeVals) Val(val string) (int) {

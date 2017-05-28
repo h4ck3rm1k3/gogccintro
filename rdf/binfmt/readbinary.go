@@ -11,9 +11,11 @@ import (
 	"io/ioutil"
 	//"container/list"
 )
-const (  
-	intval = iota  // c0 == 0
-	strval = iota  // c1 == 1
+const (
+	unknown = iota  // c0 == 0
+	intval = iota  // c0 == 1
+	strval = iota  // c1 == 2
+	intstrval = iota  // c1 == 3 // both string and int values.... mess
 	sizeofint = 8
 )
 // read in strings
@@ -120,34 +122,211 @@ func ReadPairs(filename string) ([]NodePair){
 	return res
 }
 
-func main() {
+type FieldValueInterface interface {
+	// this will resolve to an integer or string field collection.. maybe something else
+}
+
+/*
+global field type shared for all fields
+*/
+type GlobalFieldType struct {
+	FieldType int// 
+	Name string
+	IntOffset int // offset of this field type in the original array from disk
+	StrOffset int // offset of this field type in the original array from disk
+
+	FieldOffset int // offset of this field type in the int field list
+	
+	Range [] FieldValueInterface // an array of the range of this field, each unique subject is indexed.
+
+	RangeTypes [] int // array of types of objects in the field
+	DomainTypes [] int // array of types of subjects in the field
+
+	RangeTypesCount [] int // array of counts per type of objects in the field
+	DomainTypesCount [] int // array of count per type of subjects in the field
+}
+
+/*
+the field type is inside an object type
+*/
+type ContainedFieldType struct {
+	Global * GlobalFieldType
+	Domain [] int // array of the object occuring in the domain, in the object type, used to reduce the cardinality of each predicate
+	Range [] int // array of the object occuring in the range
+
+	RangeTypes [] int // array of types of objects in the field
+	RangeTypesCount [] int // array of counts per type of objects in the field
+	
+	Instances [] int // indexed by domain index what is the value index. values of each object.
+
+/*
+How to find all the domain indexes for each object?
+look up the type of the object, go over each field, lookup the offset of the domain.
+we append a contains field object to each node type that contains the offsets for those objects
+*/
+	ObjectIndex map[int]int // lookup global object id and find the offset in the index, used to find instance data
+}
+
+type ObjectType struct {
+	Name string
+	Offset int // offset of this object type in array
+	// each object type represents a type of node, we will start with one type and then refine it into subset
+	// a list of int fields (store the fieldid), used to
+	FieldNames map[string] int
+	Fields [] ContainedFieldType
+	// a list of instances (store the object), index, we read this from the file
+	Instances [] int
+}
+
+
+func (m *Model)Refine(){
+	// given a model we try and create types that are more contained
+}
+
+type FieldValue struct {
+	FieldType * ContainedFieldType // pointer to the field object description containing name etc.
+	Domainoffset int // the offset of this subject in the domain array
+	Rangeoffset int // the offset of the object in the range array 
+}
+
+/*
+TODO : be able to create optimal representation of row of data for a given table
+without generating code. Use arrays of fields to describe the format.
+
+maybe use unsafe object , create array of bytes and use fields to get the offsets to the values
+*/
+
+/*
+description of the object instance, still will require lookups.
+*/
+type ObjectInstance struct {
+	// object type, the type of object we are instance of
+	object_type int // contains 
+	Fields [] FieldValue // ordered 
+	// 
+	//incoming_fields  how to find all the incoming pointers?
+}
+
+type Model struct {
+	// a list of int fields (store the fieldid), used to
+
+	Types [] ObjectType // all the object types
+	
+	Instances [] ObjectInstance // all object instances, to find the type of that objects, indexed by object id
+
+	FieldNames map[string] int // name lookup
+	Predicates [] GlobalFieldType // load predicate lists into here, offset contains the position on the original array
+	
+}
+
+func CreateModel(otc int) (*Model){
+	return &Model{
+		Types: make([]ObjectType,otc),
+		FieldNames : make(map[string] int), 
+	}
+}
+
+func main() {	
 	//string_predicates_pairs := ReadStrings("string_predicate2")
 	int_predicates := ReadStrings("int_predicate")
+	string_predicates := ReadStrings("string_predicate")
+
+	object_types := ReadStrings("object_type")
+	otc := len(object_types)
+	m := CreateModel(otc)
+	
+	for mi,s := range(object_types) {
+		//fmt.Printf("reading type %s\n", s)
+		ot := m.Types[mi]
+		ot.Name = s
+		ot.Offset = mi
+		objects := ReadInstances(s)
+		ot.Instances = objects//make(Instances [],int)	
+		//fmt.Printf("object type %s: len %d\n", s, ic)
+		//fmt.Printf("object type %#v\n", ot)		
+		// construct an array with all possible predicates for each object
+	}
+
+	// assign each int predicate a position
+	for _,s := range(int_predicates) {
+		if _, ok := m.FieldNames[s]; ok {
+			//
+		} else {
+			// create new field
+			m.FieldNames[s] = len(m.FieldNames)
+		}
+	}
+	
+	for _,s := range(string_predicates) {
+		if _, ok := m.FieldNames[s]; ok {
+			//
+		} else {
+			// create new field
+			m.FieldNames[s] = len(m.FieldNames)
+		}
+	}	
+	m.Predicates = make( []GlobalFieldType, len(m.FieldNames))
+	
 	for i,s := range(int_predicates) {
 		//pairs := instances(i) do we need instances?
 		sn := fmt.Sprintf("%s_pairs",s)
 		pairs := ReadPairs(sn)
-		fmt.Printf("%d %s %#v\n", i,s, pairs)
+		fmt.Printf("Int predicate : offset:%d name:%s count:%d\n", i,s, len(pairs))
+
+		// now lookup the field type by name
+		if valo, ok := m.FieldNames[s]; ok {
+
+			ft := &m.Predicates[valo]
+
+			if ft.FieldType == unknown {
+				ft.FieldType = intval
+				ft.Name = s
+				ft.IntOffset = i
+				ft.FieldOffset = valo
+			} else {
+				panic(s)
+			}
+			// now for each pair, look up the domain of the subject and object
+					
+		} else {panic(s)}
+		
 	}
 
-	string_predicates := ReadStrings("string_predicate")	
+
 	fmt.Printf("predicates %s\n", string_predicates)
 	for i,s := range(string_predicates) {
 		sn := fmt.Sprintf("s_%s_pairs",s)
 		//fmt.Printf("read string pairs %d %s\n", i,sn)
 		pairs := ReadPairs(sn)
-		fmt.Printf("string %d %s %#v\n", i,sn, pairs)
+		values := ReadStrings(s) // read the unique string values in
+		fmt.Printf("string %d %s pairs:%d values%d\n", i,sn, len(pairs), len(values))
+
+		// now lookup the field type by name
+		if valo, ok := m.FieldNames[s]; ok {
+			
+			ft := &m.Predicates[valo]
+
+			if ft.FieldType == unknown {
+				ft.FieldType = intval
+				ft.Name = s
+				ft.StrOffset = i
+				ft.FieldOffset = valo
+			} else if ft.FieldType == intval {
+				ft.FieldOffset = valo
+				ft.StrOffset = i
+				ft.FieldType = intstrval
+			} else {
+				panic(s)
+				
+			}
+			// now for each pair, look up the domain of the subject and object
+					
+		} else {panic(s)}
 	}
 
 	//fmt.Printf("predicates pairs %s", string_predicates_pairs)
 	
 	// each instance types
-	object_types := ReadStrings("object_type")
-	for _,s := range(object_types) {
-		//fmt.Printf("reading type %s\n", s)
-		objects := ReadInstances(s)
-		fmt.Printf("object type %s: %#v\n", s,objects)
-	}
 
 }
 

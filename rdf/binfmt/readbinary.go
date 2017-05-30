@@ -12,10 +12,11 @@ import (
 	//"container/list"
 )
 const (
-	unknown = iota  // c0 == 0
-	intval = iota  // c0 == 1
-	strval = iota  // c1 == 2
-	intstrval = iota  // c1 == 3 // both string and int values.... mess
+//	unknown = iota  // c0 == 0
+	intval = iota  // c0 == 0
+	strval = iota  // c1 == 1
+	max_field_count = 2
+	//intstrval = iota  // c1 == 3 // both string and int values.... mess
 	sizeofint = 8
 )
 // read in strings
@@ -132,8 +133,7 @@ global field type shared for all fields
 type GlobalFieldType struct {
 	FieldType int// 
 	Name string
-	IntOffset int // offset of this field type in the original array from disk
-	StrOffset int // offset of this field type in the original array from disk
+	Offset [max_field_count]int // offset of this field type in the original array from disk for each array type
 
 	FieldOffset int // offset of this field type in the int field list
 	
@@ -144,6 +144,11 @@ type GlobalFieldType struct {
 
 	RangeTypesCount [] int // array of counts per type of objects in the field
 	DomainTypesCount [] int // array of count per type of subjects in the field
+
+	// this next field is only for strings
+	StringValues []string // for the string type what are the values
+	// this is for integers
+	Pairs  []NodePair 
 }
 
 /*
@@ -216,6 +221,8 @@ type Model struct {
 
 	FieldNames map[string] int // name lookup
 	Predicates [] GlobalFieldType // load predicate lists into here, offset contains the position on the original array
+	PredicateTypes [max_field_count]PredicateType
+
 	
 }
 
@@ -226,15 +233,29 @@ func CreateModel(otc int) (*Model){
 	}
 }
 
-func main() {	
-	//string_predicates_pairs := ReadStrings("string_predicate2")
-	int_predicates := ReadStrings("int_predicate")
-	string_predicates := ReadStrings("string_predicate")
+type PredicateType struct {
+	Values []string //:= {,string_predicates}
+	Name  string
+	Type   int
+}
 
+
+func main() {	
 	object_types := ReadStrings("object_type")
 	otc := len(object_types)
 	m := CreateModel(otc)
-	
+
+	m.PredicateTypes[intval]=PredicateType{
+		Name : "int",
+		Values:ReadStrings("int_predicate"),
+		Type: intval,
+	}
+	m.PredicateTypes[strval]=PredicateType{
+		Name : "string",
+		Values :ReadStrings("string_predicate"),
+		Type: strval,
+	}
+
 	for mi,s := range(object_types) {
 		//fmt.Printf("reading type %s\n", s)
 		ot := m.Types[mi]
@@ -247,81 +268,58 @@ func main() {
 		// construct an array with all possible predicates for each object
 	}
 
-	// assign each int predicate a position
-	for _,s := range(int_predicates) {
-		if _, ok := m.FieldNames[s]; ok {
-			//
-		} else {
-			// create new field
-			m.FieldNames[s] = len(m.FieldNames)
+	// load up the global name map, FieldNames
+	for _,pt := range(m.PredicateTypes) {
+		for _,s := range(pt.Values) {
+			if _, ok := m.FieldNames[s]; ok {
+				//
+			} else {
+				// create new field
+				m.FieldNames[s] = len(m.FieldNames)
+			}
 		}
 	}
-	
-	for _,s := range(string_predicates) {
-		if _, ok := m.FieldNames[s]; ok {
-			//
-		} else {
-			// create new field
-			m.FieldNames[s] = len(m.FieldNames)
-		}
-	}	
+
+	// create a global predicates
 	m.Predicates = make( []GlobalFieldType, len(m.FieldNames))
 	
-	for i,s := range(int_predicates) {
-		//pairs := instances(i) do we need instances?
-		sn := fmt.Sprintf("%s_pairs",s)
-		pairs := ReadPairs(sn)
-		fmt.Printf("Int predicate : offset:%d name:%s count:%d\n", i,s, len(pairs))
+	for pti,pt := range(m.PredicateTypes) {
+		for i,s := range(pt.Values) {
+			sn := fmt.Sprintf("%s_pairs",s)
 
-		// now lookup the field type by name
-		if valo, ok := m.FieldNames[s]; ok {
-
-			ft := &m.Predicates[valo]
-
-			if ft.FieldType == unknown {
-				ft.FieldType = intval
-				ft.Name = s
-				ft.IntOffset = i
-				ft.FieldOffset = valo
-			} else {
-				panic(s)
-			}
-			// now for each pair, look up the domain of the subject and object
-					
-		} else {panic(s)}
-		
-	}
-
-
-	fmt.Printf("predicates %s\n", string_predicates)
-	for i,s := range(string_predicates) {
-		sn := fmt.Sprintf("s_%s_pairs",s)
-		//fmt.Printf("read string pairs %d %s\n", i,sn)
-		pairs := ReadPairs(sn)
-		values := ReadStrings(s) // read the unique string values in
-		fmt.Printf("string %d %s pairs:%d values%d\n", i,sn, len(pairs), len(values))
-
-		// now lookup the field type by name
-		if valo, ok := m.FieldNames[s]; ok {
-			
-			ft := &m.Predicates[valo]
-
-			if ft.FieldType == unknown {
-				ft.FieldType = intval
-				ft.Name = s
-				ft.StrOffset = i
-				ft.FieldOffset = valo
-			} else if ft.FieldType == intval {
-				ft.FieldOffset = valo
-				ft.StrOffset = i
-				ft.FieldType = intstrval
-			} else {
-				panic(s)
+	
+			// now lookup the field type by name
+			if valo, ok := m.FieldNames[s]; ok {
+				ft := &m.Predicates[valo]
 				
-			}
-			// now for each pair, look up the domain of the subject and object
-					
-		} else {panic(s)}
+				// ft.FieldType == unknown {
+				ft.FieldType = pt.Type
+				ft.Name = s
+				
+				if (pt.Type == strval) {							
+					ft.StringValues = ReadStrings(s)
+
+					fmt.Printf("%s predicate, offset:%d name:%s count:%d\n",
+						pt.Name,
+						i,s, len(ft.StringValues))
+
+				} else if (pt.Type == intval) {							
+					pairs := ReadPairs(sn)
+					ft.Pairs=pairs
+					fmt.Printf("%s predicate, offset:%d name:%s count:%d\n",
+						pt.Name,
+						i,s, len(ft.Pairs))
+
+				}
+				
+				
+				ft.Offset[pti] = i
+				ft.FieldOffset = valo
+
+				// now for each pair, look up the domain of the subject and object
+			} else {panic(s)}
+
+		}
 	}
 
 	//fmt.Printf("predicates pairs %s", string_predicates_pairs)
